@@ -15,6 +15,7 @@
 		7A49CA1E288ECBBB00411D49 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A49CA1C288ECBBB00411D49 /* LaunchScreen.storyboard */; };
 		7A49CA27288ED89C00411D49 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 7A49CA26288ED89C00411D49 /* SwiftyJSON */; };
 		7A49CA2A288EDDDD00411D49 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 7A49CA29288EDDDD00411D49 /* Alamofire */; };
+		7A49CA2C288EF64400411D49 /* ArticleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA2B288EF64400411D49 /* ArticleService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		7A49CA1A288ECBBB00411D49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7A49CA1D288ECBBB00411D49 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7A49CA1F288ECBBB00411D49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7A49CA2B288EF64400411D49 /* ArticleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				7A49CA1C288ECBBB00411D49 /* LaunchScreen.storyboard */,
 				7A49CA1F288ECBBB00411D49 /* Info.plist */,
 				7A49CA17288ECBB700411D49 /* Daily.xcdatamodeld */,
+				7A49CA2B288EF64400411D49 /* ArticleService.swift */,
 			);
 			path = Daily;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A49CA2C288EF64400411D49 /* ArticleService.swift in Sources */,
 				7A49CA13288ECBB700411D49 /* ViewController.swift in Sources */,
 				7A49CA19288ECBB700411D49 /* Daily.xcdatamodeld in Sources */,
 				7A49CA0F288ECBB700411D49 /* AppDelegate.swift in Sources */,

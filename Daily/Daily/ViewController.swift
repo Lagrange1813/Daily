@@ -12,6 +12,9 @@ class ViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .blue
+		
+		let test = ArticleService()
+		test.test()
 	}
 
 
