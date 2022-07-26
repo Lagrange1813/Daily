@@ -24,7 +24,7 @@ class ArticleManager {
 
 	func getTodaysAbstractArticles() async -> [AbstractArticle] {
 		do {
-			let articles = try await withCheckedThrowingContinuation { continuation in
+			let articles: [AbstractArticle] = try await withCheckedThrowingContinuation { continuation in
 				service.getTodaysJSON { json in
 					var results: [AbstractArticle] = []
 					if let articleArray = json["stories"].array {
