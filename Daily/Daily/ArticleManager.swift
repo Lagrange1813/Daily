@@ -11,12 +11,24 @@ import UIKit
 
 let singleton = ArticleManager()
 
+enum ArticleListType {
+	case top
+	case date
+}
+
 class ArticleManager {
 	static var shared: ArticleManager {
 		singleton
 	}
 
 	private var service = ArticleService()
+
+	private var today: String?
+	private var topList: [String] = []
+	private var idList: [String] = []
+	private var currentDate: String?
+
+	private var mode: ArticleListType = .date
 
 	fileprivate init() {}
 
@@ -35,7 +47,9 @@ class ArticleManager {
 extension ArticleManager {
 	public func getTodaysDate() async -> String {
 		async let json = service.getTodaysJSON()
-		return await json["date"].stringValue
+		let date = await json["date"].stringValue
+		today = date
+		return date
 	}
 
 	public func getTopArticleAbstracts() async -> [ArticleAbstract] {
@@ -78,6 +92,24 @@ extension ArticleManager {
 }
 
 extension ArticleManager {
+	public func getTopArticleAbstracts(at date: String) async -> [ArticleAbstract] {
+		var articles: [ArticleAbstract] = []
+		return articles
+	}
+
+	public func getArticleAbstracts(at date: String) async -> [ArticleAbstract] {
+		var articles: [ArticleAbstract] = []
+		return articles
+	}
+}
+
+extension ArticleManager {
+	public func setManagerMode(_ mode: ArticleListType) {
+		self.mode = mode
+	}
+}
+
+extension ArticleManager {
 	public func getArticle(by id: String) async -> Article {
 		async let json = service.getArticle(by: id)
 
@@ -87,6 +119,14 @@ extension ArticleManager {
 			image: await getImage(url: json["image"].stringValue),
 			link: json["url"].stringValue
 		)
+	}
+
+	public func lastArticle(by id: String) {}
+
+	public func nextArticle(by id: String) {}
+	
+	public func fetchNextDate() {
+		
 	}
 }
 
