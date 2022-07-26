@@ -20,24 +20,32 @@ class ArticleManager {
 
 	fileprivate init() {}
 
-	/// [String:  Any]
-	func getTodaysAbstractArticles() -> [AbstractArticle] {
-		var result: [AbstractArticle] = []
-		service.getTodaysJSON { json in
-			if let articleArray = json["stories"].array {
-				articleArray.forEach {
-					let article = AbstractArticle(
-						title: $0["title"].stringValue,
-						hint: $0["hint"].stringValue,
-						id: $0["id"].stringValue,
-						charColor: UIColor(hexString: self.convertColorString($0["image_hue"].stringValue))
-					)
-					result.append(article)
+	var todaysArticlesFetchedCallback: (([AbstractArticle]) -> Void)?
+
+	func getTodaysAbstractArticles() async -> [AbstractArticle] {
+		do {
+			let articles = try await withCheckedThrowingContinuation { continuation in
+				service.getTodaysJSON { json in
+					var results: [AbstractArticle] = []
+					if let articleArray = json["stories"].array {
+						articleArray.forEach {
+							let article = AbstractArticle(
+								title: $0["title"].stringValue,
+								hint: $0["hint"].stringValue,
+								id: $0["id"].stringValue,
+								charColor: UIColor(hexString: self.convertColorString($0["image_hue"].stringValue))
+							)
+							results.append(article)
+						}
+						continuation.resume(returning: results)
+					}
 				}
 			}
+			return articles
+		} catch {
+			print(error)
 		}
-		print(result)
-		return result
+		return []
 	}
 
 	func getTopArticles() -> [String] {
@@ -46,7 +54,7 @@ class ArticleManager {
 		}
 		return []
 	}
-	
+
 	private func convertColorString(_ origin: String) -> String {
 		var sub = origin.suffix(6)
 		sub = "#" + sub

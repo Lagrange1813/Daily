@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		31D17FC8288F8A3500318DD3 /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D17FC7288F8A3500318DD3 /* ArticleListViewController.swift */; };
 		7A49CA0F288ECBB700411D49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA0E288ECBB700411D49 /* AppDelegate.swift */; };
 		7A49CA11288ECBB700411D49 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA10288ECBB700411D49 /* SceneDelegate.swift */; };
 		7A49CA13288ECBB700411D49 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA12288ECBB700411D49 /* ViewController.swift */; };
@@ -17,10 +16,12 @@
 		7A49CA27288ED89C00411D49 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 7A49CA26288ED89C00411D49 /* SwiftyJSON */; };
 		7A49CA2A288EDDDD00411D49 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 7A49CA29288EDDDD00411D49 /* Alamofire */; };
 		7A49CA2C288EF64400411D49 /* ArticleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA2B288EF64400411D49 /* ArticleService.swift */; };
+		7A838F6A288F971C00837DB7 /* ArticleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A838F69288F971C00837DB7 /* ArticleManager.swift */; };
+		7A838F6C288FA16A00837DB7 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A838F6B288FA16A00837DB7 /* Extension.swift */; };
+		7A838F6F288FB79100837DB7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7A838F6E288FB79100837DB7 /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		31D17FC7288F8A3500318DD3 /* ArticleListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListViewController.swift; sourceTree = "<group>"; };
 		7A49CA0B288ECBB700411D49 /* Daily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Daily.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A49CA0E288ECBB700411D49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7A49CA10288ECBB700411D49 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -30,6 +31,8 @@
 		7A49CA1D288ECBBB00411D49 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7A49CA1F288ECBBB00411D49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7A49CA2B288EF64400411D49 /* ArticleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleService.swift; sourceTree = "<group>"; };
+		7A838F69288F971C00837DB7 /* ArticleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleManager.swift; sourceTree = "<group>"; };
+		7A838F6B288FA16A00837DB7 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A838F6F288FB79100837DB7 /* SnapKit in Frameworks */,
 				7A49CA27288ED89C00411D49 /* SwiftyJSON in Frameworks */,
 				7A49CA2A288EDDDD00411D49 /* Alamofire in Frameworks */,
 			);
@@ -67,12 +71,13 @@
 				7A49CA0E288ECBB700411D49 /* AppDelegate.swift */,
 				7A49CA10288ECBB700411D49 /* SceneDelegate.swift */,
 				7A49CA12288ECBB700411D49 /* ViewController.swift */,
-				31D17FC7288F8A3500318DD3 /* ArticleListViewController.swift */,
 				7A49CA1A288ECBBB00411D49 /* Assets.xcassets */,
 				7A49CA1C288ECBBB00411D49 /* LaunchScreen.storyboard */,
 				7A49CA1F288ECBBB00411D49 /* Info.plist */,
 				7A49CA17288ECBB700411D49 /* Daily.xcdatamodeld */,
 				7A49CA2B288EF64400411D49 /* ArticleService.swift */,
+				7A838F69288F971C00837DB7 /* ArticleManager.swift */,
+				7A838F6B288FA16A00837DB7 /* Extension.swift */,
 			);
 			path = Daily;
 			sourceTree = "<group>";
@@ -96,6 +101,7 @@
 			packageProductDependencies = (
 				7A49CA26288ED89C00411D49 /* SwiftyJSON */,
 				7A49CA29288EDDDD00411D49 /* Alamofire */,
+				7A838F6E288FB79100837DB7 /* SnapKit */,
 			);
 			productName = Daily;
 			productReference = 7A49CA0B288ECBB700411D49 /* Daily.app */;
@@ -128,6 +134,7 @@
 			packageReferences = (
 				7A49CA25288ED89C00411D49 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				7A49CA28288EDDDD00411D49 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				7A838F6D288FB79100837DB7 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 7A49CA0C288ECBB700411D49 /* Products */;
 			projectDirPath = "";
@@ -157,9 +164,10 @@
 			files = (
 				7A49CA2C288EF64400411D49 /* ArticleService.swift in Sources */,
 				7A49CA13288ECBB700411D49 /* ViewController.swift in Sources */,
+				7A838F6C288FA16A00837DB7 /* Extension.swift in Sources */,
 				7A49CA19288ECBB700411D49 /* Daily.xcdatamodeld in Sources */,
-				31D17FC8288F8A3500318DD3 /* ArticleListViewController.swift in Sources */,
 				7A49CA0F288ECBB700411D49 /* AppDelegate.swift in Sources */,
+				7A838F6A288F971C00837DB7 /* ArticleManager.swift in Sources */,
 				7A49CA11288ECBB700411D49 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,9 +321,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniquestudio.Daily;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -340,9 +351,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniquestudio.Daily;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -386,6 +400,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		7A838F6D288FB79100837DB7 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -398,6 +420,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7A49CA28288EDDDD00411D49 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		7A838F6E288FB79100837DB7 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7A838F6D288FB79100837DB7 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 
