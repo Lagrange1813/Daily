@@ -31,7 +31,6 @@ class ArticleService {
 		case .success(let data):
 			return data
 		case .failure(let failure):
-			print("yes")
 			print(failure)
 		}
 		return Data()

@@ -48,7 +48,7 @@ class ArticleManager {
 				let article = AbstractArticle(
 					title: articleJson["title"].stringValue,
 					hint: articleJson["hint"].stringValue,
-					image: await getImage(url: articleJson["images"].array?.first?.stringValue ?? ""),
+					image: await getImage(url: articleJson["image"].stringValue),
 					id: articleJson["id"].stringValue,
 					charColor: UIColor(hexString: convertColorString(articleJson["image_hue"].stringValue))
 				)
@@ -70,7 +70,7 @@ class ArticleManager {
 	}
 }
 
-struct AbstractArticle {
+struct AbstractArticle: Hashable {
 	/// 文章标题
 	let title: String
 	/// 相关信息 “spRachel雷切爾 · 3 分钟阅读” 或者 “作者 \/ 李霁琛”
