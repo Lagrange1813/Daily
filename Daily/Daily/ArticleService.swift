@@ -8,13 +8,16 @@
 import Alamofire
 import SwiftyJSON
 
-let url = "http://news-at.zhihu.com/api/4/news/latest"
+private enum URLList {
+	static let today = "http://news-at.zhihu.com/api/4/news/latest"
+}
 
 class ArticleService {
-	func test() {
-		AF.request(url).response { response in
-			debugPrint(response)
+	func getTodaysJSON(handler: ((JSON) -> Void)?) {
+		AF.request(URLList.today).response { response in
+			if let result = try? response.result.get() {
+				handler?(JSON(result))
+			}
 		}
 	}
 }
-
