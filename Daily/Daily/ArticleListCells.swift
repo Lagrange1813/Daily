@@ -17,7 +17,8 @@ class ArticleTopListCell: UICollectionViewCell {
     func configureContents() {
         imageView.image = UIImage(systemName: "square.and.arrow.down")
         imageView.frame = contentView.bounds
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
+        
         contentView.addSubview(imageView)
         
         titleView.text = "主标题"
@@ -37,7 +38,7 @@ class ArticleTopListCell: UICollectionViewCell {
         let constraints = [
             titleView.centerYAnchor.constraint(
                 equalTo: contentView.centerYAnchor,
-                constant: contentView.bounds.width / 3
+                constant: contentView.bounds.width / 5
             ),
             titleView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             titleView.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
