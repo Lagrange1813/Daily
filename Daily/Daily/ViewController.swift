@@ -14,7 +14,6 @@ class ViewController: UIViewController {
 		view.backgroundColor = .blue
 		
 		let test = ArticleService()
-		test.test()
 	}
 
 
