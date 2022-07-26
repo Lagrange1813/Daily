@@ -8,14 +8,13 @@
 import UIKit
 
 class ViewController: UIViewController {
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .blue
-		
-		let test = ArticleService()
+
+		Task.init {
+			let test = await ArticleManager.shared.getTodaysDate()
+			print(test)
+		}
 	}
-
-
 }
-
