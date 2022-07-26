@@ -14,14 +14,14 @@ class ArticleTopListCell: UICollectionViewCell {
     let titleView = UILabel()
     let subtitleView = UILabel()
     
-    func configureContents() {
+    func configureContents(_ id: Int) {
         imageView.image = UIImage(systemName: "square.and.arrow.down")
         imageView.frame = contentView.bounds
         imageView.contentMode = .scaleAspectFit
         
         contentView.addSubview(imageView)
         
-        titleView.text = "主标题"
+        titleView.text = "主标题\(id)"
         titleView.font = .preferredFont(forTextStyle: .largeTitle)
         titleView.backgroundColor = .clear
         titleView.textColor = .orange
@@ -111,5 +111,18 @@ class ArticleBottomListCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+    }
+}
+
+class ArticleListHeaderView: UICollectionReusableView {
+    static let reuseIdentifier = "article-list-header-view"
+    let dateLabel = UILabel()
+    
+    func configureContents() {
+        dateLabel.text = "日期"
+        dateLabel.textColor = .darkGray
+        dateLabel.font = .preferredFont(forTextStyle: .title2)
+        addSubview(dateLabel)
+        dateLabel.frame = bounds
     }
 }

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		31D17FC8288F8A3500318DD3 /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D17FC7288F8A3500318DD3 /* ArticleListViewController.swift */; };
-		31D17FCA288F901000318DD3 /* ArticleListCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D17FC9288F901000318DD3 /* ArticleListCells.swift */; };
+		31D17FCA288F901000318DD3 /* ArticleListViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D17FC9288F901000318DD3 /* ArticleListViews.swift */; };
 		7A49CA0F288ECBB700411D49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA0E288ECBB700411D49 /* AppDelegate.swift */; };
 		7A49CA11288ECBB700411D49 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA10288ECBB700411D49 /* SceneDelegate.swift */; };
 		7A49CA13288ECBB700411D49 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA12288ECBB700411D49 /* ViewController.swift */; };
@@ -22,7 +22,7 @@
 
 /* Begin PBXFileReference section */
 		31D17FC7288F8A3500318DD3 /* ArticleListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListViewController.swift; sourceTree = "<group>"; };
-		31D17FC9288F901000318DD3 /* ArticleListCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListCells.swift; sourceTree = "<group>"; };
+		31D17FC9288F901000318DD3 /* ArticleListViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListViews.swift; sourceTree = "<group>"; };
 		7A49CA0B288ECBB700411D49 /* Daily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Daily.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A49CA0E288ECBB700411D49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7A49CA10288ECBB700411D49 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -70,7 +70,7 @@
 				7A49CA10288ECBB700411D49 /* SceneDelegate.swift */,
 				7A49CA12288ECBB700411D49 /* ViewController.swift */,
 				31D17FC7288F8A3500318DD3 /* ArticleListViewController.swift */,
-				31D17FC9288F901000318DD3 /* ArticleListCells.swift */,
+				31D17FC9288F901000318DD3 /* ArticleListViews.swift */,
 				7A49CA1A288ECBBB00411D49 /* Assets.xcassets */,
 				7A49CA1C288ECBBB00411D49 /* LaunchScreen.storyboard */,
 				7A49CA1F288ECBBB00411D49 /* Info.plist */,
@@ -159,7 +159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A49CA2C288EF64400411D49 /* ArticleService.swift in Sources */,
-				31D17FCA288F901000318DD3 /* ArticleListCells.swift in Sources */,
+				31D17FCA288F901000318DD3 /* ArticleListViews.swift in Sources */,
 				7A49CA13288ECBB700411D49 /* ViewController.swift in Sources */,
 				7A49CA19288ECBB700411D49 /* Daily.xcdatamodeld in Sources */,
 				31D17FC8288F8A3500318DD3 /* ArticleListViewController.swift in Sources */,
