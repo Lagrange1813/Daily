@@ -197,29 +197,21 @@ extension ArticleListViewController {
         
         
         Task.init() { // Fetch Top Articles
-            do {
-                topArticles = try await ArticleManager.shared.getTopArticles()
-                var snapshot = dataSource.snapshot()
-                snapshot.appendSections([0])
-                snapshot.appendItems(topArticles, toSection: 0)
-                dataSource.apply(snapshot, animatingDifferences: true)
-                pageControl.numberOfPages = topArticles.count
-            } catch {
-                print(error)
-            }
+            topArticles = await ArticleManager.shared.getTopArticles()
+            var snapshot = dataSource.snapshot()
+            snapshot.appendSections([0])
+            snapshot.appendItems(topArticles, toSection: 0)
+            dataSource.apply(snapshot, animatingDifferences: true)
+            pageControl.numberOfPages = topArticles.count
         } // Fetch Top Articles End
         
         Task.init() { // Fetch Today Articles
-            do {
-                todayArticles = try await ArticleManager.shared.getTodaysAbstractArticles()
-                var snapshot = dataSource.snapshot()
-                snapshot.appendSections([1])
-                snapshot.appendItems(todayArticles, toSection: 1)
-                dataSource.apply(snapshot)
-                print("apply")
-            } catch {
-                print(error)
-            }
+            todayArticles = await ArticleManager.shared.getTodaysAbstractArticles()
+            var snapshot = dataSource.snapshot()
+            snapshot.appendSections([1])
+            snapshot.appendItems(todayArticles, toSection: 1)
+            dataSource.apply(snapshot)
+            print("apply")
         } // Fetch Today Articles End
     }
 }
