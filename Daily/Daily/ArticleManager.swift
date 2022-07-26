@@ -20,39 +20,44 @@ class ArticleManager {
 
 	fileprivate init() {}
 
-	var todaysArticlesFetchedCallback: (([AbstractArticle]) -> Void)?
-
-	func getTodaysAbstractArticles() async -> [AbstractArticle] {
-		do {
-			let articles: [AbstractArticle] = try await withCheckedThrowingContinuation { continuation in
-				service.getTodaysJSON { json in
-					var results: [AbstractArticle] = []
-					if let articleArray = json["stories"].array {
-						articleArray.forEach {
-							let article = AbstractArticle(
-								title: $0["title"].stringValue,
-								hint: $0["hint"].stringValue,
-								id: $0["id"].stringValue,
-								charColor: UIColor(hexString: self.convertColorString($0["image_hue"].stringValue))
-							)
-							results.append(article)
-						}
-						continuation.resume(returning: results)
+	func getTodaysAbstractArticles() async throws -> [AbstractArticle] {
+		return try await withCheckedThrowingContinuation { continuation in
+			service.getTodaysJSON { json in
+				var results: [AbstractArticle] = []
+				if let articleArray = json["stories"].array {
+					articleArray.forEach {
+						let article = AbstractArticle(
+							title: $0["title"].stringValue,
+							hint: $0["hint"].stringValue,
+							id: $0["id"].stringValue,
+							charColor: UIColor(hexString: self.convertColorString($0["image_hue"].stringValue))
+						)
+						results.append(article)
 					}
+					continuation.resume(returning: results)
 				}
 			}
-			return articles
-		} catch {
-			print(error)
 		}
-		return []
 	}
 
-	func getTopArticles() -> [String] {
-		service.getTodaysJSON { json in
-			print(json["top_stories"])
+	func getTopArticles() async throws -> [AbstractArticle] {
+		return try await withCheckedThrowingContinuation { continuation in
+			service.getTodaysJSON { json in
+				var results: [AbstractArticle] = []
+				if let articleArray = json["top_stories"].array {
+					articleArray.forEach {
+						let article = AbstractArticle(
+							title: $0["title"].stringValue,
+							hint: $0["hint"].stringValue,
+							id: $0["id"].stringValue,
+							charColor: UIColor(hexString: self.convertColorString($0["image_hue"].stringValue))
+						)
+						results.append(article)
+					}
+					continuation.resume(returning: results)
+				}
+			}
 		}
-		return []
 	}
 
 	private func convertColorString(_ origin: String) -> String {
