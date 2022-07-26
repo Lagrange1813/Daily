@@ -203,7 +203,7 @@ extension ArticleListViewController {
                 snapshot.appendSections([0])
                 snapshot.appendItems(topArticles, toSection: 0)
                 dataSource.apply(snapshot, animatingDifferences: true)
-                pageControl.numberOfPages = todayArticles.count
+                pageControl.numberOfPages = topArticles.count
             } catch {
                 print(error)
             }
@@ -220,6 +220,6 @@ extension ArticleListViewController {
             } catch {
                 print(error)
             }
-        }
+        } // Fetch Today Articles End
     }
 }
