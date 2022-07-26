@@ -29,6 +29,7 @@ class ArticleManager {
 						let article = AbstractArticle(
 							title: $0["title"].stringValue,
 							hint: $0["hint"].stringValue,
+//							image: await self.getImage(url: ""),
 							id: $0["id"].stringValue,
 							charColor: UIColor(hexString: self.convertColorString($0["image_hue"].stringValue))
 						)
@@ -49,6 +50,7 @@ class ArticleManager {
 						let article = AbstractArticle(
 							title: $0["title"].stringValue,
 							hint: $0["hint"].stringValue,
+//							image: self.getImage(url: ""),
 							id: $0["id"].stringValue,
 							charColor: UIColor(hexString: self.convertColorString($0["image_hue"].stringValue))
 						)
@@ -58,6 +60,11 @@ class ArticleManager {
 				}
 			}
 		}
+	}
+	
+	func getImage(url: String) async -> UIImage {
+		
+		return UIImage()
 	}
 
 	private func convertColorString(_ origin: String) -> String {

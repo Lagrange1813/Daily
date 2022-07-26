@@ -15,10 +15,16 @@ private enum URLList {
 class ArticleService {
 	func getTodaysJSON(handler: ((JSON) -> Void)?) {
 		AF.request(URLList.today).response { response in
-			do {
-				let data = try response.result.get()
+//			do {
+//				let data = try response.result.get()
+//				handler?(JSON(data as Any))
+//			} catch {
+//				print(error)
+//			}
+			switch response.result {
+			case .success(let data):
 				handler?(JSON(data as Any))
-			} catch {
+			case .failure(let error):
 				print(error)
 			}
 		}
