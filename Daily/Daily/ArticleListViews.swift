@@ -70,16 +70,16 @@ class ArticleBottomListCell: UICollectionViewCell {
     let subtitleView = UILabel()
     let imageView = UIImageView()
     
-    func configureContents() {
-        titleView.text = "文章标题1231231231231231231312312312399999999"
+    func configureContents(with article: AbstractArticle) {
+        titleView.text = article.title
         titleView.numberOfLines = 0
         titleView.textColor = .black
         titleView.lineBreakMode = .byCharWrapping
-        titleView.font = .preferredFont(forTextStyle: .title3)
+        titleView.font = UIFont(name: "LXGWWenKaiMono-Regular", size: 20)
         titleView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(titleView)
         
-        subtitleView.text = "footnote"
+        subtitleView.text = article.hint
         subtitleView.textColor = .systemGray
         subtitleView.font = .preferredFont(forTextStyle: .footnote)
         subtitleView.translatesAutoresizingMaskIntoConstraints = false

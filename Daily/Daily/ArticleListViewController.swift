@@ -14,13 +14,14 @@ class ArticleListViewController: UIViewController {
     let pageControl = UIPageControl()
     var pageStack = [0]
     var todayArticles: [AbstractArticle] = []
+    var topArticles: [AbstractArticle] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         title = "知乎日报"
-        fetchData()
         configureCollectionView()
         configureDataSource()
+        fetchData()
         configurePageControl()
     }
 
@@ -116,6 +117,7 @@ extension ArticleListViewController {
         collectionView.delegate = self
         collectionView.bouncesZoom = true
         collectionView.bounces = true
+        collectionView.showsVerticalScrollIndicator = false
         let constraints = [
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -146,7 +148,7 @@ extension ArticleListViewController {
                         withReuseIdentifier: ArticleBottomListCell.reuseIdentifier,
                         for: indexPath
                     ) as? ArticleBottomListCell else { fatalError() }
-                    cell.configureContents()
+                    cell.configureContents(with: itemIdentifier)
                     return cell
                     
                 }
@@ -191,13 +193,33 @@ extension ArticleListViewController: UICollectionViewDelegate {
 /// Fetching Data
 extension ArticleListViewController {
     private func fetchData() {
-        Task.init() {
-            todayArticles = await ArticleManager.shared.getTodaysAbstractArticles()
-            var snapshot = NSDiffableDataSourceSnapshot<Int, AbstractArticle>()
-            snapshot.appendSections([0])
-            snapshot.appendItems(todayArticles, toSection: 0)
-            guard let dataSource = dataSource else { return }
-            dataSource.apply(snapshot)
+        guard let dataSource = dataSource else { return }
+        
+        
+        Task.init() { // Fetch Top Articles
+            do {
+                topArticles = try await ArticleManager.shared.getTopArticles()
+                var snapshot = dataSource.snapshot()
+                snapshot.appendSections([0])
+                snapshot.appendItems(topArticles, toSection: 0)
+                dataSource.apply(snapshot, animatingDifferences: true)
+                pageControl.numberOfPages = todayArticles.count
+            } catch {
+                print(error)
+            }
+        } // Fetch Top Articles End
+        
+        Task.init() { // Fetch Today Articles
+            do {
+                todayArticles = try await ArticleManager.shared.getTodaysAbstractArticles()
+                var snapshot = dataSource.snapshot()
+                snapshot.appendSections([1])
+                snapshot.appendItems(todayArticles, toSection: 1)
+                dataSource.apply(snapshot)
+                print("apply")
+            } catch {
+                print(error)
+            }
         }
     }
 }
