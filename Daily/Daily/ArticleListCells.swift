@@ -50,6 +50,14 @@ class ArticleTopListCell: UICollectionViewCell {
             subtitleView.heightAnchor.constraint(equalToConstant: contentView.bounds.width / 20),
         ]
         contentView.addConstraints(constraints)
+        
+        layer.cornerRadius = 10
+//        contentView.layer.shadowRadius = 10
+//        contentView.layer.shadowOpacity = 1
+        layer.shadowRadius = 10
+        layer.shadowOpacity = 1
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.black.cgColor
     }
     
     override func layoutSubviews() {

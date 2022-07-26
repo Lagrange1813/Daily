@@ -11,11 +11,10 @@ class ArticleListViewController: UIViewController {
 
     var collectionView: UICollectionView?
     var dataSource: UICollectionViewDiffableDataSource<Int, Int>?
-    let titleView = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        configureTitleView()
+        title = "知乎日报"
         configureCollectionView()
         configureDataSource()
         
@@ -34,36 +33,6 @@ class ArticleListViewController: UIViewController {
 
 extension ArticleListViewController {
     
-    private func configureTitleView() {
-        view.addSubview(titleView)
-        titleView.translatesAutoresizingMaskIntoConstraints = false
-        let constraints1 = [
-            titleView.topAnchor.constraint(equalTo: view.topAnchor),
-            titleView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            titleView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            titleView.bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor,
-                constant: 44
-            )
-        ]
-        view.addConstraints(constraints1)
-        titleView.backgroundColor = .white
-        let titleLabel = UILabel()
-        titleLabel.text = "知乎日报"
-        titleLabel.textAlignment = .center
-        titleLabel.font = .preferredFont(forTextStyle: .headline)
-        titleView.addSubview(titleLabel)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let constraints2 = [
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
-            titleLabel.centerXAnchor.constraint(equalTo: titleView.centerXAnchor),
-            titleLabel.widthAnchor.constraint(equalToConstant: 200),
-        ]
-        view.addConstraints(constraints2)
-        
-    }
     
     private func configureCollectionView() {
         // Create Layout using Section Provider
@@ -124,7 +93,7 @@ extension ArticleListViewController {
         view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         let constraints = [
-            collectionView.topAnchor.constraint(equalTo: titleView.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
