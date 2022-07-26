@@ -13,6 +13,7 @@ class ArticleListViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Int, AbstractArticle>?
     let pageControl = UIPageControl()
     var pageStack = [0]
+    var sectionCnt = 0
     var todayArticles: [AbstractArticle] = []
     var topArticles: [AbstractArticle] = []
     override func viewDidLoad() {
@@ -195,23 +196,30 @@ extension ArticleListViewController {
     private func fetchData() {
         guard let dataSource = dataSource else { return }
         
-        
+        dataSource.apply(NSDiffableDataSourceSnapshot<Int, AbstractArticle>())
+        sectionCnt = 0
         Task.init() { // Fetch Top Articles
             topArticles = await ArticleManager.shared.getTopArticles()
             var snapshot = dataSource.snapshot()
-            snapshot.appendSections([0])
-            snapshot.appendItems(topArticles, toSection: 0)
+            snapshot.appendSections([sectionCnt])
+            snapshot.appendItems(topArticles, toSection: sectionCnt)
+            sectionCnt += 1
             dataSource.apply(snapshot, animatingDifferences: true)
             pageControl.numberOfPages = topArticles.count
+            
+            Task.init() { // Fetch Today Articles
+                todayArticles = await ArticleManager.shared.getTodaysAbstractArticles()
+                var snapshot = dataSource.snapshot()
+                snapshot.appendSections([sectionCnt])
+                snapshot.appendItems(todayArticles, toSection: sectionCnt)
+                sectionCnt += 1
+                dataSource.apply(snapshot)
+                print("apply")
+            } // Fetch Today Articles End
+            
         } // Fetch Top Articles End
         
-        Task.init() { // Fetch Today Articles
-            todayArticles = await ArticleManager.shared.getTodaysAbstractArticles()
-            var snapshot = dataSource.snapshot()
-            snapshot.appendSections([1])
-            snapshot.appendItems(todayArticles, toSection: 1)
-            dataSource.apply(snapshot)
-            print("apply")
-        } // Fetch Today Articles End
+        
     }
 }
+

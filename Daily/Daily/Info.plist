@@ -5,6 +5,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>LXGWWenKaiMono-Regular.ttf</string>
+		<string>LXGWWenKai-Bold.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

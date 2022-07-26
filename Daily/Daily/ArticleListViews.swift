@@ -15,18 +15,18 @@ class ArticleTopListCell: UICollectionViewCell {
     let subtitleView = UILabel()
     
     func configureContents(with article: AbstractArticle) {
-        imageView.image = UIImage(systemName: "square.and.arrow.down")
+        imageView.image = article.image
         imageView.frame = contentView.bounds
-        imageView.contentMode = .scaleAspectFit
-        
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         contentView.addSubview(imageView)
         
         titleView.text = article.title
-        titleView.font = UIFont(name: "LXGWWenKaiMono-Regular", size: 20)
+        titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 20)
         titleView.backgroundColor = .clear
         titleView.numberOfLines = 0
         titleView.lineBreakMode = .byCharWrapping
-        titleView.textColor = .black
+        titleView.textColor = .white
         titleView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(titleView)
         
@@ -40,7 +40,7 @@ class ArticleTopListCell: UICollectionViewCell {
         let constraints = [
             titleView.centerYAnchor.constraint(
                 equalTo: contentView.centerYAnchor,
-                constant: contentView.bounds.width / 5
+                constant: contentView.bounds.width / 4
             ),
             titleView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             titleView.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
@@ -52,9 +52,11 @@ class ArticleTopListCell: UICollectionViewCell {
             subtitleView.heightAnchor.constraint(equalToConstant: 20),
         ]
         contentView.addConstraints(constraints)
-        
-        layer.cornerRadius = 10
-        layer.borderWidth = 1
+        layer.shadowColor = article.charColor.cgColor
+        layer.shadowRadius = 100
+        layer.shadowOpacity = 1
+//        layer.cornerRadius = 10
+//        layer.borderWidth = 1
 
     }
     
@@ -85,7 +87,7 @@ class ArticleBottomListCell: UICollectionViewCell {
         subtitleView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(subtitleView)
         
-        imageView.image = UIImage(systemName: "square.and.arrow.down")
+        imageView.image = article.image
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(imageView)
