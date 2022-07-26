@@ -20,44 +20,47 @@ class ArticleManager {
 
 	fileprivate init() {}
 
-	func getTodaysAbstractArticles() async throws -> [AbstractArticle] {
-		return try await withCheckedThrowingContinuation { continuation in
-			service.getTodaysJSON { json in
-				var results: [AbstractArticle] = []
-				if let articleArray = json["stories"].array {
-					articleArray.forEach {
-						let article = AbstractArticle(
-							title: $0["title"].stringValue,
-							hint: $0["hint"].stringValue,
-							id: $0["id"].stringValue,
-							charColor: UIColor(hexString: self.convertColorString($0["image_hue"].stringValue))
-						)
-						results.append(article)
-					}
-					continuation.resume(returning: results)
-				}
+	func getTodaysAbstractArticles() async -> [AbstractArticle] {
+		async let json = service.getTodaysJSON()
+		var articles: [AbstractArticle] = []
+
+		if let articleArray = await json["stories"].array {
+			for articleJson in articleArray {
+				let article = AbstractArticle(
+					title: articleJson["title"].stringValue,
+					hint: articleJson["hint"].stringValue,
+					image: await getImage(url: articleJson["images"].array?.first?.stringValue ?? ""),
+					id: articleJson["id"].stringValue,
+					charColor: UIColor(hexString: convertColorString(articleJson["image_hue"].stringValue))
+				)
+				articles.append(article)
 			}
 		}
+		return articles
 	}
 
-	func getTopArticles() async throws -> [AbstractArticle] {
-		return try await withCheckedThrowingContinuation { continuation in
-			service.getTodaysJSON { json in
-				var results: [AbstractArticle] = []
-				if let articleArray = json["top_stories"].array {
-					articleArray.forEach {
-						let article = AbstractArticle(
-							title: $0["title"].stringValue,
-							hint: $0["hint"].stringValue,
-							id: $0["id"].stringValue,
-							charColor: UIColor(hexString: self.convertColorString($0["image_hue"].stringValue))
-						)
-						results.append(article)
-					}
-					continuation.resume(returning: results)
-				}
+	func getTopArticles() async -> [AbstractArticle] {
+		async let json = service.getTodaysJSON()
+		var articles: [AbstractArticle] = []
+
+		if let articleArray = await json["top_stories"].array {
+			for articleJson in articleArray {
+				let article = AbstractArticle(
+					title: articleJson["title"].stringValue,
+					hint: articleJson["hint"].stringValue,
+					image: await getImage(url: articleJson["images"].array?.first?.stringValue ?? ""),
+					id: articleJson["id"].stringValue,
+					charColor: UIColor(hexString: convertColorString(articleJson["image_hue"].stringValue))
+				)
+				articles.append(article)
 			}
 		}
+		return articles
+	}
+
+	func getImage(url: String) async -> UIImage {
+		async let data = service.getImage(url: url)
+		return await UIImage(data: data) ?? UIImage()
 	}
 
 	private func convertColorString(_ origin: String) -> String {
@@ -73,7 +76,7 @@ struct AbstractArticle: Hashable {
 	/// 相关信息 “spRachel雷切爾 · 3 分钟阅读” 或者 “作者 \/ 李霁琛”
 	let hint: String
 	/// 文章展示图
-//	let image: UIImage?
+	var image: UIImage
 	let id: String
 	/// 特征色，顶部文章要用到
 	let charColor: UIColor
