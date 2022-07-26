@@ -62,7 +62,7 @@ class ArticleManager {
 	}
 }
 
-struct AbstractArticle {
+struct AbstractArticle: Hashable {
 	/// 文章标题
 	let title: String
 	/// 相关信息 “spRachel雷切爾 · 3 分钟阅读” 或者 “作者 \/ 李霁琛”

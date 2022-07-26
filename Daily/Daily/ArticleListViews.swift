@@ -14,22 +14,24 @@ class ArticleTopListCell: UICollectionViewCell {
     let titleView = UILabel()
     let subtitleView = UILabel()
     
-    func configureContents(_ id: Int) {
+    func configureContents(with article: AbstractArticle) {
         imageView.image = UIImage(systemName: "square.and.arrow.down")
         imageView.frame = contentView.bounds
         imageView.contentMode = .scaleAspectFit
         
         contentView.addSubview(imageView)
         
-        titleView.text = "主标题\(id)"
-        titleView.font = .preferredFont(forTextStyle: .largeTitle)
+        titleView.text = article.title
+        titleView.font = UIFont(name: "LXGWWenKaiMono-Regular", size: 20)
         titleView.backgroundColor = .clear
-        titleView.textColor = .orange
+        titleView.numberOfLines = 0
+        titleView.lineBreakMode = .byCharWrapping
+        titleView.textColor = .black
         titleView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(titleView)
         
-        subtitleView.text = "副标题"
-        subtitleView.font = .preferredFont(forTextStyle: .subheadline)
+        subtitleView.text = article.hint
+        subtitleView.font = UIFont(name: "LXGWWenKaiMono-Regular", size: 15)
         subtitleView.backgroundColor = titleView.backgroundColor
         subtitleView.textColor = titleView.textColor
         subtitleView.translatesAutoresizingMaskIntoConstraints = false
@@ -42,12 +44,12 @@ class ArticleTopListCell: UICollectionViewCell {
             ),
             titleView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             titleView.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
-            titleView.heightAnchor.constraint(equalToConstant: contentView.bounds.width / 10),
+            titleView.heightAnchor.constraint(equalToConstant: 80),
             
             subtitleView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 10),
             subtitleView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor),
             subtitleView.widthAnchor.constraint(equalTo: titleView.widthAnchor, constant: -20),
-            subtitleView.heightAnchor.constraint(equalToConstant: contentView.bounds.width / 20),
+            subtitleView.heightAnchor.constraint(equalToConstant: 20),
         ]
         contentView.addConstraints(constraints)
         
@@ -121,7 +123,7 @@ class ArticleListHeaderView: UICollectionReusableView {
     func configureContents() {
         dateLabel.text = "日期"
         dateLabel.textColor = .darkGray
-        dateLabel.font = .preferredFont(forTextStyle: .title2)
+        dateLabel.font = .preferredFont(forTextStyle: .subheadline)
         addSubview(dateLabel)
         dateLabel.frame = bounds
     }

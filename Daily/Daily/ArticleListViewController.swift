@@ -10,27 +10,18 @@ import UIKit
 class ArticleListViewController: UIViewController {
 
     var collectionView: UICollectionView?
-    var dataSource: UICollectionViewDiffableDataSource<Int, Int>?
+    var dataSource: UICollectionViewDiffableDataSource<Int, AbstractArticle>?
     let pageControl = UIPageControl()
     var pageStack = [0]
+    var todayArticles: [AbstractArticle] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         title = "知乎日报"
+        fetchData()
         configureCollectionView()
         configureDataSource()
         configurePageControl()
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
-        snapshot.appendSections([0, 1, 2, 3])
-        snapshot.appendItems([1, 2, 3, 4, 5], toSection: 0)
-        snapshot.appendItems([6 ,7], toSection: 1)
-        snapshot.appendItems([11 ,12 ,13, 14, 15], toSection: 2)
-        snapshot.appendItems([8 ,9 ,10, 18, 19], toSection: 3)
-        guard let dataSource = dataSource else {
-            return
-        }
-        dataSource.apply(snapshot)
     }
 
 }
@@ -123,6 +114,8 @@ extension ArticleListViewController {
         view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
+        collectionView.bouncesZoom = true
+        collectionView.bounces = true
         let constraints = [
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -144,7 +137,7 @@ extension ArticleListViewController {
                         withReuseIdentifier: ArticleTopListCell.reuseIdentifier,
                         for: indexPath
                     ) as? ArticleTopListCell else { fatalError() }
-                    cell.configureContents(indexPath.item)
+                    cell.configureContents(with: itemIdentifier)
                     return cell
                     
                 } else { // Bottom
@@ -191,5 +184,20 @@ extension ArticleListViewController: UICollectionViewDelegate {
         }
         guard let page = pageStack.last else { return }
         pageControl.currentPage = page
+    }
+}
+
+
+/// Fetching Data
+extension ArticleListViewController {
+    private func fetchData() {
+        Task.init() {
+            todayArticles = await ArticleManager.shared.getTodaysAbstractArticles()
+            var snapshot = NSDiffableDataSourceSnapshot<Int, AbstractArticle>()
+            snapshot.appendSections([0])
+            snapshot.appendItems(todayArticles, toSection: 0)
+            guard let dataSource = dataSource else { return }
+            dataSource.apply(snapshot)
+        }
     }
 }

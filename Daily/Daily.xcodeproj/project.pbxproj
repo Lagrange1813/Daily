@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31B7DA97288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31B7DA96288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf */; };
 		31D17FCA288F901000318DD3 /* ArticleListViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D17FC9288F901000318DD3 /* ArticleListViews.swift */; };
 		7A49CA0F288ECBB700411D49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA0E288ECBB700411D49 /* AppDelegate.swift */; };
 		7A49CA11288ECBB700411D49 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA10288ECBB700411D49 /* SceneDelegate.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		31B7DA96288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiMono-Regular.ttf"; sourceTree = "<group>"; };
 		31D17FC9288F901000318DD3 /* ArticleListViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListViews.swift; sourceTree = "<group>"; };
 		7A49CA0B288ECBB700411D49 /* Daily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Daily.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A49CA0E288ECBB700411D49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				7A49CA2B288EF64400411D49 /* ArticleService.swift */,
 				7A838F69288F971C00837DB7 /* ArticleManager.swift */,
 				7A838F6B288FA16A00837DB7 /* Extension.swift */,
+				31B7DA96288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf */,
 			);
 			path = Daily;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31B7DA97288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf in Resources */,
 				7A49CA1E288ECBBB00411D49 /* LaunchScreen.storyboard in Resources */,
 				7A49CA1B288ECBBB00411D49 /* Assets.xcassets in Resources */,
 			);
