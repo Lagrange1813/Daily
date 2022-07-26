@@ -48,7 +48,7 @@ class ArticleManager {
 				let article = AbstractArticle(
 					title: articleJson["title"].stringValue,
 					hint: articleJson["hint"].stringValue,
-					image: await getImage(url: articleJson["images"].array?.first?.stringValue ?? ""),
+					image: await getImage(url: articleJson["image"].stringValue),
 					id: articleJson["id"].stringValue,
 					charColor: UIColor(hexString: convertColorString(articleJson["image_hue"].stringValue))
 				)
