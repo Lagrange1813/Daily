@@ -6,7 +6,6 @@
 //
 
 import Alamofire
-import Foundation
 import SwiftyJSON
 
 private enum URLList {
@@ -14,26 +13,14 @@ private enum URLList {
 }
 
 class ArticleService {
-	func getTodaysJSON() async -> JSON {
-		async let result = AF.request(URLList.today).serializingData().result
-		switch await result {
-		case .success(let data):
-			return JSON(data)
-		case .failure(let error):
-			print(error)
+	func getTodaysJSON(handler: ((JSON) -> Void)?) {
+		AF.request(URLList.today).response { response in
+			do {
+				let data = try response.result.get()
+				handler?(JSON(data as Any))
+			} catch {
+				print(error)
+			}
 		}
-		return JSON()
-	}
-
-	func getImage(url: String) async -> Data {
-		async let test = AF.request(url).serializingData().result
-		switch await test {
-		case .success(let data):
-			return data
-		case .failure(let failure):
-			print("yes")
-			print(failure)
-		}
-		return Data()
 	}
 }
