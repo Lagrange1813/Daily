@@ -11,6 +11,7 @@ import SwiftyJSON
 
 private enum URLList {
 	static let today = "http://news-at.zhihu.com/api/4/news/latest"
+	static let article = "https://news-at.zhihu.com/api/4/news/"
 }
 
 class ArticleService {
@@ -26,13 +27,25 @@ class ArticleService {
 	}
 	
 	func getImage(url: String) async -> Data {
-		async let test = AF.request(url).serializingData().result
-		switch await test {
+		async let result = AF.request(url).serializingData().result
+		switch await result {
 		case .success(let data):
 			return data
 		case .failure(let failure):
 			print(failure)
 		}
 		return Data()
+	}
+	
+	func getArticle(by id: String) async -> JSON {
+		let url = URLList.article + id
+		async let result = AF.request(url).serializingData().result
+		switch await result {
+		case .success(let data):
+			return JSON(data)
+		case .failure(let error):
+			print(error)
+		}
+		return JSON()
 	}
 }

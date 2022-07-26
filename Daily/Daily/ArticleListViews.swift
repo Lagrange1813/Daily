@@ -14,7 +14,7 @@ class ArticleTopListCell: UICollectionViewCell {
     let titleView = UILabel()
     let subtitleView = UILabel()
     
-    func configureContents(with article: AbstractArticle) {
+    func configureContents(with article: ArticleAbstract) {
         imageView.image = article.image
         imageView.frame = contentView.bounds
         imageView.contentMode = .scaleAspectFill
@@ -72,7 +72,7 @@ class ArticleBottomListCell: UICollectionViewCell {
     let subtitleView = UILabel()
     let imageView = UIImageView()
     
-    func configureContents(with article: AbstractArticle) {
+    func configureContents(with article: ArticleAbstract) {
         titleView.text = article.title
         titleView.numberOfLines = 0
         titleView.textColor = .black

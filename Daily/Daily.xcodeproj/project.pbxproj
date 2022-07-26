@@ -76,6 +76,7 @@
 		7A49CA0D288ECBB700411D49 /* Daily */ = {
 			isa = PBXGroup;
 			children = (
+				7A838F7228901FAA00837DB7 /* Resources */,
 				7A49CA0E288ECBB700411D49 /* AppDelegate.swift */,
 				7A49CA10288ECBB700411D49 /* SceneDelegate.swift */,
 				7A49CA12288ECBB700411D49 /* ViewController.swift */,
@@ -88,10 +89,17 @@
 				7A49CA2B288EF64400411D49 /* ArticleService.swift */,
 				7A838F69288F971C00837DB7 /* ArticleManager.swift */,
 				7A838F6B288FA16A00837DB7 /* Extension.swift */,
+			);
+			path = Daily;
+			sourceTree = "<group>";
+		};
+		7A838F7228901FAA00837DB7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
 				31B7DA96288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf */,
 				31B7DA98288FFFAE00E9EAFB /* LXGWWenKai-Bold.ttf */,
 			);
-			path = Daily;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

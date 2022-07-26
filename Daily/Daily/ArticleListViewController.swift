@@ -10,12 +10,12 @@ import UIKit
 class ArticleListViewController: UIViewController {
 
     var collectionView: UICollectionView?
-    var dataSource: UICollectionViewDiffableDataSource<Int, AbstractArticle>?
+    var dataSource: UICollectionViewDiffableDataSource<Int, ArticleAbstract>?
     let pageControl = UIPageControl()
     var pageStack = [0]
     var sectionCnt = 0
-    var todayArticles: [AbstractArticle] = []
-    var topArticles: [AbstractArticle] = []
+    var todayArticles: [ArticleAbstract] = []
+    var topArticles: [ArticleAbstract] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -196,10 +196,10 @@ extension ArticleListViewController {
     private func fetchData() {
         guard let dataSource = dataSource else { return }
         
-        dataSource.apply(NSDiffableDataSourceSnapshot<Int, AbstractArticle>())
+        dataSource.apply(NSDiffableDataSourceSnapshot<Int, ArticleAbstract>())
         sectionCnt = 0
         Task.init() { // Fetch Top Articles
-            topArticles = await ArticleManager.shared.getTopArticles()
+            topArticles = await ArticleManager.shared.getTopArticleAbstracts()
             var snapshot = dataSource.snapshot()
             snapshot.appendSections([sectionCnt])
             snapshot.appendItems(topArticles, toSection: sectionCnt)
@@ -208,7 +208,7 @@ extension ArticleListViewController {
             pageControl.numberOfPages = topArticles.count
             
             Task.init() { // Fetch Today Articles
-                todayArticles = await ArticleManager.shared.getTodaysAbstractArticles()
+                todayArticles = await ArticleManager.shared.getTodaysArticleAbstracts()
                 var snapshot = dataSource.snapshot()
                 snapshot.appendSections([sectionCnt])
                 snapshot.appendItems(todayArticles, toSection: sectionCnt)
