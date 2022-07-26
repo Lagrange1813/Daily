@@ -52,12 +52,8 @@ class ArticleTopListCell: UICollectionViewCell {
         contentView.addConstraints(constraints)
         
         layer.cornerRadius = 10
-//        contentView.layer.shadowRadius = 10
-//        contentView.layer.shadowOpacity = 1
-        layer.shadowRadius = 10
-        layer.shadowOpacity = 1
         layer.borderWidth = 1
-        layer.borderColor = UIColor.black.cgColor
+
     }
     
     override func layoutSubviews() {
@@ -68,11 +64,52 @@ class ArticleTopListCell: UICollectionViewCell {
 
 class ArticleBottomListCell: UICollectionViewCell {
     static let reuseIdentifier = "article-bottom-list-cell"
-    let textView = UITextView()
+    let titleView = UILabel()
+    let subtitleView = UILabel()
+    let imageView = UIImageView()
+    
+    func configureContents() {
+        titleView.text = "文章标题1231231231231231231312312312399999999"
+        titleView.numberOfLines = 0
+        titleView.textColor = .black
+        titleView.lineBreakMode = .byCharWrapping
+        titleView.font = .preferredFont(forTextStyle: .title3)
+        titleView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(titleView)
+        
+        subtitleView.text = "footnote"
+        subtitleView.textColor = .systemGray
+        subtitleView.font = .preferredFont(forTextStyle: .footnote)
+        subtitleView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(subtitleView)
+        
+        imageView.image = UIImage(systemName: "square.and.arrow.down")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(imageView)
+        
+        let constraints = [
+            titleView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+//            titleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+            titleView.heightAnchor.constraint(equalToConstant: 60),
+            titleView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
+            titleView.widthAnchor.constraint(equalToConstant: contentView.bounds.width * 3.8 / 5.0),
+            
+            subtitleView.topAnchor.constraint(equalTo: titleView.bottomAnchor),
+            subtitleView.heightAnchor.constraint(equalToConstant: 22),
+            subtitleView.leadingAnchor.constraint(equalTo: titleView.leadingAnchor),
+            subtitleView.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
+            
+            imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: contentView.bounds.width / 5.0),
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+        ]
+        contentView.addConstraints(constraints)
+        
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.addSubview(textView)
-        textView.frame = contentView.bounds
     }
 }

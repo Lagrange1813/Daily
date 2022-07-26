@@ -19,9 +19,10 @@ class ArticleListViewController: UIViewController {
         configureDataSource()
         
         var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
-        snapshot.appendSections([0, 1])
+        snapshot.appendSections([0, 1, 2])
         snapshot.appendItems([1, 2, 3, 4, 5], toSection: 0)
         snapshot.appendItems([6 ,7 ,8, 9, 10], toSection: 1)
+        snapshot.appendItems([11 ,12 ,13, 14, 15], toSection: 1)
         guard let dataSource = dataSource else {
             return
         }
@@ -37,20 +38,21 @@ extension ArticleListViewController {
     private func configureCollectionView() {
         // Create Layout using Section Provider
         let layout = UICollectionViewCompositionalLayout() { sectionIndex, environment in
-            // Top Section
-            if sectionIndex == 0 {
+            if sectionIndex == 0 { // Top Section
+
                 
                 let topItem = NSCollectionLayoutItem(
                     layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(0.8),
-                        heightDimension: .fractionalWidth(0.8)
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .fractionalWidth(1)
                     )
                 )
-                
+                topItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
                 let topGroup = NSCollectionLayoutGroup.horizontal(
                     layoutSize: NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
-                        heightDimension: .fractionalHeight(0.4)),
+                        heightDimension: .fractionalWidth(1)
+                    ),
                     subitem: topItem,
                     count: 1
                 )
@@ -59,19 +61,19 @@ extension ArticleListViewController {
                 topSection.orthogonalScrollingBehavior = .paging
                 
                 return topSection
-            } else { //
+            } else { // Bottom Section
                 
                 let listItem = NSCollectionLayoutItem(
                     layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(0.8),
+                        widthDimension: .fractionalWidth(1),
                         heightDimension: .fractionalHeight(0.2)
                     )
                 )
-                
+                listItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0)
                 let listGroup = NSCollectionLayoutGroup.vertical(
                     layoutSize: NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
-                        heightDimension: .fractionalHeight(1)
+                        heightDimension: .fractionalHeight(0.8)
                     ),
                     subitem: listItem,
                     count: 5
@@ -99,7 +101,7 @@ extension ArticleListViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ]
         view.addConstraints(constraints)
-    }
+    } // Configure CollectionView End
     
     private func configureDataSource() {
         guard let collectionView = collectionView else { return }
@@ -122,7 +124,7 @@ extension ArticleListViewController {
                         withReuseIdentifier: ArticleBottomListCell.reuseIdentifier,
                         for: indexPath
                     ) as? ArticleBottomListCell else { fatalError() }
-                    cell.textView.text = "\(indexPath)"
+                    cell.configureContents()
                     return cell
                     
                 }
