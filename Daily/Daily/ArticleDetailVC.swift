@@ -5,11 +5,9 @@
 //  Created by Zjt on 2022/7/26.
 //
 
-import Alamofire
-import SwiftUI
-import SwiftyJSON
 import UIKit
 import WebKit
+
 enum Direction: Int {
 	case last = 0
 	case now = 1
@@ -17,29 +15,27 @@ enum Direction: Int {
 }
 
 class ArticleDetailViewController: UIViewController {
-	let url = "http://news-at.zhihu.com/api/4/news/9751055"
-	var lastId = 0
-	var nowId = 1
-	var NextId = 2
-	var nowOffset = 2
+	private let url = "http://news-at.zhihu.com/api/4/news/9751055"
+    private var lastId = "0"
+    var nowId = "1"
+    private var NextId = "2"
+    private var nowOffset = 2
     
-	// var webView: WKWebView?
-	var toolBar: UIToolbar?
-	let ScreenBounds = UIScreen.main.bounds
-	var scrollView: UIScrollView?
-	var webViews: [WKWebView] = []
-	override func viewDidLoad() {
+    private var article:Article?
+    private var toolBar: UIToolbar?
+    private var scrollView: UIScrollView?
+    private var webViews: [WKWebView] = []
+    private let ScreenBounds = UIScreen.main.bounds
+    
+    override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationController?.navigationBar.isHidden = true
 		view.backgroundColor = .white
 		setUpView()
 		setUpButton()
-		AF.request(url).response { response in
-			debugPrint(response)
-		}
 	}
     
-	func setUpView() {
+    private func setUpView() {
 		scrollView = UIScrollView(frame: CGRect(x: 0.0, y: 0.0, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70))
 		scrollView?.contentSize = CGSize(width: ScreenBounds.maxX*5, height: 0)
 		scrollView?.contentOffset.x = ScreenBounds.maxX*2
@@ -50,28 +46,41 @@ class ArticleDetailViewController: UIViewController {
 			view.addSubview(scrollView)
 		}
 		for i in 0 ... 4 {
-			let webView = WKWebView(frame: CGRect(x: ScreenBounds.maxX*CGFloat(i-1), y: 0.0, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70))
+            let jScript = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
+                    let wkUScript = WKUserScript(source: jScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+                    let wkUController = WKUserContentController()
+                    wkUController.addUserScript(wkUScript)
+                    let wkWebConfig = WKWebViewConfiguration()
+                    wkWebConfig.userContentController = wkUController
+            let  webView = WKWebView(frame: CGRect(x: ScreenBounds.maxX*CGFloat(i-1), y: 0.0, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70),configuration: wkWebConfig)
+               
 			// webView.loadHTMLString("<html><body><p>Hello\(i)!</p></body></html>", baseURL: nil)
 			scrollView?.addSubview(webView)
 			webViews.append(webView)
 		}
-		nowId = 0
+		//nowId = "0"
 		_ = ConfigWebView(webView: webViews[1], direction: .now)
-		nowId = 2
-		_ = ConfigWebView(webView: webViews[3], direction: .now)
-		nowId = 1
+		nowId = "2"
+		//_ = ConfigWebView(webView: webViews[3], direction: .now)
+		nowId = "1"
 		_ = ConfigWebView(webView: webViews[2], direction: .now)
 	}
 
-	func ConfigWebView(webView: WKWebView, direction: Direction) -> Int {
-		webView.loadHTMLString("<html><body><p>Hello!\(nowId)</p></body></html>", baseURL: nil)
+    private func ConfigWebView(webView: WKWebView, direction: Direction) -> String {
+        Task {
+            article = await ArticleManager.shared.getArticle(by: "9751055")
+            guard let article = article else { return }
+            //print(article.body)
+            webView.loadHTMLString(article.body, baseURL: nil)
+        }
+		//webView.loadHTMLString("<html><body><p>Hello!\(nowId)</p></body></html>", baseURL: nil)
 		if direction == .next {
-			return nowId + 1
+			return nowId
 		}
-		return nowId-1
+		return nowId
 	}
     
-	func setUpButton() {
+    private func setUpButton() {
 		toolBar = UIToolbar(frame: CGRect(x: 0.0, y: ScreenBounds.maxY-70, width: ScreenBounds.maxX, height: 49))
 		guard let toolBar = toolBar else { return }
 		view.addSubview(toolBar)
@@ -82,7 +91,7 @@ class ArticleDetailViewController: UIViewController {
 		toolBar.setItems([returnButton, flexibleSpace, flexibleSpace, flexibleSpace], animated: true)
 	}
 
-	@objc func clickReturn() {
+    @objc func clickReturn() {
 		// navigationController?.toolbar.barTintColor = .white
 		// navigationController?.toolbar.tintColor = .black
 		navigationController?.popViewController(animated: true)
@@ -108,7 +117,7 @@ class ArticleDetailViewController: UIViewController {
 }
 
 extension ArticleDetailViewController: UIScrollViewDelegate {
-	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		print(scrollView.contentOffset.x)
 		let offset = scrollView.contentOffset.x
 		switch offset {
@@ -153,7 +162,6 @@ extension ArticleDetailViewController: UIScrollViewDelegate {
 			nowId = NextId
 			lastId = ConfigWebView(webView: webViews[1], direction: .last)
 			NextId = ConfigWebView(webView: webViews[3], direction: .next)
-            
 		default:
 			return
 		}
