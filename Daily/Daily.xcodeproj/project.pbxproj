@@ -65,6 +65,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A122AA128912480005B6FD7 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				7474090F2890212D00DEAF7F /* ArticleDetailVC.swift */,
+				7AF36BDE2891153900F3EFFA /* ArticleDetailView.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		7A122AA2289124A1005B6FD7 /* List */ = {
+			isa = PBXGroup;
+			children = (
+				7A838F70288FDA9700837DB7 /* ArticleListVC.swift */,
+				31D17FC9288F901000318DD3 /* ArticleListViews.swift */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
+		7A122AA3289124CB005B6FD7 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				7A49CA2B288EF64400411D49 /* ArticleService.swift */,
+				7A838F69288F971C00837DB7 /* ArticleManager.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		7A49CA02288ECBB700411D49 = {
 			isa = PBXGroup;
 			children = (
@@ -85,19 +112,15 @@
 			isa = PBXGroup;
 			children = (
 				7A838F7228901FAA00837DB7 /* Resources */,
-				7A49CA0E288ECBB700411D49 /* AppDelegate.swift */,
+				7A122AA128912480005B6FD7 /* Detail */,
+				7A122AA2289124A1005B6FD7 /* List */,
+				7A122AA3289124CB005B6FD7 /* Network */,
 				7A49CA10288ECBB700411D49 /* SceneDelegate.swift */,
+				7A49CA0E288ECBB700411D49 /* AppDelegate.swift */,
 				7A49CA12288ECBB700411D49 /* ViewController.swift */,
-				31D17FC9288F901000318DD3 /* ArticleListViews.swift */,
-				7A838F70288FDA9700837DB7 /* ArticleListVC.swift */,
-				7474090F2890212D00DEAF7F /* ArticleDetailVC.swift */,
-				7AF36BDE2891153900F3EFFA /* ArticleDetailView.swift */,
 				7A49CA1A288ECBBB00411D49 /* Assets.xcassets */,
 				7A49CA1C288ECBBB00411D49 /* LaunchScreen.storyboard */,
 				7A49CA1F288ECBBB00411D49 /* Info.plist */,
-				7A49CA17288ECBB700411D49 /* Daily.xcdatamodeld */,
-				7A49CA2B288EF64400411D49 /* ArticleService.swift */,
-				7A838F69288F971C00837DB7 /* ArticleManager.swift */,
 				7A838F6B288FA16A00837DB7 /* Extension.swift */,
 				7AF36BDC2891083100F3EFFA /* Constants.swift */,
 			);
@@ -107,6 +130,7 @@
 		7A838F7228901FAA00837DB7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7A49CA17288ECBB700411D49 /* Daily.xcdatamodeld */,
 				31B7DA96288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf */,
 				31B7DA98288FFFAE00E9EAFB /* LXGWWenKai-Bold.ttf */,
 			);

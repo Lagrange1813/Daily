@@ -5,8 +5,8 @@
 //  Created by Zjt on 2022/7/26.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 import WebKit
 
 enum Direction: Int {
@@ -16,6 +16,7 @@ enum Direction: Int {
 }
 
 class ArticleDetailViewController: UIViewController {
+	private let url = "http://news-at.zhihu.com/api/4/news/9751055"
 	private var lastId = "0"
 	var nowId = "9751055"
 	private var NextId = "2"
@@ -32,16 +33,16 @@ class ArticleDetailViewController: UIViewController {
 		navigationController?.navigationBar.isHidden = true
 //		navigationController?.navigationBar.isTranslucent = true
 		view.backgroundColor = .white
-		
+
 		configureToolbar()
 		configureWebView()
 	}
-	
+
 	private func configureToolbar() {
 		toolBar = UIToolbar()
-		
+
 		guard let toolBar = toolBar else { return }
-		
+
 		view.addSubview(toolBar)
 		toolBar.snp.makeConstraints { make in
 			make.leading.equalToSuperview()
@@ -49,19 +50,18 @@ class ArticleDetailViewController: UIViewController {
 			make.trailing.equalToSuperview()
 			make.height.equalTo(Constants.bottomInset + 50)
 		}
-		
+
 		toolBar.backgroundColor = UIColor(hexString: "#F6F6F6")
-		
+
 		let button = UIButton()
 		button.addTarget(self, action: #selector(clickReturn), for: .touchUpInside)
-		
+
 		let origin = UIImage(systemName: "return")?.withTintColor(.black, renderingMode: .alwaysOriginal)
 		let highlight = origin?.withTintColor(.systemGray, renderingMode: .alwaysOriginal)
-		
+
 		button.setImage(origin, for: .normal)
 		button.setImage(highlight, for: .highlighted)
-        button.addTarget(self, action: #selector(clickReturn), for: .touchUpInside)
-		
+
 		toolBar.addSubview(button)
 		button.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(10)
@@ -73,7 +73,7 @@ class ArticleDetailViewController: UIViewController {
 
 	private func configureWebView() {
 		guard let toolBar = toolBar else { return }
-		
+
 		let detail = ArticleDetailView()
 		view.addSubview(detail)
 		detail.snp.makeConstraints { make in
@@ -82,7 +82,7 @@ class ArticleDetailViewController: UIViewController {
 			make.bottom.equalTo(toolBar.snp.top)
 			make.trailing.equalToSuperview()
 		}
-		
+
 		configWebView(webView: detail, direction: .now)
 	}
 
@@ -110,12 +110,21 @@ class ArticleDetailViewController: UIViewController {
 				webView.setContent(title: article.title, image: article.image, html: html)
 			}
 		}
+		Task {
+			article = await ArticleManager.shared.getArticle(by: "9751055")
+			guard let article = article else { return }
+			let html = concatHTML(css: article.css, body: article.body)
+			webView.setContent(title: article.title, image: article.image, html: html)
+		}
 	}
 
 	@objc func clickReturn() {
+		// navigationController?.toolbar.barTintColor = .white
+		// navigationController?.toolbar.tintColor = .black
 		navigationController?.popViewController(animated: true)
 	}
 
+	// 若body存在 拼接body与css后加载
 	private func concatHTML(css: [String], body: String) -> String {
 		var html = "<html>"
 		html += "<head>"
@@ -125,7 +134,9 @@ class ArticleDetailViewController: UIViewController {
 		html += "<body>"
 		html += body
 		html += "</body>"
+
 		html += "</html>"
+
 		return html
 	}
 }

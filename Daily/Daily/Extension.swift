@@ -26,6 +26,15 @@ extension UIColor {
 		}
 		self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
 	}
+    
+    convenience init(_ color: UIColor, withNewAlpha newAlpha: Float) {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        color.getRed(&r, green: &g, blue: &b, alpha: &a)
+        self.init(red: r, green: g, blue: b, alpha: CGFloat(newAlpha))
+    }
 }
 
 extension Date {
@@ -38,6 +47,15 @@ extension UIView {
     func removeAllSubviews() {
         self.subviews.forEach() { subview in
             subview.removeFromSuperview()
+        }
+    }
+}
+
+extension CALayer {
+    func removeAllSubLayers() {
+        guard let sublayers = self.sublayers else { return }
+        sublayers.forEach() { sublayer in
+            sublayer.removeFromSuperlayer()
         }
     }
 }
