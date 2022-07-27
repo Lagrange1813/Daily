@@ -17,7 +17,7 @@ enum Direction: Int {
 class ArticleDetailViewController: UIViewController {
 	private let url = "http://news-at.zhihu.com/api/4/news/9751055"
     private var lastId = "0"
-    var nowId = "1"
+    var nowId = "9751055"
     private var NextId = "2"
     private var nowOffset = 2
     private var article:Article?
@@ -27,15 +27,10 @@ class ArticleDetailViewController: UIViewController {
     private var webViews: [MyWebView] = []
     private let ScreenBounds = UIScreen.main.bounds
     
-//    override var prefersStatusBarHidden: Bool {
-//            return true
-//        }
-    
     override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationController?.navigationBar.isHidden = true
 		view.backgroundColor = .white
-       // UIApplication.shared.isStatusBarHidden = true
         //setUpView()
 		setUpButton()
         test()
@@ -44,7 +39,7 @@ class ArticleDetailViewController: UIViewController {
         let  webView = MyWebView(frame: CGRect(x: 0, y: -17, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70))
         ConfigWebView(webView: webView, direction: .now)
         view.addSubview(webView)
-        
+
     }
     
     private func setUpView() {
@@ -62,15 +57,40 @@ class ArticleDetailViewController: UIViewController {
             scrollView?.addSubview(webView)
 			webViews.append(webView)
 		}
-		//nowId = "0"
-		//_ = ConfigWebView(webView: webViews[1], direction: .now)
-		//nowId = "2"
-		//_ = ConfigWebView(webView: webViews[3], direction: .now)
-		//nowId = "1"
-		//_ = ConfigWebView(webView: webViews[2], direction: .now)
+        ConfigWebView(webView: webViews[2], direction: .now)
+        print(nowId)
+		//ConfigWebView(webView: webViews[1], direction: .next)
+		//NextId = ArticleManager.shared.getCurrentID() ?? nowId
+        //print(NextId)
+		//ConfigWebView(webView: webViews[3], direction: .last)
+		//lastId = ArticleManager.shared.getCurrentID() ?? nowId
+        //print(lastId)
 	}
 
     private func ConfigWebView(webView: MyWebView, direction: Direction) {
+        switch direction {
+        case .last:
+            Task {
+                article = await ArticleManager.shared.lastArticle(of: nowId)
+                guard let article = article else { return }
+                let html = concatHTML(css: article.css, body: article.body)
+                webView.ConfigView(title: article.title, image: article.image, html: html)
+            }
+        case .now:
+            Task {
+                article = await ArticleManager.shared.getArticle(by: nowId)
+                guard let article = article else { return }
+                let html = concatHTML(css: article.css, body: article.body)
+                webView.ConfigView(title: article.title, image: article.image, html: html)
+            }
+        case .next:
+            Task {
+                try article = await ArticleManager.shared.nextArticle(of: nowId)
+                guard let article = article else { return }
+                let html = concatHTML(css: article.css, body: article.body)
+                webView.ConfigView(title: article.title, image: article.image, html: html)
+            }
+        }
         Task {
             article = await ArticleManager.shared.getArticle(by: "9751055")
             guard let article = article else { return }
@@ -122,43 +142,58 @@ extension ArticleDetailViewController: UIScrollViewDelegate {
             
 			nowOffset = 2
 			scrollView.contentOffset.x = ScreenBounds.maxX*2
-			nowId = lastId
-			lastId = ConfigWebView(webView: webViews[1], direction: .last)
-			NextId = ConfigWebView(webView: webViews[3], direction: .next)
+			nowId = NextId
+            ConfigWebView(webView: webViews[3], direction: .last)
+            lastId = ArticleManager.shared.getCurrentID() ?? nowId
+            ConfigWebView(webView: webViews[1], direction: .next)
+            NextId = ArticleManager.shared.getCurrentID() ?? nowId
             
 		case ScreenBounds.maxX:
 			if nowOffset == 1 { return }
-			nowOffset = 1
-			NextId = nowId
-			nowId = lastId
-			lastId = ConfigWebView(webView: webViews[0], direction: .last)
-			_ = ConfigWebView(webView: webViews[3], direction: .last)
+            else if nowOffset == 2{
+                nowOffset = 1
+                lastId = nowId
+                nowId = NextId
+                ConfigWebView(webView: webViews[0], direction: .next)
+                NextId = ArticleManager.shared.getCurrentID() ?? nowId
+                ConfigWebView(webView: webViews[3], direction: .next)
+            } else {
+                NextId = nowId
+                nowId = lastId
+                ConfigWebView(webView: webViews[2], direction: .last)
+                lastId = ArticleManager.shared.getCurrentID() ?? nowId
+            }
 		case ScreenBounds.maxX*2:
 			if nowOffset == 2 { return }
 			else if nowOffset == 1 {
 				nowOffset = 2
-				lastId = nowId
+				NextId = nowId
 				nowId = NextId
-				NextId = ConfigWebView(webView: webViews[3], direction: .next)
+                ConfigWebView(webView: webViews[3], direction: .last)
+                lastId = nowId
 			} else {
 				nowOffset = 2
-				NextId = nowId
-				nowId = lastId
-				lastId = ConfigWebView(webView: webViews[1], direction: .last)
+				lastId = nowId
+				nowId = NextId
+				ConfigWebView(webView: webViews[1], direction: .next)
+                NextId = ArticleManager.shared.getCurrentID() ?? nowId
 			}
 		case ScreenBounds.maxX*3:
 			if nowOffset == 3 { return }
 			nowOffset = 3
-			lastId = nowId
-			nowId = NextId
-			lastId = ConfigWebView(webView: webViews[4], direction: .next)
-			_ = ConfigWebView(webView: webViews[1], direction: .next)
+			NextId = nowId
+			nowId = lastId
+			ConfigWebView(webView: webViews[4], direction: .last)
+            lastId = ArticleManager.shared.getCurrentID() ?? nowId
+			ConfigWebView(webView: webViews[1], direction: .last)
 		case 4*ScreenBounds.maxX:
 			nowOffset = 2
 			scrollView.contentOffset.x = ScreenBounds.maxX*2
-			nowId = NextId
-			lastId = ConfigWebView(webView: webViews[1], direction: .last)
-			NextId = ConfigWebView(webView: webViews[3], direction: .next)
+			nowId = lastId
+			ConfigWebView(webView: webViews[3], direction: .last)
+            lastId = ArticleManager.shared.getCurrentID() ?? nowId
+			ConfigWebView(webView: webViews[1], direction: .next)
+            NextId = ArticleManager.shared.getCurrentID() ?? nowId
 		default:
 			return
 		}
