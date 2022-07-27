@@ -24,15 +24,14 @@ class MyWebView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     func viewInit() {
-        
         let (x,y,width,height) = (frame.minX,frame.minY,frame.width,frame.height)
         imageView = UIImageView(frame: CGRect(x: x, y: y, width: width, height: imageHeigh))
         let jScript = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
-                let wkUScript = WKUserScript(source: jScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
-                let wkUController = WKUserContentController()
-                wkUController.addUserScript(wkUScript)
-                let wkWebConfig = WKWebViewConfiguration()
-                wkWebConfig.userContentController = wkUController
+        let wkUScript = WKUserScript(source: jScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        let wkUController = WKUserContentController()
+        wkUController.addUserScript(wkUScript)
+        let wkWebConfig = WKWebViewConfiguration()
+        wkWebConfig.userContentController = wkUController
         webView = WKWebView(frame: frame,configuration: wkWebConfig)
         
         titleLabel = UILabel()
