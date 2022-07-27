@@ -40,6 +40,7 @@ class MyWebView: UIView {
         
         addSubview(webView)
         webView.scrollView.addSubview(imageView)
+        webView.scrollView.delegate = self
         imageView.addSubview(titleLabel)
         
         imageView.contentMode = .scaleAspectFill
@@ -67,3 +68,11 @@ class MyWebView: UIView {
     }
 
 }
+extension MyWebView: UIScrollViewDelegate {
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        print(scrollView.contentOffset.y)
+        //if scrollView.contentOffset.y
+    }
+    
+}
+

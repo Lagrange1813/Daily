@@ -31,9 +31,9 @@ class ArticleDetailViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
-        setUpView()
+        //setUpView()
         setUpButton()
-        // test()
+        test()
     }
     
     func test() {
@@ -44,7 +44,7 @@ class ArticleDetailViewController: UIViewController {
     
     private func setUpView() {
         scrollView = UIScrollView(frame: CGRect(x: 0.0, y: 0.0, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70))
-        scrollView?.contentSize = CGSize(width: ScreenBounds.maxX*5, height: ScreenBounds.maxY-70)
+        scrollView?.contentSize = CGSize(width: ScreenBounds.maxX*5, height: 0)
         scrollView?.contentOffset.x = ScreenBounds.maxX*2
         scrollView?.delegate = self
         // scrollView?.showsHorizontalScrollIndicator = false
@@ -188,5 +188,11 @@ extension ArticleDetailViewController: UIScrollViewDelegate {
         default:
             return
         }
+    }
+}
+extension UIScrollView: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        print("true")
+        return true
     }
 }
