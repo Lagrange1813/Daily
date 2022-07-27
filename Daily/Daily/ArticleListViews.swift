@@ -7,14 +7,18 @@
 
 import UIKit
 
-class ArticleTopListCell: UICollectionViewCell {
+class ArticleListCell: UICollectionViewCell {
+    let imageView = UIImageView()
+    let titleView = UILabel()
+    let subtitleView = UILabel()
+    var articleId = ""
+}
+
+class ArticleTopListCell: ArticleListCell {
 	static let reuseIdentifier = "article-top-list-cell"
     
-	let imageView = UIImageView()
-	let titleView = UILabel()
-	let subtitleView = UILabel()
-    
 	func configureContents(with article: ArticleAbstract) {
+        articleId = article.id
 		imageView.image = article.image
 		imageView.frame = contentView.bounds
 		imageView.contentMode = .scaleAspectFill
@@ -55,8 +59,6 @@ class ArticleTopListCell: UICollectionViewCell {
 		layer.shadowColor = article.charColor.cgColor
 		layer.shadowRadius = 100
 		layer.shadowOpacity = 1
-		//        layer.cornerRadius = 10
-		//        layer.borderWidth = 1
 	}
     
 	override func layoutSubviews() {
@@ -64,13 +66,12 @@ class ArticleTopListCell: UICollectionViewCell {
 	}
 }
 
-class ArticleBottomListCell: UICollectionViewCell {
+class ArticleBottomListCell: ArticleListCell {
 	static let reuseIdentifier = "article-bottom-list-cell"
-	let titleView = UILabel()
-	let subtitleView = UILabel()
-	let imageView = UIImageView()
     
 	func configureContents(with article: ArticleAbstract) {
+        articleId = article.id
+        
 		titleView.text = article.title
 		titleView.numberOfLines = 0
 		titleView.textColor = .black
