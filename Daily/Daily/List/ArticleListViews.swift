@@ -68,6 +68,7 @@ class ArticleTopListCell: ArticleListCell {
         let gradientColors = [
             UIColor(article.charColor, withNewAlpha: 0).cgColor,
             UIColor(article.charColor, withNewAlpha: 1).cgColor,
+            UIColor(article.charColor, withNewAlpha: 1).cgColor,
         ]
         gradientLayer.colors = gradientColors
         imageView.layer.removeAllSubLayers()

@@ -28,13 +28,15 @@ class ArticleListViewController: UIViewController {
         configureNetworkMonitor()
 	}
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
+        setTitle()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        title = ""
         navigationController?.navigationBar.isHidden = true
     }
 }
@@ -267,6 +269,17 @@ extension ArticleListViewController {
     
     private func fetchDate() {
         dates = [""]
+        title = "知乎日报"
+        Task.init() { // Fetch Date
+            let yyyymmdd = await ArticleManager.shared.getTodaysDate()
+            let todayMmdd = String(yyyymmdd.dropFirst(4))
+            let mm = todayMmdd.dropLast(2)
+            let dd = todayMmdd.dropFirst(2)
+            title = "知乎日报 \(mm) \(dd)"
+        }
+    }
+    
+    private func setTitle() {
         title = "知乎日报"
         Task.init() { // Fetch Date
             let yyyymmdd = await ArticleManager.shared.getTodaysDate()
