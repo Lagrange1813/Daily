@@ -16,7 +16,6 @@ enum Direction: Int {
 }
 
 class ArticleDetailViewController: UIViewController {
-	private let url = "http://news-at.zhihu.com/api/4/news/9751055"
 	private var lastId = "0"
 	var nowId = "9751055"
 	private var NextId = "2"
@@ -61,6 +60,7 @@ class ArticleDetailViewController: UIViewController {
 		
 		button.setImage(origin, for: .normal)
 		button.setImage(highlight, for: .highlighted)
+        button.addTarget(self, action: #selector(clickReturn), for: .touchUpInside)
 		
 		toolBar.addSubview(button)
 		button.snp.makeConstraints { make in
@@ -110,23 +110,12 @@ class ArticleDetailViewController: UIViewController {
 				webView.setContent(title: article.title, image: article.image, html: html)
 			}
 		}
-		Task {
-			article = await ArticleManager.shared.getArticle(by: "9751055")
-			guard let article = article else { return }
-			let html = concatHTML(css: article.css, body: article.body)
-			webView.setContent(title: article.title, image: article.image, html: html)
-		}
 	}
 
-	
-
 	@objc func clickReturn() {
-		// navigationController?.toolbar.barTintColor = .white
-		// navigationController?.toolbar.tintColor = .black
 		navigationController?.popViewController(animated: true)
 	}
 
-	// 若body存在 拼接body与css后加载
 	private func concatHTML(css: [String], body: String) -> String {
 		var html = "<html>"
 		html += "<head>"
@@ -136,9 +125,7 @@ class ArticleDetailViewController: UIViewController {
 		html += "<body>"
 		html += body
 		html += "</body>"
-
 		html += "</html>"
-
 		return html
 	}
 }
