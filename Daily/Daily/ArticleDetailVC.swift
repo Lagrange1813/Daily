@@ -20,20 +20,32 @@ class ArticleDetailViewController: UIViewController {
     var nowId = "1"
     private var NextId = "2"
     private var nowOffset = 2
-    
     private var article:Article?
     private var toolBar: UIToolbar?
     private var scrollView: UIScrollView?
-    private var webViews: [WKWebView] = []
+    private var topImageViews: [UIImageView] = []
+    private var webViews: [MyWebView] = []
     private let ScreenBounds = UIScreen.main.bounds
+    
+    override var prefersStatusBarHidden: Bool {
+            return true
+        }
     
     override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationController?.navigationBar.isHidden = true
 		view.backgroundColor = .white
-		setUpView()
+        UIApplication.shared.isStatusBarHidden = true
+        //setUpView()
 		setUpButton()
+        test()
 	}
+    func test(){
+        let  webView = MyWebView(frame: CGRect(x: 0, y: -17, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70))
+        ConfigWebView(webView: webView, direction: .now)
+        view.addSubview(webView)
+        
+    }
     
     private func setUpView() {
 		scrollView = UIScrollView(frame: CGRect(x: 0.0, y: 0.0, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70))
@@ -53,25 +65,30 @@ class ArticleDetailViewController: UIViewController {
                     let wkWebConfig = WKWebViewConfiguration()
                     wkWebConfig.userContentController = wkUController
             let  webView = WKWebView(frame: CGRect(x: ScreenBounds.maxX*CGFloat(i-1), y: 0.0, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70),configuration: wkWebConfig)
-               
+            let imageView = UIImageView(frame: CGRect(x: ScreenBounds.maxX*CGFloat(i-1), y: 0.0, width: ScreenBounds.maxX, height: 150))
+            imageView.backgroundColor = .red
 			// webView.loadHTMLString("<html><body><p>Hello\(i)!</p></body></html>", baseURL: nil)
 			scrollView?.addSubview(webView)
-			webViews.append(webView)
+            webView.scrollView.addSubview(imageView)
+            //webView.scrollView.contentInset
+			//webViews.append(webView)
 		}
 		//nowId = "0"
-		_ = ConfigWebView(webView: webViews[1], direction: .now)
-		nowId = "2"
+		//_ = ConfigWebView(webView: webViews[1], direction: .now)
+		//nowId = "2"
 		//_ = ConfigWebView(webView: webViews[3], direction: .now)
-		nowId = "1"
-		_ = ConfigWebView(webView: webViews[2], direction: .now)
+		//nowId = "1"
+		//_ = ConfigWebView(webView: webViews[2], direction: .now)
 	}
 
-    private func ConfigWebView(webView: WKWebView, direction: Direction) -> String {
+    private func ConfigWebView(webView: MyWebView, direction: Direction) -> String {
         Task {
             article = await ArticleManager.shared.getArticle(by: "9751055")
             guard let article = article else { return }
             //print(article.body)
-            webView.loadHTMLString(article.body, baseURL: nil)
+            print(article.css)
+            let html = concatHTML(css: article.css, body: article.body)
+            webView.ConfigView(title: article.title, image: article.image, html: html)
         }
 		//webView.loadHTMLString("<html><body><p>Hello!\(nowId)</p></body></html>", baseURL: nil)
 		if direction == .next {
@@ -97,23 +114,21 @@ class ArticleDetailViewController: UIViewController {
 		navigationController?.popViewController(animated: true)
 	}
                 
-	//                //若body存在 拼接body与css后加载
-	//    private func concatHTML(css: [String], body: String) -> String {
-	//        var html = "<html>"
-//
-	//        html += "<head>"
-	//        css.forEach { html += "<link rel=\"stylesheet\" href=\($0)>" }
-	//        html += "<style>img{max-width:320px !important;}</style>"
-	//        html += "</head>"
-//
-	//        html += "<body>"
-	//        html += body
-	//        html += "</body>"
-//
-	//        html += "</html>"
-//
-	//        return html
-	//           }
+	                //若body存在 拼接body与css后加载
+	    private func concatHTML(css: [String], body: String) -> String {
+	        var html = "<html>"
+	        html += "<head>"
+	        css.forEach { html += "<link rel=\"stylesheet\" href=\($0)>" }
+	        html += "<style>img{max-width:320px !important;}</style>"
+	        html += "</head>"
+	        html += "<body>"
+	        html += body
+	        html += "</body>"
+
+	        html += "</html>"
+
+	        return html
+	           }
 }
 
 extension ArticleDetailViewController: UIScrollViewDelegate {
