@@ -28,7 +28,8 @@ class ArticleService {
 	}
 	
 	func getPastJSON(before date: String) async -> JSON {
-		async let result = AF.request(URLList.today).serializingData().result
+		let url = URLList.before + date
+		async let result = AF.request(url).serializingData().result
 		switch await result {
 		case .success(let data):
 			return JSON(data)

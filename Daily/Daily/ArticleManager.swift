@@ -143,7 +143,7 @@ extension ArticleManager {
 
 	public func lastArticle(by id: String) async -> Article? {
 		guard let index = idList.firstIndex(of: id),
-		      index >= 0 else { return nil }
+		      index > 0 else { return nil }
 		return await getArticle(by: idList[index - 1])
 	}
 
@@ -168,6 +168,7 @@ extension ArticleManager {
 			for articleJson in articleArray {
 				idList.append(articleJson["id"].stringValue)
 			}
+			currentDate = json["date"].stringValue
 		} else if let currentDate = currentDate {
 			let json = await service.getPastJSON(before: currentDate)
 			guard let articleArray = json["stories"].array else { throw fetchBeforeDataError.cantFetch }
