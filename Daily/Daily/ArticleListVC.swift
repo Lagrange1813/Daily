@@ -9,16 +9,15 @@ import UIKit
 
 class ArticleListViewController: UIViewController {
 	var collectionView: UICollectionView?
-	var dataSource: UICollectionViewDiffableDataSource<Int, ArticleAbstract>?
+	var dataSource: UICollectionViewDiffableDataSource<String, ArticleAbstract>?
 	let pageControl = UIPageControl()
 	var pageStack = [0]
-	var sectionCnt = 0
+    var todayMmdd = ""
 	var todayArticles: [ArticleAbstract] = []
 	var topArticles: [ArticleAbstract] = []
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
-		title = "知乎日报"
 		configureCollectionView()
 		configureDataSource()
 		fetchData()
@@ -27,6 +26,7 @@ class ArticleListViewController: UIViewController {
 }
 
 extension ArticleListViewController {
+    
 	private func configurePageControl() {
 		pageControl.currentPage = 0
 		pageControl.numberOfPages = 5
@@ -120,8 +120,11 @@ extension ArticleListViewController {
 		view.addConstraints(constraints)
 	} // Configure CollectionView End
     
+    // Configure DataSource
 	private func configureDataSource() {
 		guard let collectionView = collectionView else { return }
+        
+        // Cell Provider
 		dataSource = UICollectionViewDiffableDataSource(
 			collectionView: collectionView,
 			cellProvider: { _, indexPath, itemIdentifier in
@@ -143,7 +146,8 @@ extension ArticleListViewController {
 					return cell
 				}
 			}
-		)
+		) // Cell Provider End
+        
 		// Header Provider
 		dataSource?.supplementaryViewProvider = { collectionView, _, indexPath in
 			guard let header = collectionView.dequeueReusableSupplementaryView(
@@ -151,9 +155,10 @@ extension ArticleListViewController {
 				withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
 				for: indexPath
 			) as? ArticleListHeaderView else { fatalError() }
-			header.configureContents()
+            header.configureContents(with: self.todayMmdd)
 			return header
 		} // Header Provider End
+        
 	} // Configure DataSource End
 }
 
@@ -179,6 +184,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
 	}
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
         let detailVC = ArticleDetailViewController()
         navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -189,25 +195,29 @@ extension ArticleListViewController {
 	private func fetchData() {
 		guard let dataSource = dataSource else { return }
         
-		dataSource.apply(NSDiffableDataSourceSnapshot<Int, ArticleAbstract>())
-		sectionCnt = 0
+        Task.init() { // Fetch Date
+            let yyyymmdd = await ArticleManager.shared.getTodaysDate()
+            todayMmdd = String(yyyymmdd.dropFirst(4))
+            let mm = todayMmdd.dropLast(2)
+            let dd = todayMmdd.dropFirst(2)
+            title = "知乎日报 \(mm) \(dd)"
+        }
+        
+		dataSource.apply(NSDiffableDataSourceSnapshot<String, ArticleAbstract>())
 		Task { // Fetch Top Articles
 			topArticles = await ArticleManager.shared.getTopArticleAbstracts()
 			var snapshot = dataSource.snapshot()
-			snapshot.appendSections([sectionCnt])
-			snapshot.appendItems(topArticles, toSection: sectionCnt)
-			sectionCnt += 1
+			snapshot.appendSections(["top"])
+			snapshot.appendItems(topArticles, toSection: "top")
 			dataSource.apply(snapshot, animatingDifferences: true)
 			pageControl.numberOfPages = topArticles.count
             
 			Task { // Fetch Today Articles
 				todayArticles = await ArticleManager.shared.getTodaysArticleAbstracts()
 				var snapshot = dataSource.snapshot()
-				snapshot.appendSections([sectionCnt])
-				snapshot.appendItems(todayArticles, toSection: sectionCnt)
-				sectionCnt += 1
+				snapshot.appendSections([todayMmdd])
+				snapshot.appendItems(todayArticles, toSection: todayMmdd)
 				dataSource.apply(snapshot)
-				print("apply")
 			} // Fetch Today Articles End
 		} // Fetch Top Articles End
 	}
