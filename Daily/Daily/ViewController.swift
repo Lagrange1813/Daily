@@ -16,8 +16,8 @@ class ViewController: UIViewController {
 			await ArticleManager.shared.getTodaysDate()
 			let test = await ArticleManager.shared.getTodaysArticleAbstracts()
 			do {
-				var article = try await ArticleManager.shared.nextArticle(by: "9751080")
-				article = try await ArticleManager.shared.nextArticle(by: "9751045")
+				var article = try await ArticleManager.shared.nextArticle(of: "9751080")
+				article = try await ArticleManager.shared.nextArticle(of: "9751045")
 				print(article)
 			} catch {
 				print(error)
