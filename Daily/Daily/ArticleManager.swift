@@ -85,6 +85,7 @@ extension ArticleManager {
 					charColor: UIColor(hexString: convertColorString(articleJson["image_hue"].stringValue))
 				)
 				articles.append(article)
+				idList.append(articleJson["id"].stringValue)
 			}
 		}
 		return articles
@@ -92,13 +93,22 @@ extension ArticleManager {
 }
 
 extension ArticleManager {
-	public func getTopArticleAbstracts(at date: String) async -> [ArticleAbstract] {
+	public func getArticleAbstracts(before date: String) async -> [ArticleAbstract] {
+		async let json = service.getPastJSON(before: date)
 		var articles: [ArticleAbstract] = []
-		return articles
-	}
 
-	public func getArticleAbstracts(at date: String) async -> [ArticleAbstract] {
-		var articles: [ArticleAbstract] = []
+		if let articleArray = await json["stories"].array {
+			for articleJson in articleArray {
+				let article = ArticleAbstract(
+					title: articleJson["title"].stringValue,
+					hint: articleJson["hint"].stringValue,
+					image: await getImage(url: articleJson["images"].array?.first?.stringValue ?? ""),
+					id: articleJson["id"].stringValue,
+					charColor: UIColor(hexString: convertColorString(articleJson["image_hue"].stringValue))
+				)
+				articles.append(article)
+			}
+		}
 		return articles
 	}
 }
@@ -107,6 +117,15 @@ extension ArticleManager {
 	public func setManagerMode(_ mode: ArticleListType) {
 		self.mode = mode
 	}
+}
+
+enum NextArticleError: Error {
+	case notInside
+	case outOfNumber
+}
+
+enum fetchBeforeDataError: Error {
+	case cantFetch
 }
 
 extension ArticleManager {
@@ -122,11 +141,44 @@ extension ArticleManager {
 		)
 	}
 
-	public func lastArticle(by id: String) {}
+	public func lastArticle(by id: String) async -> Article? {
+		guard let index = idList.firstIndex(of: id),
+		      index > 0 else { return nil }
+		return await getArticle(by: idList[index - 1])
+	}
 
-	public func nextArticle(by id: String) {}
+	public func nextArticle(by id: String) async throws -> Article? {
+		guard let index = idList.firstIndex(of: id) else { throw NextArticleError.notInside }
+		if index == idList.count - 1 {
+			do {
+				try await fetchNextDatesAbstract()
+			} catch fetchBeforeDataError.cantFetch {
+				try await fetchNextDatesAbstract()
+			}
+		}
+		guard index < idList.count else { throw NextArticleError.outOfNumber }
+		return await getArticle(by: idList[(index) + 1])
+	}
 
-	public func fetchNextDate() {}
+	public func fetchNextDatesAbstract() async throws {
+		guard let today = today else { fatalError("Should Have!") }
+		if currentDate == nil {
+			let json = await service.getPastJSON(before: today)
+			guard let articleArray = json["stories"].array else { throw fetchBeforeDataError.cantFetch }
+			for articleJson in articleArray {
+				idList.append(articleJson["id"].stringValue)
+			}
+			currentDate = json["date"].stringValue
+		} else if let currentDate = currentDate {
+			let json = await service.getPastJSON(before: currentDate)
+			guard let articleArray = json["stories"].array else { throw fetchBeforeDataError.cantFetch }
+			for articleJson in articleArray {
+				idList.append(articleJson["id"].stringValue)
+			}
+		} else {
+			fatalError("Should't Be Here!")
+		}
+	}
 }
 
 struct ArticleAbstract: Hashable {

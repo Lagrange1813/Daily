@@ -157,6 +157,7 @@ extension ArticleListViewController {
 	} // Configure DataSource End
 }
 
+/// Collection View Delegate
 extension ArticleListViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		guard indexPath.section == 0 else { return }
@@ -176,6 +177,11 @@ extension ArticleListViewController: UICollectionViewDelegate {
 		guard let page = pageStack.last else { return }
 		pageControl.currentPage = page
 	}
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let detailVC = ArticleDetailViewController()
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
 }
 
 /// Fetching Data
