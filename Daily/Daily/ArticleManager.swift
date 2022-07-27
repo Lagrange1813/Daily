@@ -117,17 +117,16 @@ extension ArticleManager {
 			title: json["title"].stringValue,
 			body: json["body"].stringValue,
 			image: await getImage(url: json["image"].stringValue),
-			link: json["url"].stringValue
+			link: json["url"].stringValue,
+			css: json["css"].arrayValue.map { $0.stringValue }
 		)
 	}
 
 	public func lastArticle(by id: String) {}
 
 	public func nextArticle(by id: String) {}
-	
-	public func fetchNextDate() {
-		
-	}
+
+	public func fetchNextDate() {}
 }
 
 struct ArticleAbstract: Hashable {
@@ -147,4 +146,5 @@ struct Article {
 	let body: String
 	let image: UIImage
 	let link: String
+	let css: [String]
 }
