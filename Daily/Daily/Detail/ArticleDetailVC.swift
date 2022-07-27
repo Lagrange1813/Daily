@@ -31,7 +31,6 @@ class ArticleDetailViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationController?.navigationBar.isHidden = true
-//		navigationController?.navigationBar.isTranslucent = true
 		view.backgroundColor = .white
 
 		configureToolbar()
@@ -126,18 +125,23 @@ class ArticleDetailViewController: UIViewController {
 
 	// 若body存在 拼接body与css后加载
 	private func concatHTML(css: [String], body: String) -> String {
-		var html = "<html>"
-		html += "<head>"
-		css.forEach { html += "<link rel=\"stylesheet\" href=\($0)>" }
-		html += "<style>img{max-width:320px !important;}</style>"
-		html += "</head>"
-		html += "<body>"
-		html += body
-		html += "</body>"
-
-		html += "</html>"
-
-		return html
+		var htmlString =
+"""
+<html>
+<head>
+"""
+		css.forEach { htmlString += "<link rel=\"stylesheet\" href=\($0)>" }
+		htmlString +=
+"""
+  <style>
+  </style>
+</head>
+<body>
+\(body)
+</body>
+</html>
+"""
+		return htmlString
 	}
 }
 

@@ -21,6 +21,7 @@ class ArticleDetailView: WKWebView {
 		let config = WKWebViewConfiguration()
 		config.userContentController = controller
 		super.init(frame: .zero, configuration: config)
+		navigationDelegate = self
 		configureView()
 	}
 	
@@ -69,5 +70,11 @@ class ArticleDetailView: WKWebView {
 		imageView?.image = image
 		titleLabel?.text = title
 		loadHTMLString(html, baseURL: nil)
+	}
+}
+
+extension ArticleDetailView: WKNavigationDelegate {
+	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+		webView.evaluateJavaScript("document.body.style.fontFamily = \"-apple-system\"")
 	}
 }
