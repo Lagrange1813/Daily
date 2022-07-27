@@ -56,9 +56,23 @@ class ArticleTopListCell: ArticleListCell {
 			subtitleView.heightAnchor.constraint(equalToConstant: 20),
 		]
 		contentView.addConstraints(constraints)
-		layer.shadowColor = article.charColor.cgColor
-		layer.shadowRadius = 100
-		layer.shadowOpacity = 1
+        
+        // Gradient Layer
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(
+            x: 0,
+            y: imageView.frame.height / 3.0 * 2,
+            width: imageView.frame.width,
+            height: imageView.frame.height / 3.0
+        )
+        let gradientColors = [
+            UIColor(article.charColor, withNewAlpha: 0).cgColor,
+            UIColor(article.charColor, withNewAlpha: 1).cgColor,
+            UIColor(article.charColor, withNewAlpha: 1).cgColor,
+        ]
+        gradientLayer.colors = gradientColors
+        imageView.layer.removeAllSubLayers()
+        imageView.layer.addSublayer(gradientLayer)
 	}
     
 	override func layoutSubviews() {

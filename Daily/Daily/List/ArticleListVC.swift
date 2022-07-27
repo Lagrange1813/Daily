@@ -20,12 +20,25 @@ class ArticleListViewController: UIViewController {
     var lastNetworkStatus = NWPath.Status.unsatisfied
 	var todayArticles: [ArticleAbstract] = []
 	var topArticles: [ArticleAbstract] = []
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
         view.backgroundColor = .white
         configureNetworkMonitor()
 	}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
+        setTitle()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        title = ""
+        navigationController?.navigationBar.isHidden = true
+    }
 }
 
 extension ArticleListViewController {
@@ -246,7 +259,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
         let detailVC = ArticleDetailViewController()
-        print(article)
+        detailVC.nowId = article.id
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
@@ -256,6 +269,17 @@ extension ArticleListViewController {
     
     private func fetchDate() {
         dates = [""]
+        title = "知乎日报"
+        Task.init() { // Fetch Date
+            let yyyymmdd = await ArticleManager.shared.getTodaysDate()
+            let todayMmdd = String(yyyymmdd.dropFirst(4))
+            let mm = todayMmdd.dropLast(2)
+            let dd = todayMmdd.dropFirst(2)
+            title = "知乎日报 \(mm) \(dd)"
+        }
+    }
+    
+    private func setTitle() {
         title = "知乎日报"
         Task.init() { // Fetch Date
             let yyyymmdd = await ArticleManager.shared.getTodaysDate()
