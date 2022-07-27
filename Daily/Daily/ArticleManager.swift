@@ -141,13 +141,13 @@ extension ArticleManager {
 		)
 	}
 
-	public func lastArticle(by id: String) async -> Article? {
+	public func lastArticle(of id: String) async -> Article? {
 		guard let index = idList.firstIndex(of: id),
 		      index > 0 else { return nil }
 		return await getArticle(by: idList[index - 1])
 	}
 
-	public func nextArticle(by id: String) async throws -> Article? {
+	public func nextArticle(of id: String) async throws -> Article? {
 		guard let index = idList.firstIndex(of: id) else { throw NextArticleError.notInside }
 		if index == idList.count - 1 {
 			do {
