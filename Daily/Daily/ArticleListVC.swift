@@ -156,11 +156,11 @@ extension ArticleListViewController {
 				withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
 				for: indexPath
 			) as? ArticleListHeaderView else { fatalError() }
-            if indexPath.section == 1 {
-                header.configureContents(with: "")
-            } else {
+//            if indexPath.section == 1 {
+//                header.configureContents(with: "")
+//            } else {
                 header.configureContents(with: self.earliestDate)
-            }
+//            }
 			return header
 		} // Header Provider End
         
