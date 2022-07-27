@@ -246,7 +246,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
         let detailVC = ArticleDetailViewController()
-        print(article)
+        detailVC.nowId = article.id
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
