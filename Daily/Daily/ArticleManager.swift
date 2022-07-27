@@ -28,6 +28,8 @@ class ArticleManager {
 	private var idList: [String] = []
 	private var currentDate: String?
 
+	private var currentID: String?
+	
 	private var mode: ArticleListType = .date
 
 	fileprivate init() {}
@@ -129,8 +131,13 @@ enum fetchBeforeDataError: Error {
 }
 
 extension ArticleManager {
+	public func getCurrentID() -> String? {
+		return self.currentID
+	}
+	
 	public func getArticle(by id: String) async -> Article {
 		async let json = service.getArticle(by: id)
+		self.currentID = id
 
 		return await Article(
 			title: json["title"].stringValue,
@@ -141,13 +148,13 @@ extension ArticleManager {
 		)
 	}
 
-	public func lastArticle(by id: String) async -> Article? {
+	public func lastArticle(of id: String) async -> Article? {
 		guard let index = idList.firstIndex(of: id),
 		      index > 0 else { return nil }
 		return await getArticle(by: idList[index - 1])
 	}
 
-	public func nextArticle(by id: String) async throws -> Article? {
+	public func nextArticle(of id: String) async throws -> Article? {
 		guard let index = idList.firstIndex(of: id) else { throw NextArticleError.notInside }
 		if index == idList.count - 1 {
 			do {
