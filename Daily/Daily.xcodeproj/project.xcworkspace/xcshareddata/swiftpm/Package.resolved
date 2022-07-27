@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "lookinserver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/QMUI/LookinServer/",
+      "state" : {
+        "revision" : "d88a8deecae0949583b5d36fe4a96c6588c91bda",
+        "version" : "1.0.6"
+      }
+    },
+    {
       "identity" : "snapkit",
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:SnapKit/SnapKit.git",
