@@ -120,8 +120,8 @@ class ArticleListHeaderView: UICollectionReusableView {
 	static let reuseIdentifier = "article-list-header-view"
 	let dateLabel = UILabel()
     
-	func configureContents() {
-		dateLabel.text = "日期"
+    func configureContents(with mmdd: String) {
+		dateLabel.text = mmdd
 		dateLabel.textColor = .darkGray
 		dateLabel.font = .preferredFont(forTextStyle: .subheadline)
 		addSubview(dateLabel)

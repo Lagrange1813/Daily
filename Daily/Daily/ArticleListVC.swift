@@ -9,16 +9,16 @@ import UIKit
 
 class ArticleListViewController: UIViewController {
 	var collectionView: UICollectionView?
-	var dataSource: UICollectionViewDiffableDataSource<Int, ArticleAbstract>?
+	var dataSource: UICollectionViewDiffableDataSource<String, ArticleAbstract>?
 	let pageControl = UIPageControl()
 	var pageStack = [0]
-	var sectionCnt = 0
+    var earliestDate = ""
 	var todayArticles: [ArticleAbstract] = []
 	var topArticles: [ArticleAbstract] = []
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
-		title = "知乎日报"
+        fetchDate()
 		configureCollectionView()
 		configureDataSource()
 		fetchData()
@@ -27,6 +27,7 @@ class ArticleListViewController: UIViewController {
 }
 
 extension ArticleListViewController {
+    
 	private func configurePageControl() {
 		pageControl.currentPage = 0
 		pageControl.numberOfPages = 5
@@ -120,8 +121,11 @@ extension ArticleListViewController {
 		view.addConstraints(constraints)
 	} // Configure CollectionView End
     
+    // Configure DataSource
 	private func configureDataSource() {
 		guard let collectionView = collectionView else { return }
+        
+        // Cell Provider
 		dataSource = UICollectionViewDiffableDataSource(
 			collectionView: collectionView,
 			cellProvider: { _, indexPath, itemIdentifier in
@@ -143,7 +147,8 @@ extension ArticleListViewController {
 					return cell
 				}
 			}
-		)
+		) // Cell Provider End
+        
 		// Header Provider
 		dataSource?.supplementaryViewProvider = { collectionView, _, indexPath in
 			guard let header = collectionView.dequeueReusableSupplementaryView(
@@ -151,15 +156,30 @@ extension ArticleListViewController {
 				withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
 				for: indexPath
 			) as? ArticleListHeaderView else { fatalError() }
-			header.configureContents()
+            if indexPath.section == 1 {
+                header.configureContents(with: "")
+            } else {
+                header.configureContents(with: self.earliestDate)
+            }
 			return header
 		} // Header Provider End
+        
 	} // Configure DataSource End
 }
 
 /// Collection View Delegate
 extension ArticleListViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        // Should Fetch New Data
+        guard let dataSource = dataSource else { return }
+        let sectionNum = dataSource.numberOfSections(in: collectionView)
+        let itemNumInLastSection = dataSource.collectionView(collectionView, numberOfItemsInSection: sectionNum - 1)
+        if indexPath.section == sectionNum - 1 && indexPath.item == itemNumInLastSection - 1 {
+            fetchNewData()
+        }
+        
+        
 		guard indexPath.section == 0 else { return }
 		pageStack.append(indexPath.item)
 		guard let last = pageStack.last else { return }
@@ -169,6 +189,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
 	}
     
 	func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
 		guard indexPath.section == 0 else { return }
 		guard let last = pageStack.last else { return }
 		if last == indexPath.item {
@@ -179,36 +200,73 @@ extension ArticleListViewController: UICollectionViewDelegate {
 	}
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
         let detailVC = ArticleDetailViewController()
+        print(article)
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
 /// Fetching Data
 extension ArticleListViewController {
+    
+    private func fetchDate() {
+        title = "知乎日报"
+        Task.init() { // Fetch Date
+            let yyyymmdd = await ArticleManager.shared.getTodaysDate()
+            let todayMmdd = String(yyyymmdd.dropFirst(4))
+            let mm = todayMmdd.dropLast(2)
+            let dd = todayMmdd.dropFirst(2)
+            title = "知乎日报 \(mm) \(dd)"
+        }
+    }
+    
 	private func fetchData() {
 		guard let dataSource = dataSource else { return }
         
-		dataSource.apply(NSDiffableDataSourceSnapshot<Int, ArticleAbstract>())
-		sectionCnt = 0
-		Task { // Fetch Top Articles
+        
+		dataSource.apply(NSDiffableDataSourceSnapshot<String, ArticleAbstract>())
+        Task.init() {
+            
+            // Fetch Top Articles
 			topArticles = await ArticleManager.shared.getTopArticleAbstracts()
 			var snapshot = dataSource.snapshot()
-			snapshot.appendSections([sectionCnt])
-			snapshot.appendItems(topArticles, toSection: sectionCnt)
-			sectionCnt += 1
+			snapshot.appendSections(["top"])
+			snapshot.appendItems(topArticles, toSection: "top")
 			dataSource.apply(snapshot, animatingDifferences: true)
 			pageControl.numberOfPages = topArticles.count
             
-			Task { // Fetch Today Articles
-				todayArticles = await ArticleManager.shared.getTodaysArticleAbstracts()
-				var snapshot = dataSource.snapshot()
-				snapshot.appendSections([sectionCnt])
-				snapshot.appendItems(todayArticles, toSection: sectionCnt)
-				sectionCnt += 1
-				dataSource.apply(snapshot)
-				print("apply")
-			} // Fetch Today Articles End
-		} // Fetch Top Articles End
+            earliestDate = await ArticleManager.shared.getTodaysDate()
+            
+			// Fetch Today Articles
+            todayArticles = await ArticleManager.shared.getTodaysArticleAbstracts()
+            snapshot = dataSource.snapshot()
+            snapshot.appendSections([earliestDate])
+            snapshot.appendItems(todayArticles, toSection: earliestDate)
+            dataSource.apply(snapshot)
+            
+            
+		}
 	}
+    
+    private func fetchNewData() {
+        print("Fetch New Data")
+        guard let dataSource = dataSource else { return }
+        Task.init() {
+            let newArticles = await ArticleManager.shared.getArticleAbstracts(before: earliestDate)
+            earliestDate = getDate(before: earliestDate)
+            var snapshot = dataSource.snapshot()
+            snapshot.appendSections([earliestDate])
+            snapshot.appendItems(newArticles, toSection: earliestDate)
+            dataSource.apply(snapshot, animatingDifferences: true)
+        }
+    }
+    
+    private func getDate(before now: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyymmdd"
+        guard var nowDate = dateFormatter.date(from: now) else { fatalError() }
+        nowDate = nowDate.dayBofre
+        return dateFormatter.string(from: nowDate)
+    }
 }
