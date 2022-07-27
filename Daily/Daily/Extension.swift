@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 extension UIColor {
 	convenience init(hexString: String) {
@@ -30,5 +31,13 @@ extension UIColor {
 extension Date {
     var dayBofre: Date {
         Calendar.current.date(byAdding: .day, value: -1, to: self) ?? Date.distantPast
+    }
+}
+
+extension UIView {
+    func removeAllSubviews() {
+        self.subviews.forEach() { subview in
+            subview.removeFromSuperview()
+        }
     }
 }

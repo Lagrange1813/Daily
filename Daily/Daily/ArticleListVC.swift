@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Network
 
 class ArticleListViewController: UIViewController {
 	var collectionView: UICollectionView?
@@ -14,19 +15,66 @@ class ArticleListViewController: UIViewController {
 	var pageStack = [0]
     var earliestDate = ""
     var dates = [""]
+    let reloadButton = UIButton()
+    let networkMonitor = NWPathMonitor()
+    var lastNetworkStatus = NWPath.Status.unsatisfied
 	var todayArticles: [ArticleAbstract] = []
 	var topArticles: [ArticleAbstract] = []
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
-		configureCollectionView()
-		configureDataSource()
-		fetchData()
-		configurePageControl()
+        view.backgroundColor = .white
+        configureNetworkMonitor()
 	}
 }
 
 extension ArticleListViewController {
+    
+    func configureNetworkMonitor() {
+        networkMonitor.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                print("have network")
+                if self.lastNetworkStatus == .satisfied {
+                    return
+                }
+                self.view.removeAllSubviews()
+                self.configureSubviews()
+//                self.networkMonitor.cancel()
+            } else {
+                print("no network")
+                self.view.removeAllSubviews()
+                self.configureReloadButton()
+            }
+            self.lastNetworkStatus = path.status
+        }
+        self.networkMonitor.start(queue: DispatchQueue.main)
+    }
+    
+    private func configureReloadButton() {
+        reloadButton.setTitle("无网络连接", for: .normal)
+//        reloadButton.setImage(
+//            UIImage(systemName: "antenna.radiowaves.left.and.right.slash")?.withTintColor(.white),
+//            for: .normal
+//        )
+        reloadButton.translatesAutoresizingMaskIntoConstraints = false
+        reloadButton.backgroundColor = .systemBlue
+        reloadButton.layer.cornerRadius = 10
+        view.addSubview(reloadButton)
+        let constraints = [
+            reloadButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            reloadButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            reloadButton.heightAnchor.constraint(equalToConstant: 44),
+            reloadButton.widthAnchor.constraint(equalToConstant: view.bounds.width - 80)
+        ]
+        view.addConstraints(constraints)
+    }
+    
+    private func configureSubviews() {
+        configureCollectionView()
+        configureDataSource()
+        fetchData()
+        configurePageControl()
+    }
     
 	private func configurePageControl() {
 		pageControl.currentPage = 0
