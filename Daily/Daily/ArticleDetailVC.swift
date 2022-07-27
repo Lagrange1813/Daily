@@ -27,15 +27,15 @@ class ArticleDetailViewController: UIViewController {
     private var webViews: [MyWebView] = []
     private let ScreenBounds = UIScreen.main.bounds
     
-    override var prefersStatusBarHidden: Bool {
-            return true
-        }
+//    override var prefersStatusBarHidden: Bool {
+//            return true
+//        }
     
     override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationController?.navigationBar.isHidden = true
 		view.backgroundColor = .white
-        UIApplication.shared.isStatusBarHidden = true
+       // UIApplication.shared.isStatusBarHidden = true
         //setUpView()
 		setUpButton()
         test()
@@ -58,20 +58,9 @@ class ArticleDetailViewController: UIViewController {
 			view.addSubview(scrollView)
 		}
 		for i in 0 ... 4 {
-            let jScript = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
-                    let wkUScript = WKUserScript(source: jScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
-                    let wkUController = WKUserContentController()
-                    wkUController.addUserScript(wkUScript)
-                    let wkWebConfig = WKWebViewConfiguration()
-                    wkWebConfig.userContentController = wkUController
-            let  webView = WKWebView(frame: CGRect(x: ScreenBounds.maxX*CGFloat(i-1), y: 0.0, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70),configuration: wkWebConfig)
-            let imageView = UIImageView(frame: CGRect(x: ScreenBounds.maxX*CGFloat(i-1), y: 0.0, width: ScreenBounds.maxX, height: 150))
-            imageView.backgroundColor = .red
-			// webView.loadHTMLString("<html><body><p>Hello\(i)!</p></body></html>", baseURL: nil)
-			scrollView?.addSubview(webView)
-            webView.scrollView.addSubview(imageView)
-            //webView.scrollView.contentInset
-			//webViews.append(webView)
+            let webView = MyWebView(frame: CGRect(x: ScreenBounds.maxX*CGFloat(i-1), y: -17, width: ScreenBounds.maxX, height: ScreenBounds.maxY-70))
+            scrollView?.addSubview(webView)
+			webViews.append(webView)
 		}
 		//nowId = "0"
 		//_ = ConfigWebView(webView: webViews[1], direction: .now)
@@ -81,20 +70,13 @@ class ArticleDetailViewController: UIViewController {
 		//_ = ConfigWebView(webView: webViews[2], direction: .now)
 	}
 
-    private func ConfigWebView(webView: MyWebView, direction: Direction) -> String {
+    private func ConfigWebView(webView: MyWebView, direction: Direction) {
         Task {
             article = await ArticleManager.shared.getArticle(by: "9751055")
             guard let article = article else { return }
-            //print(article.body)
-            print(article.css)
             let html = concatHTML(css: article.css, body: article.body)
             webView.ConfigView(title: article.title, image: article.image, html: html)
         }
-		//webView.loadHTMLString("<html><body><p>Hello!\(nowId)</p></body></html>", baseURL: nil)
-		if direction == .next {
-			return nowId
-		}
-		return nowId
 	}
     
     private func setUpButton() {
