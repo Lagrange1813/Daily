@@ -11,11 +11,23 @@ import SwiftyJSON
 
 private enum URLList {
 	static let today = "http://news-at.zhihu.com/api/4/news/latest"
+	static let before = "http://news.at.zhihu.com/api/4/news/before/"
 	static let article = "https://news-at.zhihu.com/api/4/news/"
 }
 
 class ArticleService {
 	func getTodaysJSON() async -> JSON {
+		async let result = AF.request(URLList.today).serializingData().result
+		switch await result {
+		case .success(let data):
+			return JSON(data)
+		case .failure(let error):
+			print(error)
+		}
+		return JSON()
+	}
+	
+	func getPastJSON(before date: String) async -> JSON {
 		async let result = AF.request(URLList.today).serializingData().result
 		switch await result {
 		case .success(let data):
