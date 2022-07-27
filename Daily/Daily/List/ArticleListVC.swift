@@ -20,12 +20,18 @@ class ArticleListViewController: UIViewController {
     var lastNetworkStatus = NWPath.Status.unsatisfied
 	var todayArticles: [ArticleAbstract] = []
 	var topArticles: [ArticleAbstract] = []
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
         view.backgroundColor = .white
         configureNetworkMonitor()
 	}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
+    }
 }
 
 extension ArticleListViewController {
