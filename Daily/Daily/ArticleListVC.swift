@@ -13,12 +13,12 @@ class ArticleListViewController: UIViewController {
 	let pageControl = UIPageControl()
 	var pageStack = [0]
     var earliestDate = ""
+    var dates = [""]
 	var todayArticles: [ArticleAbstract] = []
 	var topArticles: [ArticleAbstract] = []
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
-        fetchDate()
 		configureCollectionView()
 		configureDataSource()
 		fetchData()
@@ -156,11 +156,7 @@ extension ArticleListViewController {
 				withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
 				for: indexPath
 			) as? ArticleListHeaderView else { fatalError() }
-            if indexPath.section == 1 {
-                header.configureContents(with: "")
-            } else {
-                header.configureContents(with: self.earliestDate)
-            }
+            header.configureContents(with: self.dates[indexPath.section])
 			return header
 		} // Header Provider End
         
@@ -211,6 +207,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
 extension ArticleListViewController {
     
     private func fetchDate() {
+        dates = [""]
         title = "知乎日报"
         Task.init() { // Fetch Date
             let yyyymmdd = await ArticleManager.shared.getTodaysDate()
@@ -224,7 +221,7 @@ extension ArticleListViewController {
 	private func fetchData() {
 		guard let dataSource = dataSource else { return }
         
-        
+        fetchDate()
 		dataSource.apply(NSDiffableDataSourceSnapshot<String, ArticleAbstract>())
         Task.init() {
             
@@ -240,11 +237,11 @@ extension ArticleListViewController {
             
 			// Fetch Today Articles
             todayArticles = await ArticleManager.shared.getTodaysArticleAbstracts()
+            dates.append(earliestDate)
             snapshot = dataSource.snapshot()
             snapshot.appendSections([earliestDate])
             snapshot.appendItems(todayArticles, toSection: earliestDate)
             dataSource.apply(snapshot)
-            
             
 		}
 	}
@@ -255,6 +252,7 @@ extension ArticleListViewController {
         Task.init() {
             let newArticles = await ArticleManager.shared.getArticleAbstracts(before: earliestDate)
             earliestDate = getDate(before: earliestDate)
+            dates.append(earliestDate)
             var snapshot = dataSource.snapshot()
             snapshot.appendSections([earliestDate])
             snapshot.appendItems(newArticles, toSection: earliestDate)
