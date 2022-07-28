@@ -30,6 +30,7 @@ class ArticleDetailView: WKWebView {
 	}
 	
 	func configureView() {
+		scrollView.bounces = false
 		scrollView.contentInsetAdjustmentBehavior = .never
 		scrollView.automaticallyAdjustsScrollIndicatorInsets = false
 		scrollView.contentInset = UIEdgeInsets(top: 200, left: 0, bottom: 0, right: 0)

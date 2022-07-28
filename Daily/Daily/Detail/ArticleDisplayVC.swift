@@ -2,7 +2,7 @@
 //  ArticleDisplayVC.swift
 //  Daily
 //
-//  Created by 张维熙 on 2022/7/27.
+//  Created by Zjt on 2022/7/27.
 //
 
 import UIKit
@@ -17,6 +17,9 @@ class ArticleDisplayViewController: UIViewController {
 		ArticleDetailView(),
 		ArticleDetailView()
 	]
+	
+	private var isChanged: Bool = false
+	private var currentIndex: Int = 1
 
 //	init(id: String) {
 //		super.init(nibName: nil, bundle: nil)
@@ -34,7 +37,7 @@ class ArticleDisplayViewController: UIViewController {
 			
 			let webViewAtRight = webViewArray[2]
 			do {
-				if let article = try await ArticleManager.shared.nextArticle(of: "9751066") {
+				if let article = try await ArticleManager.shared.nextArticle(of: "9751095") {
 					let html = concatHTML(css: article.css, body: article.body)
 					webViewAtRight.setContent(title: article.title, image: article.image, html: html)
 				}
@@ -43,7 +46,7 @@ class ArticleDisplayViewController: UIViewController {
 			}
 			
 			let webViewAtLeft = webViewArray[0]
-			if let article = try await ArticleManager.shared.lastArticle(of: "9751066") {
+			if let article = try await ArticleManager.shared.lastArticle(of: "9751095") {
 				let html = concatHTML(css: article.css, body: article.body)
 				webViewAtLeft.setContent(title: article.title, image: article.image, html: html)
 			}
@@ -52,9 +55,9 @@ class ArticleDisplayViewController: UIViewController {
 		configureToolbar()
 		configureSwitchingView()
 
-		configureWebView(at: 0)
-		configureWebView(at: 1)
-		configureWebView(at: 2)
+		for (index, _) in webViewArray.enumerated() {
+			configureWebView(at: index)
+		}
 	}
 
 	private func configureToolbar() {
@@ -138,7 +141,7 @@ class ArticleDisplayViewController: UIViewController {
 //		guard let webView = webView else { return }
 		let webViewAtCenter = webViewArray[1]
 		Task {
-			let article = await ArticleManager.shared.getArticle(by: "9751066")
+			let article = await ArticleManager.shared.getArticle(by: "9751095")
 			let html = concatHTML(css: article.css, body: article.body)
 			webViewAtCenter.setContent(title: article.title, image: article.image, html: html)
 		}
@@ -171,17 +174,28 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 		switchingView.setContentOffset(CGPoint(x: Constants.width, y: 0), animated: false)
 	}
 
-	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		
-	}
-
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-		print("yes")
-//		setSwitchingViewContentOffset()
-		moveWebView()
+		guard let switchingView = switchingView else { return }
+		
+		let index = index(at: switchingView.contentOffset.x + Constants.width/2)
+		if index == currentIndex {
+			print("No")
+		} else if index < 1 {
+			print("Left")
+			moveToLeft()
+		} else if index > 1 {
+			print("Right")
+			moveToRight()
+		} else {
+			fatalError()
+		}
 	}
-
-	func moveWebView() {
+	
+	func index(at position: CGFloat) -> Int {
+		Int(position / Constants.width)
+	}
+	
+	func moveToRight() {
 		webViewArray[2].snp.updateConstraints { make in
 			make.leading.equalToSuperview().offset(Constants.width)
 		}
@@ -193,14 +207,30 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 			make.leading.equalToSuperview().offset(Constants.width * CGFloat(2))
 		}
 		view.layoutIfNeeded()
-		resetPointing()
-	}
-
-	func resetPointing() {
+		
 		let temp = webViewArray[0]
 		webViewArray[0] = webViewArray[1]
 		webViewArray[1] = webViewArray[2]
 		webViewArray[2] = temp
+	}
+
+	func moveToLeft() {
+		webViewArray[0].snp.updateConstraints { make in
+			make.leading.equalToSuperview().offset(Constants.width)
+		}
+		setSwitchingViewContentOffset()
+		webViewArray[1].snp.updateConstraints { make in
+			make.leading.equalToSuperview().offset(Constants.width * CGFloat(2))
+		}
+		webViewArray[2].snp.updateConstraints { make in
+			make.leading.equalToSuperview()
+		}
+		view.layoutIfNeeded()
+		
+		let temp = webViewArray[2]
+		webViewArray[2] = webViewArray[1]
+		webViewArray[1] = webViewArray[0]
+		webViewArray[0] = temp
 	}
 }
 
