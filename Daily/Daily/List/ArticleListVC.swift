@@ -19,6 +19,13 @@ class ArticleListViewController: UIViewController {
         didSet {
             //Todo after select date
             print(seletedDate)
+            earliestDate = seletedDate
+            dates = [""]
+            var snapshot = NSDiffableDataSourceSnapshot<String, ArticleAbstract>()
+            snapshot.appendSections(["top"])
+            snapshot.appendItems(topArticles, toSection: "top")
+            dataSource?.apply(snapshot)
+            fetchNewData(setDate: false)
         }
     }
     let reloadButton = UIButton()
@@ -36,7 +43,6 @@ class ArticleListViewController: UIViewController {
 		// Do any additional setup after loading the view.
         view.backgroundColor = .white
         configureNetworkMonitor()
-        configuredatePicker()
 	}
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,10 +59,11 @@ class ArticleListViewController: UIViewController {
 }
 
 extension ArticleListViewController {
-    func configuredatePicker() {
+    func configureDatePicker() {
         datePicker.date = Date()
         datePicker.locale = .current
         datePicker.datePickerMode = .date
+        datePicker.maximumDate = Date()
         datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
         if #available(iOS 13.4, *) {
             datePicker.preferredDatePickerStyle = .compact
@@ -71,7 +78,8 @@ extension ArticleListViewController {
     }
     @objc func datePickerValueChanged() {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyymmdd"
+        dateFormatter.dateFormat = "yyyyMMdd"
+        print(datePicker.date)
         seletedDate = dateFormatter.string(from: datePicker.date)
         
     }
@@ -122,6 +130,7 @@ extension ArticleListViewController {
         configureDataSource()
         fetchData()
         configurePageControl()
+        configureDatePicker()
     }
     
     private func configureTopIndicator() {
@@ -331,7 +340,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
         guard let dataSource = dataSource else { return }
         
         if dataSource.isIndexPath(indexPath, lastOf: collectionView){
-            fetchNewData()
+            fetchNewData(setDate: true)
         }
         
 		guard indexPath.section == 0 else { return }
@@ -418,7 +427,7 @@ extension ArticleListViewController {
 		}
 	}
     
-    private func fetchNewData() {
+    private func fetchNewData(setDate: Bool) {
         print("Fetch New Data")
         guard let dataSource = dataSource else { return }
         guard let collectionView = collectionView else { return }
@@ -426,7 +435,9 @@ extension ArticleListViewController {
             
             bottomActivityIndicator.startAnimating()
             let newArticles = await ArticleManager.shared.getArticleAbstracts(before: earliestDate)
-            earliestDate = getDate(before: earliestDate)
+            if setDate {
+                earliestDate = getDate(before: earliestDate)
+            }
             dates.append(earliestDate)
             guard let footer = dataSource.collectionView(collectionView, viewForSupplementaryElementOfKind: AriticleListFooterView.reuseIdentifier,
                 at: dataSource.lastIndexPath(of: collectionView)) as? AriticleListFooterView else {
@@ -446,7 +457,7 @@ extension ArticleListViewController {
     
     private func getDate(before now: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyymmdd"
+        dateFormatter.dateFormat = "yyyyMMdd"
         guard var nowDate = dateFormatter.date(from: now) else { fatalError() }
         nowDate = nowDate.dayBofre
         return dateFormatter.string(from: nowDate)
