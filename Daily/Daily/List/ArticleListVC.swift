@@ -64,6 +64,10 @@ extension ArticleListViewController {
         datePicker.locale = .current
         datePicker.datePickerMode = .date
         datePicker.maximumDate = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        guard let minDate = dateFormatter.date(from: "20130520") else { fatalError() }
+        datePicker.minimumDate = minDate
         datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
         if #available(iOS 13.4, *) {
             datePicker.preferredDatePickerStyle = .compact
