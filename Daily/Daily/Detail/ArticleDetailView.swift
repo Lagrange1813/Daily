@@ -8,6 +8,7 @@
 import WebKit
 
 class ArticleDetailView: WKWebView {
+	public var willLoad = false
 	public var isLoaded = false
 	public var id: String = ""
 	
@@ -86,10 +87,10 @@ class ArticleDetailView: WKWebView {
 	}
 	
 	public func resetContent() {
+		id = ""
 		imageView?.image = UIImage()
 		titleLabel?.text = ""
 		loadHTMLString("", baseURL: nil)
-		id = ""
 		isLoaded = false
 	}
 }

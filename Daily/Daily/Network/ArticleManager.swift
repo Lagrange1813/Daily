@@ -136,6 +136,7 @@ extension ArticleManager {
 	}
 	
 	public func getArticle(by id: String) async -> Article {
+		print(idList)
 		async let json = service.getArticle(by: id)
 		self.currentID = id
 
