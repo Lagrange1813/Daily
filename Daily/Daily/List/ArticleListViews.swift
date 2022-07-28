@@ -142,3 +142,13 @@ class ArticleListHeaderView: UICollectionReusableView {
 		dateLabel.frame = bounds
 	}
 }
+
+class AriticleListFooterView: UICollectionReusableView {
+    static let reuseIdentifier = "article-list-footer-view"
+    
+    func configureContents(with activityIndicator: UIActivityIndicatorView) {
+        removeAllSubviews()
+        addSubview(activityIndicator)
+        activityIndicator.frame = bounds
+    }
+}

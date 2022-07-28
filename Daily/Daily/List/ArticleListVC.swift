@@ -20,6 +20,7 @@ class ArticleListViewController: UIViewController {
     var lastNetworkStatus = NWPath.Status.unsatisfied
 	var todayArticles: [ArticleAbstract] = []
 	var topArticles: [ArticleAbstract] = []
+    let activityIndicator = UIActivityIndicatorView(style: .medium)
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -142,6 +143,7 @@ extension ArticleListViewController {
                 
 				let listSection = NSCollectionLayoutSection(group: listGroup)
 				listSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
+                
 				let header = NSCollectionLayoutBoundarySupplementaryItem(
 					layoutSize: NSCollectionLayoutSize(
 						widthDimension: .fractionalWidth(1),
@@ -150,7 +152,17 @@ extension ArticleListViewController {
 					elementKind: ArticleListHeaderView.reuseIdentifier,
 					alignment: .top
 				)
-				listSection.boundarySupplementaryItems = [header]
+                
+                let footer = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .absolute(20)
+                    ),
+                    elementKind: AriticleListFooterView.reuseIdentifier,
+                    alignment: .bottom
+                )
+                
+                listSection.boundarySupplementaryItems = [header, footer]
 				return listSection
 			}
 		} // Create Layout End
@@ -166,11 +178,13 @@ extension ArticleListViewController {
 		collectionView.register(ArticleListHeaderView.self,
 		                        forSupplementaryViewOfKind: ArticleListHeaderView.reuseIdentifier,
 		                        withReuseIdentifier: ArticleListHeaderView.reuseIdentifier)
+        collectionView.register(AriticleListFooterView.self,
+                                forSupplementaryViewOfKind: AriticleListFooterView.reuseIdentifier,
+                                withReuseIdentifier: AriticleListFooterView.reuseIdentifier)
         
 		view.addSubview(collectionView)
 		collectionView.translatesAutoresizingMaskIntoConstraints = false
 		collectionView.delegate = self
-		collectionView.bouncesZoom = true
 		collectionView.bounces = true
 		collectionView.showsVerticalScrollIndicator = false
 		let constraints = [
@@ -210,16 +224,37 @@ extension ArticleListViewController {
 			}
 		) // Cell Provider End
         
-		// Header Provider
-		dataSource?.supplementaryViewProvider = { collectionView, _, indexPath in
-			guard let header = collectionView.dequeueReusableSupplementaryView(
-				ofKind: ArticleListHeaderView.reuseIdentifier,
-				withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
-				for: indexPath
-			) as? ArticleListHeaderView else { fatalError() }
-            header.configureContents(with: self.dates[indexPath.section])
-			return header
-		} // Header Provider End
+		// Header/Footer Provider
+		dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath in
+            if kind == ArticleListHeaderView.reuseIdentifier { // Header
+                guard let header = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: ArticleListHeaderView.reuseIdentifier,
+                    withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
+                    for: indexPath
+                ) as? ArticleListHeaderView else { fatalError() }
+                header.configureContents(with: self.dates[indexPath.section])
+                return header
+            } else { // Footer
+                
+                guard let footer = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: AriticleListFooterView.reuseIdentifier,
+                    withReuseIdentifier: AriticleListFooterView.reuseIdentifier,
+                    for: indexPath
+                ) as? AriticleListFooterView else { fatalError() }
+                footer.configureContents(with: self.activityIndicator)
+                guard let dataSource = self.dataSource else {
+                    return footer
+                }
+                
+                let lastSection = dataSource.lastIndexPath(of: collectionView).section
+                guard indexPath.section == lastSection else {
+                    return footer
+                }
+                self.activityIndicator.startAnimating()
+                return footer
+            }
+
+		} // Header/Footer Provider End
         
 	} // Configure DataSource End
 }
@@ -230,12 +265,10 @@ extension ArticleListViewController: UICollectionViewDelegate {
         
         // Should Fetch New Data
         guard let dataSource = dataSource else { return }
-        let sectionNum = dataSource.numberOfSections(in: collectionView)
-        let itemNumInLastSection = dataSource.collectionView(collectionView, numberOfItemsInSection: sectionNum - 1)
-        if indexPath.section == sectionNum - 1 && indexPath.item == itemNumInLastSection - 1 {
+        
+        if dataSource.isIndexPath(indexPath, lastOf: collectionView){
             fetchNewData()
         }
-        
         
 		guard indexPath.section == 0 else { return }
 		pageStack.append(indexPath.item)
@@ -321,14 +354,26 @@ extension ArticleListViewController {
     private func fetchNewData() {
         print("Fetch New Data")
         guard let dataSource = dataSource else { return }
+        guard let collectionView = collectionView else { return }
         Task.init() {
+            
+            activityIndicator.startAnimating()
             let newArticles = await ArticleManager.shared.getArticleAbstracts(before: earliestDate)
             earliestDate = getDate(before: earliestDate)
             dates.append(earliestDate)
+            guard let footer = dataSource.collectionView(collectionView, viewForSupplementaryElementOfKind: AriticleListFooterView.reuseIdentifier,
+                at: dataSource.lastIndexPath(of: collectionView)) as? AriticleListFooterView else {
+                    fatalError()
+            }
+            activityIndicator.stopAnimating()
+            footer.removeAllSubviews()
+            
             var snapshot = dataSource.snapshot()
             snapshot.appendSections([earliestDate])
             snapshot.appendItems(newArticles, toSection: earliestDate)
             dataSource.apply(snapshot, animatingDifferences: true)
+            
+            
         }
     }
     
@@ -339,4 +384,5 @@ extension ArticleListViewController {
         nowDate = nowDate.dayBofre
         return dateFormatter.string(from: nowDate)
     }
+    
 }
