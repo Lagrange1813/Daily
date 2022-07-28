@@ -8,8 +8,11 @@
 import WebKit
 
 class ArticleDetailView: WKWebView {
-	var imageView: UIImageView?
-	var titleLabel: UILabel?
+	public var isLoaded = false
+	public var id: String = ""
+	
+	private var imageView: UIImageView?
+	private var titleLabel: UILabel?
 
 	let imageHeight: CGFloat = 400
 
@@ -67,10 +70,18 @@ class ArticleDetailView: WKWebView {
 		}
 	}
 	
-	func setContent(title: String, image: UIImage, html: String) {
+	func setContent(id: String, title: String, image: UIImage, html: String) {
+		self.id = id
 		imageView?.image = image
 		titleLabel?.text = title
 		loadHTMLString(html, baseURL: nil)
+	}
+	
+	func resetContent() {
+		imageView?.image = UIImage()
+		titleLabel?.text = ""
+		loadHTMLString("", baseURL: nil)
+		id = ""
 	}
 }
 

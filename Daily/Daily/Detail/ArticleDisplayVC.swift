@@ -5,9 +5,12 @@
 //  Created by Zjt on 2022/7/27.
 //
 
+import SnapKit
 import UIKit
 
 class ArticleDisplayViewController: UIViewController {
+	private var id: String
+
 	private var toolBar: UIView?
 	private var switchingView: UIScrollView?
 	private var webView: ArticleDetailView?
@@ -17,14 +20,19 @@ class ArticleDisplayViewController: UIViewController {
 		ArticleDetailView(),
 		ArticleDetailView()
 	]
-	
+
 	private var isChanged: Bool = false
 	private var currentIndex: Int = 1
 
-//	init(id: String) {
-//		super.init(nibName: nil, bundle: nil)
-//
-//	}
+	init(id: String) {
+		self.id = id
+		super.init(nibName: nil, bundle: nil)
+	}
+
+	@available(*, unavailable)
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -34,22 +42,6 @@ class ArticleDisplayViewController: UIViewController {
 		Task {
 			await ArticleManager.shared.getTodaysDate()
 			await ArticleManager.shared.getTodaysArticleAbstracts()
-			
-			let webViewAtRight = webViewArray[2]
-			do {
-				if let article = try await ArticleManager.shared.nextArticle(of: "9751095") {
-					let html = concatHTML(css: article.css, body: article.body)
-					webViewAtRight.setContent(title: article.title, image: article.image, html: html)
-				}
-			} catch {
-				print(error)
-			}
-			
-			let webViewAtLeft = webViewArray[0]
-			if let article = try await ArticleManager.shared.lastArticle(of: "9751095") {
-				let html = concatHTML(css: article.css, body: article.body)
-				webViewAtLeft.setContent(title: article.title, image: article.image, html: html)
-			}
 		}
 
 		configureToolbar()
@@ -138,12 +130,12 @@ class ArticleDisplayViewController: UIViewController {
 	}
 
 	func setContent() {
-//		guard let webView = webView else { return }
 		let webViewAtCenter = webViewArray[1]
+		webViewAtCenter.isLoaded = true
 		Task {
-			let article = await ArticleManager.shared.getArticle(by: "9751095")
+			let article = await ArticleManager.shared.getArticle(by: self.id)
 			let html = concatHTML(css: article.css, body: article.body)
-			webViewAtCenter.setContent(title: article.title, image: article.image, html: html)
+			webViewAtCenter.setContent(id: self.id, title: article.title, image: article.image, html: html)
 		}
 	}
 
@@ -169,6 +161,60 @@ class ArticleDisplayViewController: UIViewController {
 }
 
 extension ArticleDisplayViewController: UIScrollViewDelegate {
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		guard let switchingView = switchingView else { return }
+
+		let gesture = scrollView.panGestureRecognizer
+		switch gesture.state {
+		case .changed:
+			let index = getRelativeOffset(at: switchingView.contentOffset.x + Constants.width / 2)
+			if index == currentIndex {
+			} else if index < 1 {
+//				print("Left")
+				if webViewArray[0].isLoaded == false {
+					Task {
+						if let data = await ArticleManager.shared.lastArticle(of: self.id) {
+							let html = concatHTML(css: data.1.css, body: data.1.body)
+							webViewArray[0].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
+						}
+					}
+					webViewArray[0].isLoaded = true
+				}
+
+			} else if index > 1 {
+//				print("Right")
+				if webViewArray[2].isLoaded == false {
+					Task {
+						do {
+							if let data = try await ArticleManager.shared.nextArticle(of: self.id) {
+								let html = concatHTML(css: data.1.css, body: data.1.body)
+								webViewArray[2].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
+							}
+						} catch {
+							print(error)
+						}
+					}
+					webViewArray[2].isLoaded = true
+				}
+			} else {
+				fatalError()
+			}
+		default:
+			break
+		}
+	}
+
+	func getRelativeOffset(at positon: CGFloat) -> Int {
+		let datum = Constants.width * 3 / 2
+		if positon < datum {
+			return 0
+		} else if positon > datum {
+			return 2
+		} else {
+			return 1
+		}
+	}
+
 	func setSwitchingViewContentOffset() {
 		guard let switchingView = switchingView else { return }
 		switchingView.setContentOffset(CGPoint(x: Constants.width, y: 0), animated: false)
@@ -176,25 +222,22 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		guard let switchingView = switchingView else { return }
-		
-		let index = index(at: switchingView.contentOffset.x + Constants.width/2)
+
+		let index = index(at: switchingView.contentOffset.x + Constants.width / 2)
 		if index == currentIndex {
-			print("No")
 		} else if index < 1 {
-			print("Left")
 			moveToLeft()
 		} else if index > 1 {
-			print("Right")
 			moveToRight()
 		} else {
 			fatalError()
 		}
 	}
-	
+
 	func index(at position: CGFloat) -> Int {
 		Int(position / Constants.width)
 	}
-	
+
 	func moveToRight() {
 		webViewArray[2].snp.updateConstraints { make in
 			make.leading.equalToSuperview().offset(Constants.width)
@@ -207,7 +250,7 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 			make.leading.equalToSuperview().offset(Constants.width * CGFloat(2))
 		}
 		view.layoutIfNeeded()
-		
+
 		let temp = webViewArray[0]
 		webViewArray[0] = webViewArray[1]
 		webViewArray[1] = webViewArray[2]
@@ -226,7 +269,7 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 			make.leading.equalToSuperview()
 		}
 		view.layoutIfNeeded()
-		
+
 		let temp = webViewArray[2]
 		webViewArray[2] = webViewArray[1]
 		webViewArray[1] = webViewArray[0]

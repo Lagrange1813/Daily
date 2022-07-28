@@ -148,13 +148,13 @@ extension ArticleManager {
 		)
 	}
 
-	public func lastArticle(of id: String) async -> Article? {
+	public func lastArticle(of id: String) async -> (String, Article)? {
 		guard let index = idList.firstIndex(of: id),
 		      index > 0 else { return nil }
-		return await getArticle(by: idList[index - 1])
+		return (idList[index - 1], await getArticle(by: idList[index - 1]))
 	}
 
-	public func nextArticle(of id: String) async throws -> Article? {
+	public func nextArticle(of id: String) async throws -> (String, Article)? {
 		guard let index = idList.firstIndex(of: id) else { throw NextArticleError.notInside }
 		if index == idList.count - 1 {
 			do {
@@ -164,7 +164,7 @@ extension ArticleManager {
 			}
 		}
 		guard index < idList.count else { throw NextArticleError.outOfNumber }
-		return await getArticle(by: idList[(index) + 1])
+		return (idList[(index) + 1], await getArticle(by: idList[(index) + 1]))
 	}
 
 	public func fetchNextDatesAbstract() async throws {

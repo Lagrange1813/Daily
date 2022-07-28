@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window = UIWindow(frame: windowScene.coordinateSpace.bounds)
 		window?.windowScene = windowScene
 
-		let articleListVC = ArticleDisplayViewController()
+		let articleListVC = ArticleDisplayViewController(id: "9751095")
 //		let articleListVC = ArticleListViewController()
 		let navi = UINavigationController(rootViewController: articleListVC)
 		window?.rootViewController = navi
