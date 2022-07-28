@@ -17,7 +17,7 @@ class ArticleDetailView: WKWebView {
 	let imageHeight: CGFloat = 400
 
 	init() {
-		let script = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
+		let script = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width, user-scalable=no'); document.getElementsByTagName('head')[0].appendChild(meta);"
 		let userScript = WKUserScript(source: script, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
 		let controller = WKUserContentController()
 		controller.addUserScript(userScript)
@@ -33,6 +33,7 @@ class ArticleDetailView: WKWebView {
 	}
 	
 	func configureView() {
+		
 		scrollView.bounces = false
 		scrollView.contentInsetAdjustmentBehavior = .never
 		scrollView.automaticallyAdjustsScrollIndicatorInsets = false
