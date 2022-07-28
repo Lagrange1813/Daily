@@ -85,7 +85,7 @@ extension ArticleListViewController {
         dateFormatter.dateFormat = "yyyyMMdd"
         print(datePicker.date)
         seletedDate = dateFormatter.string(from: datePicker.date)
-        
+        navigationController?.dismiss(animated: false)
     }
     
     func configureNetworkMonitor() {
