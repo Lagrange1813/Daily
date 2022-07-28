@@ -15,6 +15,12 @@ class ArticleListViewController: UIViewController {
 	var pageStack = [0]
     var earliestDate = ""
     var dates = [""]
+    var seletedDate: String = "" {
+        didSet {
+            //Todo after select date
+            print(seletedDate)
+        }
+    }
     let reloadButton = UIButton()
     let networkMonitor = NWPathMonitor()
     var lastNetworkStatus = NWPath.Status.unsatisfied
@@ -23,12 +29,14 @@ class ArticleListViewController: UIViewController {
     let bottomActivityIndicator = UIActivityIndicatorView(style: .medium)
     let topActivityIndicator = UIActivityIndicatorView(style: .large)
     let todayActivityIndicator = UIActivityIndicatorView(style: .medium)
+    let datePicker = UIDatePicker()
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
         view.backgroundColor = .white
         configureNetworkMonitor()
+        configuredatePicker()
 	}
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,6 +53,28 @@ class ArticleListViewController: UIViewController {
 }
 
 extension ArticleListViewController {
+    func configuredatePicker() {
+        datePicker.date = Date()
+        datePicker.locale = .current
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
+        if #available(iOS 13.4, *) {
+            datePicker.preferredDatePickerStyle = .compact
+        }
+        navigationController?.navigationBar.addSubview(datePicker)
+        datePicker.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.width.equalTo(100)
+            make.height.equalTo(50)
+        }
+    }
+    @objc func datePickerValueChanged() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyymmdd"
+        seletedDate = dateFormatter.string(from: datePicker.date)
+        
+    }
     
     func configureNetworkMonitor() {
         networkMonitor.pathUpdateHandler = { path in
@@ -140,14 +170,14 @@ extension ArticleListViewController {
 				let topItem = NSCollectionLayoutItem(
 					layoutSize: NSCollectionLayoutSize(
 						widthDimension: .fractionalWidth(1),
-						heightDimension: .fractionalWidth(1)
+                        heightDimension: .fractionalWidth(1)
 					)
 				)
 				topItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
 				let topGroup = NSCollectionLayoutGroup.horizontal(
 					layoutSize: NSCollectionLayoutSize(
 						widthDimension: .fractionalWidth(1),
-						heightDimension: .fractionalWidth(1)
+                        heightDimension: .fractionalWidth(1)
 					),
 					subitem: topItem,
 					count: 1
