@@ -70,18 +70,19 @@ class ArticleDetailView: WKWebView {
 		}
 	}
 	
-	func setContent(id: String, title: String, image: UIImage, html: String) {
+	public func setContent(id: String, title: String, image: UIImage, html: String) {
 		self.id = id
 		imageView?.image = image
 		titleLabel?.text = title
 		loadHTMLString(html, baseURL: nil)
 	}
 	
-	func resetContent() {
+	public func resetContent() {
 		imageView?.image = UIImage()
 		titleLabel?.text = ""
 		loadHTMLString("", baseURL: nil)
 		id = ""
+		isLoaded = false
 	}
 }
 

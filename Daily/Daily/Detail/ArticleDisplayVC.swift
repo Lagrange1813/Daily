@@ -255,6 +255,9 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 		webViewArray[0] = webViewArray[1]
 		webViewArray[1] = webViewArray[2]
 		webViewArray[2] = temp
+		
+		id = webViewArray[1].id
+		webViewArray[2].resetContent()
 	}
 
 	func moveToLeft() {
@@ -274,6 +277,9 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 		webViewArray[2] = webViewArray[1]
 		webViewArray[1] = webViewArray[0]
 		webViewArray[0] = temp
+		
+		id = webViewArray[1].id
+		webViewArray[0].resetContent()
 	}
 }
 
