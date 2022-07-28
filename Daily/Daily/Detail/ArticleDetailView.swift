@@ -92,6 +92,7 @@ class ArticleDetailView: WKWebView {
 		titleLabel?.text = ""
 		loadHTMLString("", baseURL: nil)
 		isLoaded = false
+		willLoad = false
 	}
 }
 

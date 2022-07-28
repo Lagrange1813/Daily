@@ -178,6 +178,7 @@ class ArticleDisplayViewController: UIViewController {
 	}
 
 	func setContent() {
+		webViewArray[1].willLoad = true
 		Task {
 			let article = await ArticleManager.shared.getArticle(by: id)
 			let html = concatHTML(css: article.css, body: article.body)
@@ -264,22 +265,22 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 			if index == currentIndex {
 				//
 			} else if index < 1 {
-				if webViewArray[0].isLoaded == false {
-					webViewArray[0].isLoaded = true
+				if webViewArray[0].willLoad == false {
+					webViewArray[0].willLoad = true
 					Task {
 						let id = webViewArray[1].id
 						if let data = await ArticleManager.shared.lastArticle(of: id) {
 							self.id = data.0
 							let html = concatHTML(css: data.1.css, body: data.1.body)
 							webViewArray[0].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
-							
+							webViewArray[0].isLoaded = true
 						}
 					}
 				}
 
 			} else if index > 1 {
-				if webViewArray[2].isLoaded == false {
-					webViewArray[2].isLoaded = true
+				if webViewArray[2].willLoad == false {
+					webViewArray[2].willLoad = true
 					Task {
 						do {
 							let id = webViewArray[1].id
@@ -287,7 +288,7 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 								self.id = data.0
 								let html = concatHTML(css: data.1.css, body: data.1.body)
 								webViewArray[2].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
-								
+								webViewArray[2].isLoaded = true
 							}
 						} catch {
 							print(error)
@@ -362,7 +363,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 
 		if webViewArray[1].isLoaded == false {
 			noRight = true
-//			setContent()
 		} else {
 			noLeft = false
 			noRight = false
@@ -392,7 +392,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 
 		if webViewArray[1].isLoaded == false {
 			noLeft = true
-//			setContent()
 		} else {
 			noLeft = false
 			noRight = false
