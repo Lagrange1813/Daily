@@ -28,13 +28,14 @@ class ArticleDetailView: WKWebView {
 		configureView()
 	}
 	
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError()
 	}
 	
 	func configureView() {
-		
-		scrollView.bounces = false
+//		scrollView.bounces = false
+		scrollView.clipsToBounds = false
 		scrollView.contentInsetAdjustmentBehavior = .never
 		scrollView.automaticallyAdjustsScrollIndicatorInsets = false
 		scrollView.contentInset = UIEdgeInsets(top: 200, left: 0, bottom: 0, right: 0)
@@ -43,7 +44,7 @@ class ArticleDetailView: WKWebView {
 		titleLabel = UILabel()
 		
 		guard let imageView = imageView,
-			  let titleLabel = titleLabel else { return }
+		      let titleLabel = titleLabel else { return }
 		
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
@@ -57,7 +58,8 @@ class ArticleDetailView: WKWebView {
 		scrollView.addSubview(imageView)
 		imageView.snp.makeConstraints { make in
 			make.centerX.equalToSuperview()
-			make.top.equalTo(scrollView.snp.top).offset(-200)
+//			make.top.equalTo(scrollView.snp.top).offset(-200)
+			make.bottom.equalTo(scrollView.snp.top).offset(200)
 			make.height.equalTo(imageHeight)
 			make.width.equalTo(Constants.width)
 		}
@@ -69,6 +71,11 @@ class ArticleDetailView: WKWebView {
 			make.trailing.equalToSuperview().inset(20)
 			make.height.equalTo(80)
 		}
+	}
+	
+	public func adjustImageView(_ handler: (UIImageView) -> Void) {
+		guard let imageView = imageView else { return }
+		handler(imageView)
 	}
 	
 	public func setContent(id: String, title: String, image: UIImage, html: String) {
