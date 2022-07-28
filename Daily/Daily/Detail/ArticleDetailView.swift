@@ -8,8 +8,11 @@
 import WebKit
 
 class ArticleDetailView: WKWebView {
-	var imageView: UIImageView?
-	var titleLabel: UILabel?
+	public var isLoaded = false
+	public var id: String = ""
+	
+	private var imageView: UIImageView?
+	private var titleLabel: UILabel?
 
 	let imageHeight: CGFloat = 400
 
@@ -21,6 +24,7 @@ class ArticleDetailView: WKWebView {
 		let config = WKWebViewConfiguration()
 		config.userContentController = controller
 		super.init(frame: .zero, configuration: config)
+		navigationDelegate = self
 		configureView()
 	}
 	
@@ -29,6 +33,7 @@ class ArticleDetailView: WKWebView {
 	}
 	
 	func configureView() {
+		scrollView.bounces = false
 		scrollView.contentInsetAdjustmentBehavior = .never
 		scrollView.automaticallyAdjustsScrollIndicatorInsets = false
 		scrollView.contentInset = UIEdgeInsets(top: 200, left: 0, bottom: 0, right: 0)
@@ -65,9 +70,24 @@ class ArticleDetailView: WKWebView {
 		}
 	}
 	
-	func setContent(title: String, image: UIImage, html: String) {
+	public func setContent(id: String, title: String, image: UIImage, html: String) {
+		self.id = id
 		imageView?.image = image
 		titleLabel?.text = title
 		loadHTMLString(html, baseURL: nil)
+	}
+	
+	public func resetContent() {
+		imageView?.image = UIImage()
+		titleLabel?.text = ""
+		loadHTMLString("", baseURL: nil)
+		id = ""
+		isLoaded = false
+	}
+}
+
+extension ArticleDetailView: WKNavigationDelegate {
+	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+		webView.evaluateJavaScript("document.body.style.fontFamily = \"-apple-system\"")
 	}
 }
