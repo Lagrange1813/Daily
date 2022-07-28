@@ -59,3 +59,16 @@ extension CALayer {
         }
     }
 }
+
+extension UICollectionViewDiffableDataSource {
+    func lastIndexPath(of collectionView: UICollectionView) -> IndexPath {
+        let lastSection = numberOfSections(in: collectionView) - 1
+        let lastItem = self.collectionView(collectionView, numberOfItemsInSection: lastSection) - 1
+        return IndexPath(item: lastItem, section: lastSection)
+    }
+    
+    func isIndexPath(_ indexPath: IndexPath, lastOf collectionView: UICollectionView) -> Bool {
+        let lastIndexPath = lastIndexPath(of: collectionView)
+        return indexPath.section == lastIndexPath.section && indexPath.item == lastIndexPath.item
+    }
+}

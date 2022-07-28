@@ -10,8 +10,8 @@
 		31B7DA97288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31B7DA96288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf */; };
 		31B7DA99288FFFAE00E9EAFB /* LXGWWenKai-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31B7DA98288FFFAE00E9EAFB /* LXGWWenKai-Bold.ttf */; };
 		31D17FCA288F901000318DD3 /* ArticleListViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D17FC9288F901000318DD3 /* ArticleListViews.swift */; };
-		747409102890212D00DEAF7F /* ArticleDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7474090F2890212D00DEAF7F /* ArticleDetailVC.swift */; };
 		7A122AA028911D5C005B6FD7 /* LookinServer in Frameworks */ = {isa = PBXBuildFile; productRef = 7A122A9F28911D5C005B6FD7 /* LookinServer */; };
+		7A122AA528914936005B6FD7 /* ArticleDisplayVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A122AA428914936005B6FD7 /* ArticleDisplayVC.swift */; };
 		7A49CA0F288ECBB700411D49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA0E288ECBB700411D49 /* AppDelegate.swift */; };
 		7A49CA11288ECBB700411D49 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA10288ECBB700411D49 /* SceneDelegate.swift */; };
 		7A49CA13288ECBB700411D49 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A49CA12288ECBB700411D49 /* ViewController.swift */; };
@@ -33,7 +33,7 @@
 		31B7DA96288FE26E00E9EAFB /* LXGWWenKaiMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiMono-Regular.ttf"; sourceTree = "<group>"; };
 		31B7DA98288FFFAE00E9EAFB /* LXGWWenKai-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKai-Bold.ttf"; sourceTree = "<group>"; };
 		31D17FC9288F901000318DD3 /* ArticleListViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListViews.swift; sourceTree = "<group>"; };
-		7474090F2890212D00DEAF7F /* ArticleDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleDetailVC.swift; sourceTree = "<group>"; };
+		7A122AA428914936005B6FD7 /* ArticleDisplayVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDisplayVC.swift; sourceTree = "<group>"; };
 		7A49CA0B288ECBB700411D49 /* Daily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Daily.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A49CA0E288ECBB700411D49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7A49CA10288ECBB700411D49 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -68,8 +68,8 @@
 		7A122AA128912480005B6FD7 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
-				7474090F2890212D00DEAF7F /* ArticleDetailVC.swift */,
 				7AF36BDE2891153900F3EFFA /* ArticleDetailView.swift */,
+				7A122AA428914936005B6FD7 /* ArticleDisplayVC.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -225,10 +225,10 @@
 				31D17FCA288F901000318DD3 /* ArticleListViews.swift in Sources */,
 				7A49CA13288ECBB700411D49 /* ViewController.swift in Sources */,
 				7A838F6C288FA16A00837DB7 /* Extension.swift in Sources */,
-				747409102890212D00DEAF7F /* ArticleDetailVC.swift in Sources */,
 				7A49CA19288ECBB700411D49 /* Daily.xcdatamodeld in Sources */,
 				7A49CA0F288ECBB700411D49 /* AppDelegate.swift in Sources */,
 				7A838F71288FDA9700837DB7 /* ArticleListVC.swift in Sources */,
+				7A122AA528914936005B6FD7 /* ArticleDisplayVC.swift in Sources */,
 				7A838F6A288F971C00837DB7 /* ArticleManager.swift in Sources */,
 				7A49CA11288ECBB700411D49 /* SceneDelegate.swift in Sources */,
 				7AF36BDF2891153900F3EFFA /* ArticleDetailView.swift in Sources */,
@@ -371,7 +371,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LKMBDQA2QL;
+				DEVELOPMENT_TEAM = J848DTSBF7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Daily/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -402,7 +402,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LKMBDQA2QL;
+				DEVELOPMENT_TEAM = J848DTSBF7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Daily/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
