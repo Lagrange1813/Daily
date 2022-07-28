@@ -20,7 +20,9 @@ class ArticleListViewController: UIViewController {
     var lastNetworkStatus = NWPath.Status.unsatisfied
 	var todayArticles: [ArticleAbstract] = []
 	var topArticles: [ArticleAbstract] = []
-    let activityIndicator = UIActivityIndicatorView(style: .medium)
+    let bottomActivityIndicator = UIActivityIndicatorView(style: .medium)
+    let topActivityIndicator = UIActivityIndicatorView(style: .large)
+    let todayActivityIndicator = UIActivityIndicatorView(style: .medium)
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -85,9 +87,40 @@ extension ArticleListViewController {
     
     private func configureSubviews() {
         configureCollectionView()
+        configureTopIndicator()
+        configureTodayIndicator()
         configureDataSource()
         fetchData()
         configurePageControl()
+    }
+    
+    private func configureTopIndicator() {
+        topActivityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        guard let collectionView = collectionView else { return }
+        collectionView.addSubview(topActivityIndicator)
+        let constraints = [
+            topActivityIndicator.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            topActivityIndicator.heightAnchor.constraint(equalToConstant: view.bounds.width),
+            topActivityIndicator.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            topActivityIndicator.widthAnchor.constraint(equalToConstant: view.bounds.width),
+        ]
+        collectionView.addConstraints(constraints)
+    }
+    
+    private func configureTodayIndicator() {
+        todayActivityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        guard let collectionView = collectionView else { return }
+        collectionView.addSubview(todayActivityIndicator)
+        let constraints = [
+            todayActivityIndicator.topAnchor.constraint(
+                equalTo: topActivityIndicator.bottomAnchor,
+                constant: 50
+            ),
+            todayActivityIndicator.heightAnchor.constraint(equalToConstant: 50),
+            todayActivityIndicator.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            todayActivityIndicator.widthAnchor.constraint(equalToConstant: 50),
+        ]
+        collectionView.addConstraints(constraints)
     }
     
 	private func configurePageControl() {
@@ -194,6 +227,7 @@ extension ArticleListViewController {
 			collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 		]
 		view.addConstraints(constraints)
+        
 	} // Configure CollectionView End
     
     // Configure DataSource
@@ -210,7 +244,7 @@ extension ArticleListViewController {
 						withReuseIdentifier: ArticleTopListCell.reuseIdentifier,
 						for: indexPath
 					) as? ArticleTopListCell else { fatalError() }
-					cell.configureContents(with: itemIdentifier)
+                    cell.configureContents(withArticle: itemIdentifier, indicator: self.topActivityIndicator)
 					return cell
                     
 				} else { // Bottom
@@ -241,7 +275,7 @@ extension ArticleListViewController {
                     withReuseIdentifier: AriticleListFooterView.reuseIdentifier,
                     for: indexPath
                 ) as? AriticleListFooterView else { fatalError() }
-                footer.configureContents(with: self.activityIndicator)
+                footer.configureContents(with: self.bottomActivityIndicator)
                 guard let dataSource = self.dataSource else {
                     return footer
                 }
@@ -250,7 +284,7 @@ extension ArticleListViewController {
                 guard indexPath.section == lastSection else {
                     return footer
                 }
-                self.activityIndicator.startAnimating()
+                self.bottomActivityIndicator.startAnimating()
                 return footer
             }
 
@@ -331,11 +365,14 @@ extension ArticleListViewController {
         Task.init() {
             
             // Fetch Top Articles
+            topActivityIndicator.startAnimating()
+            todayActivityIndicator.startAnimating()
 			topArticles = await ArticleManager.shared.getTopArticleAbstracts()
 			var snapshot = dataSource.snapshot()
 			snapshot.appendSections(["top"])
 			snapshot.appendItems(topArticles, toSection: "top")
 			dataSource.apply(snapshot, animatingDifferences: true)
+            topActivityIndicator.stopAnimating()
 			pageControl.numberOfPages = topArticles.count
             
             earliestDate = await ArticleManager.shared.getTodaysDate()
@@ -347,6 +384,7 @@ extension ArticleListViewController {
             snapshot.appendSections([earliestDate])
             snapshot.appendItems(todayArticles, toSection: earliestDate)
             dataSource.apply(snapshot)
+            todayActivityIndicator.stopAnimating()
             
 		}
 	}
@@ -357,7 +395,7 @@ extension ArticleListViewController {
         guard let collectionView = collectionView else { return }
         Task.init() {
             
-            activityIndicator.startAnimating()
+            bottomActivityIndicator.startAnimating()
             let newArticles = await ArticleManager.shared.getArticleAbstracts(before: earliestDate)
             earliestDate = getDate(before: earliestDate)
             dates.append(earliestDate)
@@ -365,7 +403,7 @@ extension ArticleListViewController {
                 at: dataSource.lastIndexPath(of: collectionView)) as? AriticleListFooterView else {
                     fatalError()
             }
-            activityIndicator.stopAnimating()
+            bottomActivityIndicator.stopAnimating()
             footer.removeAllSubviews()
             
             var snapshot = dataSource.snapshot()

@@ -17,7 +17,9 @@ class ArticleListCell: UICollectionViewCell {
 class ArticleTopListCell: ArticleListCell {
 	static let reuseIdentifier = "article-top-list-cell"
     
-	func configureContents(with article: ArticleAbstract) {
+    func configureContents(withArticle article: ArticleAbstract, indicator: UIActivityIndicatorView) {
+
+        
         articleId = article.id
 		imageView.image = article.image
 		imageView.frame = contentView.bounds
@@ -56,7 +58,8 @@ class ArticleTopListCell: ArticleListCell {
 			subtitleView.heightAnchor.constraint(equalToConstant: 20),
 		]
 		contentView.addConstraints(constraints)
-        
+        indicator.frame = bounds
+        contentView.addSubview(indicator)
         // Gradient Layer
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = CGRect(
