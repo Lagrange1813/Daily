@@ -263,17 +263,17 @@ extension ArticleListViewController {
                                 withReuseIdentifier: AriticleListFooterView.reuseIdentifier)
         
         view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
         collectionView.delegate = self
         collectionView.bounces = true
         collectionView.showsVerticalScrollIndicator = false
-        let constraints = [
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ]
-        view.addConstraints(constraints)
+        
+		collectionView.snp.makeConstraints { make in
+			make.top.equalToSuperview()
+			make.leading.equalToSuperview().offset(15)
+			make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+			make.trailing.equalToSuperview().inset(15)
+		}
     } // Configure CollectionView End
     
     // Configure DataSource
