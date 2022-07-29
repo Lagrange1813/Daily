@@ -35,6 +35,18 @@ class ArticleTopListCell: ArticleListCell {
             make.height.equalToSuperview()
         }
         
+        // Gradient Layer
+
+        let gradientColors = [
+            UIColor(article.charColor, withNewAlpha: 0).cgColor,
+            UIColor(article.charColor, withNewAlpha: 0.8).cgColor,
+            UIColor(article.charColor, withNewAlpha: 1).cgColor,
+        ]
+        
+        let gradientView = GradientView(colors: gradientColors)
+        
+        contentView.addSubview(gradientView)
+        
 		titleView.text = article.title
 		titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 20)
 		titleView.backgroundColor = .clear
@@ -68,32 +80,12 @@ class ArticleTopListCell: ArticleListCell {
 		contentView.addConstraints(constraints)
         indicator.frame = bounds
         contentView.addSubview(indicator)
-        // Gradient Layer
-//        gradientLayer.frame = CGRect(
-//            x: 0,
-//            y: frame.height / 3.0 * 2,
-//            width: frame.width,
-//            height: frame.height / 3.0
-//        )
-        let gradientColors = [
-            UIColor(article.charColor, withNewAlpha: 0).cgColor,
-            UIColor(article.charColor, withNewAlpha: 0.8).cgColor,
-            UIColor(article.charColor, withNewAlpha: 1).cgColor,
-        ]
-//        gradientLayer.colors = gradientColors
-//        imageView.layer.removeAllSubLayers()
-//        imageView.layer.addSublayer(gradientLayer)
-//
-//        gradientLayerPosition = gradientLayer.position
+
 		
-		let view = GradientView(colors: gradientColors)
-		
-		contentView.addSubview(view)
-		
-		view.snp.makeConstraints { make in
+		gradientView.snp.makeConstraints { make in
 			make.bottom.equalToSuperview()
 			make.centerX.equalToSuperview()
-			make.width.equalTo(Constants.width)
+            make.width.equalTo(Constants.width - 10)
 			make.height.equalTo(100)
 		}
 	}
