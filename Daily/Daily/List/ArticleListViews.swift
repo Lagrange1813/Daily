@@ -110,12 +110,16 @@ class ArticleMiddleListCell: ArticleListCell {
 
         
         titleView.text = title
-        contentView.snp.makeConstraints { make in
+        titleView.textColor = .black
+        titleView.textAlignment = .center
+        contentView.addSubview(titleView)
+        titleView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.top.equalToSuperview()
             make.bottom.equalToSuperview()
             make.width.equalToSuperview()
         }
+        contentView.layoutIfNeeded()
     }
     
     override func layoutSubviews() {
