@@ -45,6 +45,10 @@ class ArticleDisplayViewController: UIViewController {
 		super.viewDidLoad()
 		navigationController?.navigationBar.isHidden = true
 		view.backgroundColor = .white
+        
+        for i in 0 ..< 3 {
+            webViewArray[i].delegate = self
+        }
 
 		Task {
 			await ArticleManager.shared.getTodaysDate()
@@ -398,4 +402,12 @@ extension ArticleDisplayViewController {
 	@objc func returnBtnFunc() {
 		navigationController?.popViewController(animated: true)
 	}
+}
+extension ArticleDisplayViewController: ArticleDetailViewDelegate {
+    func jumpToWeb(urlRequest: URLRequest) {
+        let jumpToWebVC = JumpToWebVC(urlRequest: urlRequest)
+        present(jumpToWebVC, animated: true)
+        print("present")
+        
+    }
 }
