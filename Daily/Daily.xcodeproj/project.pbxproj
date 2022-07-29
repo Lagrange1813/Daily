@@ -25,6 +25,7 @@
 		7A838F6C288FA16A00837DB7 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A838F6B288FA16A00837DB7 /* Extension.swift */; };
 		7A838F6F288FB79100837DB7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7A838F6E288FB79100837DB7 /* SnapKit */; };
 		7A838F71288FDA9700837DB7 /* ArticleListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A838F70288FDA9700837DB7 /* ArticleListVC.swift */; };
+		7ACDD62B28937E15005DE38A /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACDD62A28937E15005DE38A /* GradientView.swift */; };
 		7AF36BDD2891083100F3EFFA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF36BDC2891083100F3EFFA /* Constants.swift */; };
 		7AF36BDF2891153900F3EFFA /* ArticleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF36BDE2891153900F3EFFA /* ArticleDetailView.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +47,7 @@
 		7A838F69288F971C00837DB7 /* ArticleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleManager.swift; sourceTree = "<group>"; };
 		7A838F6B288FA16A00837DB7 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		7A838F70288FDA9700837DB7 /* ArticleListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleListVC.swift; sourceTree = "<group>"; };
+		7ACDD62A28937E15005DE38A /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		7AF36BDC2891083100F3EFFA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		7AF36BDE2891153900F3EFFA /* ArticleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -79,6 +81,7 @@
 			children = (
 				7A838F70288FDA9700837DB7 /* ArticleListVC.swift */,
 				31D17FC9288F901000318DD3 /* ArticleListViews.swift */,
+				7ACDD62A28937E15005DE38A /* GradientView.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 				7A122AA528914936005B6FD7 /* ArticleDisplayVC.swift in Sources */,
 				7A838F6A288F971C00837DB7 /* ArticleManager.swift in Sources */,
 				7A49CA11288ECBB700411D49 /* SceneDelegate.swift in Sources */,
+				7ACDD62B28937E15005DE38A /* GradientView.swift in Sources */,
 				7AF36BDF2891153900F3EFFA /* ArticleDetailView.swift in Sources */,
 				7AF36BDD2891083100F3EFFA /* Constants.swift in Sources */,
 			);

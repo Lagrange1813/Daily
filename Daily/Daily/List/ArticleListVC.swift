@@ -346,6 +346,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
             if let position = cell.gradientLayerPosition {
                 print(position)
                 gradientLayer.position = CGPoint(x: position.x, y: position.y-y-91)
+				view.layoutIfNeeded()
             }
             let imageView = cell.imageView
             cell.imageView.snp.remakeConstraints { make in
