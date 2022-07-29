@@ -426,8 +426,10 @@ extension ArticleListViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if isFirstTime {
-            collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
-            isFirstTime.toggle()
+            if collectionView.numberOfSections > 0 {
+                collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
+                isFirstTime.toggle()
+            }
         } else if indexPath.section == 0 {
             if indexPath.item == 8 {
                 nowPage = 2
