@@ -182,7 +182,7 @@ class ArticleDisplayViewController: UIViewController {
 			do {
 				let data = try await ArticleManager.shared.getArticle(by: id)
 				let html = concatHTML(css: data.0.css, body: data.0.body)
-				webViewArray[1].setContent(id: id, title: data.0.title, image: data.0.image, html: html)
+                webViewArray[1].setContent(id: id, title: data.0.title, image: data.0.image, html: html, charColor: data.0.charColor)
 				webViewArray[1].isFirst = data.1
 				webViewArray[1].isLoaded = true
 			} catch {
@@ -278,7 +278,7 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 							let data = try await ArticleManager.shared.lastArticle(of: id)
 							self.id = data.0
 							let html = concatHTML(css: data.1.css, body: data.1.body)
-							webViewArray[0].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
+                            webViewArray[0].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html, charColor: data.1.charColor)
 							webViewArray[0].isFirst = data.2
 							webViewArray[0].isLoaded = true
 						} catch {
@@ -296,7 +296,7 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 							let data = try await ArticleManager.shared.nextArticle(of: id)
 							self.id = data.0
 							let html = concatHTML(css: data.1.css, body: data.1.body)
-							webViewArray[2].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
+                            webViewArray[2].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html, charColor: data.1.charColor)
 							webViewArray[2].isLoaded = true
 						} catch {
 							print(error)
