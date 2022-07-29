@@ -93,13 +93,16 @@ class ArticleTopListCell: ArticleListCell {
 
 class ArticleMiddleListCell: ArticleListCell {
     static let reuseIdentifier = "article-middle-list-cell"
-    
+    let gradientLayer = CAGradientLayer()
+    let blurView = UIVisualEffectView()
+
     func configureContents(withImage image: UIImage?, title: String) {
 		contentView.layer.cornerRadius = 10
 		
         imageView.image = image
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
+//        imageView
         contentView.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -109,8 +112,25 @@ class ArticleMiddleListCell: ArticleListCell {
         }
 
         
+        blurView.effect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        gradientLayer.colors = [UIColor(white: 0, alpha: 0.8).cgColor,
+                        UIColor(white: 0, alpha: 0.8).cgColor,
+//                        UIColor(white: 0, alpha: 0).cgColor
+        ]
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
+        blurView.layer.mask = gradientLayer
+        
+        contentView.addSubview(blurView)
+        blurView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+        }
+        
         titleView.text = title
-		titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 18)
+        titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 18)
         titleView.textColor = .white
         titleView.textAlignment = .center
         contentView.addSubview(titleView)
@@ -126,7 +146,10 @@ class ArticleMiddleListCell: ArticleListCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         imageView.layer.cornerRadius = imageView.frame.size.width / 2
-        imageView.layer.borderWidth = 1
+        gradientLayer.frame = imageView.frame
+        gradientLayer.cornerRadius = imageView.frame.size.width / 2
+//        print(gradientLayer.cornerRadius)
+//        imageView.layer.borderWidth = 1
     }
 }
 
