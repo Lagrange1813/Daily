@@ -10,6 +10,7 @@ import WebKit
 class ArticleDetailView: WKWebView {
 	public var willLoad = false
 	public var isLoaded = false
+	public var isFirst = false
 	public var id: String = ""
 	
 	private var imageView: UIImageView?

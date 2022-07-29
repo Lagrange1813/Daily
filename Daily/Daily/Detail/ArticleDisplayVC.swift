@@ -276,6 +276,7 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 							self.id = data.0
 							let html = concatHTML(css: data.1.css, body: data.1.body)
 							webViewArray[0].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
+							webViewArray[0].isFirst = data.2
 							webViewArray[0].isLoaded = true
 						} catch {
 							print(error)
@@ -391,7 +392,7 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 
 		webViewArray[0].resetContent()
 
-		if webViewArray[1].isLoaded == false {
+		if webViewArray[1].isLoaded == false  || webViewArray[1].isFirst == true {
 			noLeft = true
 		} else {
 			noLeft = false

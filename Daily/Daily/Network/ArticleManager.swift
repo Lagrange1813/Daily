@@ -154,11 +154,12 @@ extension ArticleManager {
 		)
 	}
 
-	public func lastArticle(of id: String) async throws -> (String, Article) {
+	public func lastArticle(of id: String) async throws -> (String, Article, Bool) {
+		var signal = false
 		guard let index = idList.firstIndex(of: id),
 		      index > 0 else { throw LastArticleError.outOfIndex }
-		if index == 1 { throw LastArticleError.first }
-		return (idList[index - 1], try await getArticle(by: idList[index - 1]))
+		if index == 1 { signal = true }
+		return (idList[index - 1], try await getArticle(by: idList[index - 1]), signal)
 	}
 
 	public func nextArticle(of id: String) async throws -> (String, Article) {
