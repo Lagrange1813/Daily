@@ -16,6 +16,7 @@ class ArticleListViewController: UIViewController {
     var earliestDate = ""
     var dates = [""]
     var collectionViewOriginalYOffset: CGFloat = 0
+    var middleArticles: [ArticleAbstract] = []
 //    var pageStack = [0]
     var nowPage = 2
     // 用于无限轮播图片
@@ -342,9 +343,10 @@ extension ArticleListViewController {
                         withReuseIdentifier: ArticleMiddleListCell.reuseIdentifier,
                         for: indexPath
                     ) as? ArticleMiddleListCell else { fatalError() }
+                    let article = self.middleArticles[indexPath.item]
                     cell.configureContents(withImage:
-                                            UIImage(systemName: "signature"),
-                                           title: "Test")
+                                            article.image,
+                                           title: article.title)
                     return cell
                             
                 } else { // Bottom
@@ -503,15 +505,28 @@ extension ArticleListViewController {
 
             
             // Middle Items
-            let middleArticles = [
-                ArticleAbstract(title: "", hint: "", image: UIImage(), id: "",
+            guard let signatureImage = UIImage(systemName: "signature") else { return }
+            middleArticles = [
+                ArticleAbstract(title: "大误", hint: "",
+                                image: signatureImage,
+                                id: "",
                                 charColor: .black),
-                ArticleAbstract(title: "", hint: "", image: UIImage(), id: "",
+                ArticleAbstract(title: "小事", hint: "",
+                                image: signatureImage,
+                                id: "",
                                 charColor: .white),
-                ArticleAbstract(title: "", hint: "", image: UIImage(), id: "",
+                ArticleAbstract(title: "瞎扯", hint: "",
+                                image: signatureImage,
+                                id: "",
                                 charColor: .blue),
-                ArticleAbstract(title: "", hint: "", image: UIImage(), id: "",
+                ArticleAbstract(title: "深夜食堂", hint: "",
+                                image:  signatureImage,
+                                id: "",
                                 charColor: .brown),
+                ArticleAbstract(title: "知天下", hint: "",
+                                image: signatureImage,
+                                id: "",
+                                charColor: .cyan)
             ]
             snapshot.appendSections(["middle"])
             snapshot.appendItems(middleArticles, toSection: "middle")
