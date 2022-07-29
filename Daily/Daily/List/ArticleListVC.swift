@@ -342,6 +342,11 @@ extension ArticleListViewController: UICollectionViewDelegate {
             let indexPath = IndexPath(item: pageControl.currentPage, section: 0)
             let cell = collectionView?.cellForItem(at: indexPath) as? ArticleTopListCell
             guard let cell = cell else { return }
+            let gradientLayer = cell.gradientLayer
+            if let position = cell.gradientLayerPosition {
+                print(position)
+                gradientLayer.position = CGPoint(x: position.x, y: position.y-y-91)
+            }
             let imageView = cell.imageView
             cell.imageView.snp.remakeConstraints { make in
                 make.bottom.equalToSuperview()
@@ -349,6 +354,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
                 make.leading.equalToSuperview()
                 make.height.equalTo(390 - y - 91)
             }
+            
         }
     }
 

@@ -11,6 +11,8 @@ class ArticleListCell: UICollectionViewCell {
     let imageView = UIImageView()
     let titleView = UILabel()
     let subtitleView = UILabel()
+    let gradientLayer = CAGradientLayer()
+    var gradientLayerPosition: CGPoint?
     var articleId = ""
 }
 
@@ -66,12 +68,11 @@ class ArticleTopListCell: ArticleListCell {
         indicator.frame = bounds
         contentView.addSubview(indicator)
         // Gradient Layer
-        let gradientLayer = CAGradientLayer()
         gradientLayer.frame = CGRect(
             x: 0,
-            y: imageView.frame.height / 3.0 * 2,
-            width: imageView.frame.width,
-            height: imageView.frame.height / 3.0
+            y: frame.height / 3.0 * 2,
+            width: frame.width,
+            height: frame.height / 3.0
         )
         let gradientColors = [
             UIColor(article.charColor, withNewAlpha: 0).cgColor,
@@ -81,6 +82,7 @@ class ArticleTopListCell: ArticleListCell {
         gradientLayer.colors = gradientColors
         imageView.layer.removeAllSubLayers()
         imageView.layer.addSublayer(gradientLayer)
+        gradientLayerPosition = gradientLayer.position
 	}
     
 	override func layoutSubviews() {
