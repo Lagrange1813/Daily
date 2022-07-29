@@ -27,6 +27,8 @@ class ArticleManager {
 	private var topList: [String] = []
 	private var idList: [String] = []
 	private var currentDate: String?
+	
+	private var colorDic: [String: UIColor] = [:]
 
 	private var mode: ArticleListType = .date
 
@@ -77,15 +79,20 @@ extension ArticleManager {
 
 		if let articleArray = await json["stories"].array {
 			for articleJson in articleArray {
+				
+				let id = articleJson["id"].stringValue
+				let color = UIColor(hexString: convertColorString(articleJson["image_hue"].stringValue))
+				
 				let article = ArticleAbstract(
 					title: articleJson["title"].stringValue,
 					hint: articleJson["hint"].stringValue,
 					image: await getImage(url: articleJson["images"].array?.first?.stringValue ?? ""),
-					id: articleJson["id"].stringValue,
-					charColor: UIColor(hexString: convertColorString(articleJson["image_hue"].stringValue))
+					id: id,
+					charColor: color
 				)
 				articles.append(article)
 				idList.append(articleJson["id"].stringValue)
+				colorDic[id] = color
 			}
 		}
 		return articles
@@ -138,14 +145,14 @@ extension ArticleManager {
 		print(idList)
 		async let json = service.getArticle(by: id)
 		let signal = idList.firstIndex(of: id) == 0
-		print(signal)
 
 		return try await (Article(
 			title: json["title"].stringValue,
 			body: json["body"].stringValue,
 			image: await getImage(url: json["image"].stringValue),
 			link: json["url"].stringValue,
-			css: json["css"].arrayValue.map { $0.stringValue }
+			css: json["css"].arrayValue.map { $0.stringValue },
+			charColor: colorDic[id] ?? .black
 		), signal)
 	}
 
@@ -205,4 +212,5 @@ struct Article {
 	let image: UIImage
 	let link: String
 	let css: [String]
+	let charColor: UIColor
 }

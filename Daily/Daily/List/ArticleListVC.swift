@@ -41,8 +41,7 @@ class ArticleListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(hexString: "#F3F3F3")
         configureNetworkMonitor()
     }
     
@@ -246,7 +245,10 @@ extension ArticleListViewController {
         } // Create Layout End
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+		
         guard let collectionView = collectionView else { return }
+		
+		collectionView.backgroundColor = UIColor(hexString: "#F3F3F3")
         
         // Register Cells And Headers
         collectionView.register(ArticleTopListCell.self,

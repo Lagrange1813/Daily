@@ -46,6 +46,13 @@ class ArticleTopListCell: ArticleListCell {
         let gradientView = GradientView(colors: gradientColors)
         
         contentView.addSubview(gradientView)
+		
+		gradientView.snp.makeConstraints { make in
+			make.bottom.equalToSuperview()
+			make.centerX.equalToSuperview()
+			make.width.equalTo(Constants.width - 10)
+			make.height.equalTo(150)
+		}
         
 		titleView.text = article.title
 		titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 20)
@@ -81,13 +88,9 @@ class ArticleTopListCell: ArticleListCell {
         indicator.frame = bounds
         contentView.addSubview(indicator)
 
+		contentView.layer.cornerRadius = 20
+		contentView.clipsToBounds = true
 		
-		gradientView.snp.makeConstraints { make in
-			make.bottom.equalToSuperview()
-			make.centerX.equalToSuperview()
-            make.width.equalTo(Constants.width - 10)
-			make.height.equalTo(100)
-		}
 	}
     
 	override func layoutSubviews() {
