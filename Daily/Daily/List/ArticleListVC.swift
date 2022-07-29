@@ -233,6 +233,7 @@ extension ArticleListViewController {
                         heightDimension: .absolute(100)
                     )
                 )
+                midItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
                 
                 let midGroup = NSCollectionLayoutGroup.horizontal(
                     layoutSize: NSCollectionLayoutSize(
@@ -375,24 +376,32 @@ extension ArticleListViewController {
         
 		// Header/Footer Provider
 		dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath in
+            
+            if indexPath.section == 1 { // Middle Section
+                guard let header = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: ArticleListHeaderView.reuseIdentifier,
+                    withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
+                    for: indexPath
+                ) as? ArticleListHeaderView else { fatalError() }
+                header.configureContents(with: "Explore")
+                return header
+            }
+            
+            
+            // Bottom Section
 			if kind == ArticleListHeaderView.reuseIdentifier { // Header
-                
-                if indexPath.section == 1 { // Middle Section
-                    guard let header = collectionView.dequeueReusableSupplementaryView(
-                        ofKind: ArticleListHeaderView.reuseIdentifier,
-                        withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
-                        for: indexPath
-                    ) as? ArticleListHeaderView else { fatalError() }
-                    header.configureContents(with: "Explore")
-                    return header
-                }
-                
 				guard let header = collectionView.dequeueReusableSupplementaryView(
 					ofKind: ArticleListHeaderView.reuseIdentifier,
 					withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
 					for: indexPath
 				) as? ArticleListHeaderView else { fatalError() }
-				header.configureContents(with: self.dates[indexPath.section - 1])
+                var dateStr = self.dates[indexPath.section - 1]
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyyMMdd"
+                guard let date = dateFormatter.date(from: dateStr) else { fatalError() }
+                dateFormatter.dateFormat = "MM月dd日"
+                dateStr = dateFormatter.string(from: date)
+				header.configureContents(with: dateStr)
 				return header
 			} else { // Footer
 				guard let footer = collectionView.dequeueReusableSupplementaryView(
