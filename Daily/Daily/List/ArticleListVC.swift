@@ -10,7 +10,7 @@ import UIKit
 
 class ArticleListViewController: UIViewController {
     var collectionView: UICollectionView?
-    let collectionViewHorizontalOffset: CGFloat = 15
+    let collectionViewHorizontalOffset: CGFloat = 0
     var dataSource: UICollectionViewDiffableDataSource<String, ArticleAbstract>?
     let pageControl = UIPageControl()
     var pageStack = [0]
