@@ -71,5 +71,15 @@ class JumpToWebVC: UIViewController {
             make.width.equalToSuperview()
             make.bottom.equalTo(toolBar.snp.top)
         }
+        webView.uiDelegate = self
     }
+}
+extension JumpToWebVC: WKUIDelegate {
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+            if  navigationAction.targetFrame?.isMainFrame == nil{
+                    webView.load(navigationAction.request)
+            }
+            return nil
+        }
+    
 }
