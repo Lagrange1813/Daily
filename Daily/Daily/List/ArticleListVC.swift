@@ -10,6 +10,7 @@ import UIKit
 
 class ArticleListViewController: UIViewController {
     var collectionView: UICollectionView?
+    let collectionViewHorizontalOffset: CGFloat = 15
     var dataSource: UICollectionViewDiffableDataSource<String, ArticleAbstract>?
     let pageControl = UIPageControl()
     var pageStack = [0]
@@ -173,8 +174,18 @@ extension ArticleListViewController {
         pageControl.pageIndicatorTintColor = .gray
         pageControl.currentPageIndicatorTintColor = .black
         guard let collectionView = collectionView else { return }
-        pageControl.frame = CGRect(x: view.bounds.width - 175, y: view.bounds.width - 40, width: 175, height: 40)
         collectionView.addSubview(pageControl)
+//        pageControl.snp.makeConstraints { make in
+//            make.top.equalToSuperview().offset(Constants.width - 80)
+//            make.trailing.equalToSuperview()
+//            make.height.equalTo(80)
+//            make.width.equalTo(200)
+//        }
+        let height = Constants.width - collectionViewHorizontalOffset * 2
+        pageControl.frame = CGRect(x: Constants.width - 200 - collectionViewHorizontalOffset,
+                                   y: height - 50,
+                                   width: 200,
+                                   height: 50)
     }
     
     private func configureCollectionView() {
@@ -270,9 +281,9 @@ extension ArticleListViewController {
         
 		collectionView.snp.makeConstraints { make in
 			make.top.equalToSuperview()
-			make.leading.equalToSuperview().offset(15)
+			make.leading.equalToSuperview().offset(collectionViewHorizontalOffset)
 			make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-			make.trailing.equalToSuperview().inset(15)
+			make.trailing.equalToSuperview().inset(collectionViewHorizontalOffset)
 		}
     } // Configure CollectionView End
     
