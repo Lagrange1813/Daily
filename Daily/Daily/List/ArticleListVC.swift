@@ -215,8 +215,10 @@ extension ArticleListViewController {
 				)
                 
 				let topSection = NSCollectionLayoutSection(group: topGroup)
-				topSection.orthogonalScrollingBehavior = .paging
+				
+				topSection.orthogonalScrollingBehavior = .groupPaging
 				topSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
+				
 				return topSection
 			} else { // Bottom Section
 				let listItem = NSCollectionLayoutItem(
