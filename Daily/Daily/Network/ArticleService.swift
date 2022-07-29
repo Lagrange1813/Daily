@@ -50,15 +50,9 @@ class ArticleService {
 		return Data()
 	}
 	
-	func getArticle(by id: String) async -> JSON {
+	func getArticle(by id: String) async throws -> JSON {
 		let url = URLList.article + id
-		async let result = AF.request(url).serializingData().result
-		switch await result {
-		case .success(let data):
-			return JSON(data)
-		case .failure(let error):
-			print(error)
-		}
-		return JSON()
+		let value = try await AF.request(url).serializingData().value
+		return JSON(value)
 	}
 }

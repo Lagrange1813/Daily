@@ -182,11 +182,16 @@ class ArticleDisplayViewController: UIViewController {
 	}
 
 	func setContent() {
+		webViewArray[1].willLoad = true
 		Task {
-			let article = await ArticleManager.shared.getArticle(by: self.id)
-			let html = concatHTML(css: article.css, body: article.body)
-			webViewArray[1].setContent(id: self.id, title: article.title, image: article.image, html: html)
-			webViewArray[1].isLoaded = true
+			do {
+				let article = try await ArticleManager.shared.getArticle(by: id)
+				let html = concatHTML(css: article.css, body: article.body)
+				webViewArray[1].setContent(id: id, title: article.title, image: article.image, html: html)
+				webViewArray[1].isLoaded = true
+			} catch {
+				print(error)
+			}
 		}
 	}
 
@@ -241,7 +246,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 		guard scrollView == switchingView else { return }
 
 		if noLeft {
-			print("noLeft")
 			if scrollView.contentOffset.x < Constants.width {
 				scrollView.setContentOffset(CGPoint(x: Constants.width, y: 0),
 				                            animated: false)
@@ -249,7 +253,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 		}
 
 		if noRight {
-			print("noRight")
 			if scrollView.contentOffset.x > Constants.width {
 				scrollView.setContentOffset(CGPoint(x: Constants.width, y: 0),
 				                            animated: false)
@@ -263,30 +266,39 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 		case .failed:
 			print("fail")
 		case .changed:
-			print("changed")
+//			print("changed")
 			let index = getRelativeOffset(at: switchingView.contentOffset.x + Constants.width / 2)
 			if index == currentIndex {
 				//
 			} else if index < 1 {
-				if webViewArray[0].isLoaded == false {
+				if webViewArray[0].willLoad == false {
+					webViewArray[0].willLoad = true
 					Task {
-						if let data = await ArticleManager.shared.lastArticle(of: self.id) {
+						do {
+							let id = webViewArray[1].id
+							let data = try await ArticleManager.shared.lastArticle(of: id)
+							self.id = data.0
 							let html = concatHTML(css: data.1.css, body: data.1.body)
 							webViewArray[0].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
+							webViewArray[0].isFirst = data.2
 							webViewArray[0].isLoaded = true
+						} catch {
+							print(error)
 						}
 					}
 				}
 
 			} else if index > 1 {
-				if webViewArray[2].isLoaded == false {
+				if webViewArray[2].willLoad == false {
+					webViewArray[2].willLoad = true
 					Task {
 						do {
-							if let data = try await ArticleManager.shared.nextArticle(of: self.id) {
-								let html = concatHTML(css: data.1.css, body: data.1.body)
-								webViewArray[2].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
-								webViewArray[2].isLoaded = true
-							}
+							let id = webViewArray[1].id
+							let data = try await ArticleManager.shared.nextArticle(of: id)
+							self.id = data.0
+							let html = concatHTML(css: data.1.css, body: data.1.body)
+							webViewArray[2].setContent(id: data.0, title: data.1.title, image: data.1.image, html: html)
+							webViewArray[2].isLoaded = true
 						} catch {
 							print(error)
 						}
@@ -318,7 +330,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		guard scrollView == switchingView else { return }
-		print("done")
 		guard let switchingView = switchingView else { return }
 
 		let index = index(at: switchingView.contentOffset.x + Constants.width / 2)
@@ -338,7 +349,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 	}
 
 	func moveToRight() {
-		id = webViewArray[2].id
 		webViewArray[2].snp.updateConstraints { make in
 			make.leading.equalToSuperview().offset(Constants.width)
 		}
@@ -360,7 +370,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 
 		if webViewArray[1].isLoaded == false {
 			noRight = true
-//			setContent()
 		} else {
 			noLeft = false
 			noRight = false
@@ -368,7 +377,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 	}
 
 	func moveToLeft() {
-		id = webViewArray[0].id
 		webViewArray[0].snp.updateConstraints { make in
 			make.leading.equalToSuperview().offset(Constants.width)
 		}
@@ -388,9 +396,8 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 
 		webViewArray[0].resetContent()
 
-		if webViewArray[1].isLoaded == false {
+		if webViewArray[1].isLoaded == false  || webViewArray[1].isFirst == true {
 			noLeft = true
-//			setContent()
 		} else {
 			noLeft = false
 			noRight = false
