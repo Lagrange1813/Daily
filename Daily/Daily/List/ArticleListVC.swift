@@ -181,16 +181,16 @@ extension ArticleListViewController {
 		pageControl.currentPage = 0
 		pageControl.numberOfPages = 5
 		pageControl.pageIndicatorTintColor = .gray
-		pageControl.currentPageIndicatorTintColor = .white
+		pageControl.currentPageIndicatorTintColor = .black
 		
 		guard let collectionView = collectionView else { return }
 		
 		collectionView.addSubview(pageControl)
 		
 		pageControl.snp.makeConstraints { make in
-			make.trailing.equalTo(view.snp.trailing)
-			make.top.equalToSuperview().offset(Constants.width - 30 - 50)
-			make.width.equalTo(175)
+			make.leading.equalToSuperview().offset(125)
+			make.top.equalToSuperview().offset(320 - 50)
+			make.width.equalTo(55)
 			make.height.equalTo(50)
 		}
 	}
@@ -429,9 +429,9 @@ extension ArticleListViewController: UICollectionViewDelegate {
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
-//        let detailVC = ArticleDisplayViewController(id: article.id)
-//        navigationController?.pushViewController(detailVC, animated: true)
+        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
+        let detailVC = ArticleDisplayViewController(id: article.id)
+        navigationController?.pushViewController(detailVC, animated: true)
         print(indexPath)
     }
 }

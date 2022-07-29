@@ -8,14 +8,13 @@
 import SnapKit
 import UIKit
 
-fileprivate let CornerRadius: CGFloat = 15
+private let CornerRadius: CGFloat = 15
 
 class ArticleListCell: UICollectionViewCell {
 	let imageView = UIImageView()
 	let titleView = UILabel()
 	let subtitleView = UILabel()
-	let gradientLayer = CAGradientLayer()
-	var gradientLayerPosition: CGPoint?
+	let symbolView = UILabel()
 	var articleId = ""
 }
 
@@ -39,25 +38,6 @@ class ArticleTopListCell: ArticleListCell {
 			make.leading.equalToSuperview().offset(5)
 			make.height.equalTo(180).priority(800)
 		}
-        
-		// Gradient Layer
-
-//		let gradientColors = [
-//			UIColor(article.charColor, withNewAlpha: 0).cgColor,
-//			UIColor(article.charColor, withNewAlpha: 0.8).cgColor,
-//			UIColor(article.charColor, withNewAlpha: 1).cgColor,
-//		]
-//
-//		let gradientView = GradientView(colors: gradientColors)
-//
-//		contentView.addSubview(gradientView)
-//
-//		gradientView.snp.makeConstraints { make in
-//			make.bottom.equalToSuperview()
-//			make.centerX.equalToSuperview()
-//			make.width.equalTo(Constants.width - 10)
-//			make.height.equalTo(150)
-//		}
         
 		titleView.text = article.title
 		titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 18)
@@ -89,23 +69,16 @@ class ArticleTopListCell: ArticleListCell {
 			make.height.equalTo(30)
 		}
         
-//		let constraints = [
-//			titleView.centerYAnchor.constraint(
-//				equalTo: contentView.centerYAnchor,
-//				constant: contentView.bounds.width / 4
-//			),
-//			titleView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-//			titleView.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
-//			titleView.heightAnchor.constraint(equalToConstant: 80),
-//
-//			subtitleView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 10),
-//			subtitleView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor),
-//			subtitleView.widthAnchor.constraint(equalTo: titleView.widthAnchor, constant: -20),
-//			subtitleView.heightAnchor.constraint(equalToConstant: 20),
-//		]
-//		contentView.addConstraints(constraints)
+		symbolView.text = "👾"
+		symbolView.backgroundColor = .clear
+		contentView.addSubview(symbolView)
 		
-
+		symbolView.snp.makeConstraints { make in
+			make.trailing.equalToSuperview().offset(-15)
+			make.bottom.equalToSuperview().offset(-15)
+			make.height.width.equalTo(30)
+		}
+		
 		contentView.layer.cornerRadius = CornerRadius
 		contentView.clipsToBounds = true
 		
@@ -199,26 +172,26 @@ class AriticleListFooterView: UICollectionReusableView {
 }
 
 protocol PageControlDelegate {
-    func pageControl(_ pageControl: PageControl, currentPageDidChangeTo now: Int)
+	func pageControl(_ pageControl: PageControl, currentPageDidChangeTo now: Int)
 }
 
 class PageControl: UIPageControl {
-    var delegate: PageControlDelegate?
-    var lastPage: Int = 0
-    init(delegate: PageControlDelegate?) {
-        self.delegate = delegate
-        super.init(frame: .zero)
-    }
+	var delegate: PageControlDelegate?
+	var lastPage: Int = 0
+	init(delegate: PageControlDelegate?) {
+		self.delegate = delegate
+		super.init(frame: .zero)
+	}
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+	@available(*, unavailable)
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        guard currentPage != lastPage else { return }
-        lastPage = currentPage
-        delegate?.pageControl(self, currentPageDidChangeTo: currentPage)
-    }
-
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+		super.touchesEnded(touches, with: event)
+		guard currentPage != lastPage else { return }
+		lastPage = currentPage
+		delegate?.pageControl(self, currentPageDidChangeTo: currentPage)
+	}
 }
