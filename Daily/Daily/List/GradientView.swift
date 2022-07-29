@@ -23,7 +23,8 @@ class GradientView: UIView {
 	
 	override var bounds: CGRect {
 		didSet {
-			gradientLayer.bounds = bounds
+            gradientLayer.frame.origin = CGPoint(x: 0, y: 0)
+            gradientLayer.frame.size = bounds.size
 		}
 	}
 	
