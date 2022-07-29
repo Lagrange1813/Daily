@@ -5,47 +5,45 @@
 //  Created by 闫润邦 on 2022/7/26.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 class ArticleListCell: UICollectionViewCell {
-    let imageView = UIImageView()
-    let titleView = UILabel()
-    let subtitleView = UILabel()
-    let gradientLayer = CAGradientLayer()
-    var gradientLayerPosition: CGPoint?
-    var articleId = ""
+	let imageView = UIImageView()
+	let titleView = UILabel()
+	let subtitleView = UILabel()
+	let gradientLayer = CAGradientLayer()
+	var gradientLayerPosition: CGPoint?
+	var articleId = ""
 }
 
 class ArticleTopListCell: ArticleListCell {
 	static let reuseIdentifier = "article-top-list-cell"
     
-    func configureContents(withArticle article: ArticleAbstract, indicator: UIActivityIndicatorView) {
-
-        
-        articleId = article.id
+	func configureContents(withArticle article: ArticleAbstract, indicator: UIActivityIndicatorView) {
+		articleId = article.id
 		imageView.image = article.image
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
 		contentView.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.leading.equalToSuperview()
-            make.height.equalToSuperview()
-        }
+		imageView.snp.makeConstraints { make in
+			make.bottom.equalToSuperview()
+			make.trailing.equalToSuperview()
+			make.leading.equalToSuperview()
+			make.height.equalToSuperview()
+		}
         
-        // Gradient Layer
+		// Gradient Layer
 
-        let gradientColors = [
-            UIColor(article.charColor, withNewAlpha: 0).cgColor,
-            UIColor(article.charColor, withNewAlpha: 0.8).cgColor,
-            UIColor(article.charColor, withNewAlpha: 1).cgColor,
-        ]
+		let gradientColors = [
+			UIColor(article.charColor, withNewAlpha: 0).cgColor,
+			UIColor(article.charColor, withNewAlpha: 0.8).cgColor,
+			UIColor(article.charColor, withNewAlpha: 1).cgColor,
+		]
         
-        let gradientView = GradientView(colors: gradientColors)
+		let gradientView = GradientView(colors: gradientColors)
         
-        contentView.addSubview(gradientView)
+		contentView.addSubview(gradientView)
 		
 		gradientView.snp.makeConstraints { make in
 			make.bottom.equalToSuperview()
@@ -58,7 +56,7 @@ class ArticleTopListCell: ArticleListCell {
 		titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 20)
 		titleView.backgroundColor = .clear
 		titleView.numberOfLines = 0
-		titleView.lineBreakMode = .byCharWrapping
+		titleView.lineBreakMode = .byWordWrapping
 		titleView.textColor = .white
 		titleView.translatesAutoresizingMaskIntoConstraints = false
 		contentView.addSubview(titleView)
@@ -85,12 +83,11 @@ class ArticleTopListCell: ArticleListCell {
 			subtitleView.heightAnchor.constraint(equalToConstant: 20),
 		]
 		contentView.addConstraints(constraints)
-        indicator.frame = bounds
-        contentView.addSubview(indicator)
+		indicator.frame = bounds
+		contentView.addSubview(indicator)
 
 		contentView.layer.cornerRadius = 20
 		contentView.clipsToBounds = true
-		
 	}
     
 	override func layoutSubviews() {
@@ -102,13 +99,13 @@ class ArticleBottomListCell: ArticleListCell {
 	static let reuseIdentifier = "article-bottom-list-cell"
     
 	func configureContents(with article: ArticleAbstract) {
-        articleId = article.id
+		articleId = article.id
         
 		titleView.text = article.title
 		titleView.numberOfLines = 0
 		titleView.textColor = .black
-		titleView.lineBreakMode = .byCharWrapping
-		titleView.font = UIFont(name: "LXGWWenKaiMono-Regular", size: 20)
+		titleView.lineBreakMode = .byWordWrapping
+		titleView.font = UIFont(name: "LXGWWenKaiMono-Regular", size: 18)
 		titleView.translatesAutoresizingMaskIntoConstraints = false
 		contentView.addSubview(titleView)
         
@@ -152,7 +149,7 @@ class ArticleListHeaderView: UICollectionReusableView {
 	static let reuseIdentifier = "article-list-header-view"
 	let dateLabel = UILabel()
     
-    func configureContents(with mmdd: String) {
+	func configureContents(with mmdd: String) {
 		dateLabel.text = mmdd
 		dateLabel.textColor = .darkGray
 		dateLabel.font = .preferredFont(forTextStyle: .subheadline)
@@ -162,11 +159,11 @@ class ArticleListHeaderView: UICollectionReusableView {
 }
 
 class AriticleListFooterView: UICollectionReusableView {
-    static let reuseIdentifier = "article-list-footer-view"
+	static let reuseIdentifier = "article-list-footer-view"
     
-    func configureContents(with activityIndicator: UIActivityIndicatorView) {
-        removeAllSubviews()
-        addSubview(activityIndicator)
-        activityIndicator.frame = bounds
-    }
+	func configureContents(with activityIndicator: UIActivityIndicatorView) {
+		removeAllSubviews()
+		addSubview(activityIndicator)
+		activityIndicator.frame = bounds
+	}
 }
