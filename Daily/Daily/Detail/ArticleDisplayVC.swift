@@ -414,7 +414,6 @@ extension ArticleDisplayViewController: ArticleDetailViewDelegate {
     func jumpToWeb(urlRequest: URLRequest) {
         let jumpToWebVC = JumpToWebVC(urlRequest: urlRequest)
         present(jumpToWebVC, animated: true)
-        print("present")
         
     }
 }

@@ -15,6 +15,8 @@ class ArticleDetailView: WKWebView {
 	
 	private var imageView: UIImageView?
 	private var titleLabel: UILabel?
+    
+    var delegate: ArticleDetailViewDelegate?
 
 	let imageHeight: CGFloat = 400
 
@@ -105,4 +107,15 @@ extension ArticleDetailView: WKNavigationDelegate {
 	func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
 		webView.evaluateJavaScript("document.body.style.fontFamily = \"-apple-system\"")
 	}
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+        if navigationAction.request.url == URL(string: "about:blank") {
+            return .allow
+        } else {
+            delegate?.jumpToWeb(urlRequest: navigationAction.request)
+        }
+        return .cancel
+    }
+}
+protocol ArticleDetailViewDelegate {
+    func jumpToWeb(urlRequest: URLRequest)
 }
