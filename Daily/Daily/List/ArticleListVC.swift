@@ -7,6 +7,7 @@
 
 import Network
 import UIKit
+import SwiftUI
 
 class ArticleListViewController: UIViewController {
     var collectionView: UICollectionView?
@@ -18,6 +19,8 @@ class ArticleListViewController: UIViewController {
     var dates = [""]
     // 用于无限轮播图片
     var isFirstTime: Bool = true
+    var timer: Timer?
+    var autoPlay = true
     //
     var seletedDate: String = "" {
         didSet {
@@ -354,6 +357,7 @@ extension ArticleListViewController {
 extension ArticleListViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let y = scrollView.contentOffset.y
+        print(y)
 //        let collectionView = scrollView as! UICollectionView
         if y < -91 {
             let indexPath = IndexPath(item: pageControl.currentPage, section: 0)
@@ -371,6 +375,11 @@ extension ArticleListViewController: UICollectionViewDelegate {
                 make.leading.equalToSuperview()
                 make.height.equalTo(390 - y - 91)
             }
+        }
+        if y == -91 {
+            autoPlay = true
+        } else {
+            autoPlay = false
         }
     }
 
@@ -525,11 +534,22 @@ extension ArticleListViewController {
 // 实现无限自动轮播
 extension ArticleListViewController {
     func setupTimer() {
-        let timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(showNextImage), userInfo: nil, repeats: true)
-        RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
+        timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(showNextImage), userInfo: nil, repeats: true)
+        if let timer = timer {
+            RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
+        }
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        autoPlay = false
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        autoPlay = true
     }
 
     @objc func showNextImage() {
+        if !autoPlay { return }
         guard let collectionView = collectionView else { return }
         nowPage += 1
         if nowPage == 8 {
@@ -538,6 +558,6 @@ extension ArticleListViewController {
         } else {
             collectionView.scrollToItem(at: IndexPath(item: nowPage, section: 0), at: .centeredHorizontally, animated: true)
         }
-        print(nowPage)
+//        print(nowPage)
     }
 }
