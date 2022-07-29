@@ -360,7 +360,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
         print(y)
 //        let collectionView = scrollView as! UICollectionView
         if y < -91 {
-            let indexPath = IndexPath(item: pageControl.currentPage, section: 0)
+            let indexPath = IndexPath(item: pageControl.currentPage+2, section: 0)
             let cell = collectionView?.cellForItem(at: indexPath) as? ArticleTopListCell
             guard let cell = cell else { return }
             let gradientLayer = cell.gradientLayer
@@ -386,20 +386,20 @@ extension ArticleListViewController: UICollectionViewDelegate {
     // func collectionView
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if isFirstTime {
-            collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
-            isFirstTime.toggle()
-        } else if indexPath.section == 0 {
-            if indexPath.item == 8 {
-                nowPage = 2
-                collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
-                return
-            } else if indexPath.item == 0 {
-                nowPage = 6
-                collectionView.scrollToItem(at: IndexPath(item: 6, section: 0), at: .centeredHorizontally, animated: false)
-                return
-            }
-        }
+//        if isFirstTime {
+//            collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
+//            isFirstTime.toggle()
+//        } else if indexPath.section == 0 {
+//            if indexPath.item == 8 {
+//                nowPage = 2
+//                collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
+//                return
+//            } else if indexPath.item == 0 {
+//                nowPage = 6
+//                collectionView.scrollToItem(at: IndexPath(item: 6, section: 0), at: .centeredHorizontally, animated: false)
+//                return
+//            }
+//        }
         
         // Should Fetch New Data
         guard let dataSource = dataSource else { return }
@@ -423,10 +423,10 @@ extension ArticleListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {}
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
-        let detailVC = ArticleDisplayViewController(id: article.id)
-        navigationController?.pushViewController(detailVC, animated: true)
-//        print(indexPath)
+//        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
+//        let detailVC = ArticleDisplayViewController(id: article.id)
+//        navigationController?.pushViewController(detailVC, animated: true)
+        print(indexPath)
     }
 }
 
@@ -446,17 +446,17 @@ extension ArticleListViewController {
             topActivityIndicator.startAnimating()
             todayActivityIndicator.startAnimating()
             topArticles = await ArticleManager.shared.getTopArticleAbstracts()
-            guard let lastArticles = topArticles.last, let firstArticle = topArticles.first else { return }
-            
-            let leftSecondArticle = ArticleAbstract(title: lastArticles.title, hint: lastArticles.hint, image: lastArticles.image, id: "0", charColor: lastArticles.charColor)
-            let leftFirstArticle = ArticleAbstract(title: "", hint: "", image: lastArticles.image, id: "0", charColor: lastArticles.charColor)
-            
-            topArticles.insert(leftSecondArticle, at: 0)
-            topArticles.insert(leftFirstArticle, at: 0)
-            let rightSecondArticle = ArticleAbstract(title: firstArticle.title, hint: firstArticle.hint, image: firstArticle.image, id: "", charColor: firstArticle.charColor)
-            let rightFirstArticle = ArticleAbstract(title: "", hint: "", image: firstArticle.image, id: "", charColor: firstArticle.charColor)
-            topArticles.append(rightSecondArticle)
-            topArticles.append(rightFirstArticle)
+//            guard let lastArticles = topArticles.last, let firstArticle = topArticles.first else { return }
+//            
+//            let leftSecondArticle = ArticleAbstract(title: lastArticles.title, hint: lastArticles.hint, image: lastArticles.image, id: "0", charColor: lastArticles.charColor)
+//            let leftFirstArticle = ArticleAbstract(title: "", hint: "", image: lastArticles.image, id: "0", charColor: lastArticles.charColor)
+//            
+//            topArticles.insert(leftSecondArticle, at: 0)
+//            topArticles.insert(leftFirstArticle, at: 0)
+//            let rightSecondArticle = ArticleAbstract(title: firstArticle.title, hint: firstArticle.hint, image: firstArticle.image, id: "", charColor: firstArticle.charColor)
+//            let rightFirstArticle = ArticleAbstract(title: "", hint: "", image: firstArticle.image, id: "", charColor: firstArticle.charColor)
+//            topArticles.append(rightSecondArticle)
+//            topArticles.append(rightFirstArticle)
             var snapshot = dataSource.snapshot()
             snapshot.appendSections(["top"])
             snapshot.appendItems(topArticles, toSection: "top")
@@ -531,14 +531,14 @@ extension ArticleListViewController {
 
     @objc func showNextImage() {
         if !autoPlay { return }
-        guard let collectionView = collectionView else { return }
-        nowPage += 1
-        if nowPage == 8 {
-            collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
-            collectionView.scrollToItem(at: IndexPath(item: 3, section: 0), at: .centeredHorizontally, animated: true)
-        } else {
-            collectionView.scrollToItem(at: IndexPath(item: nowPage, section: 0), at: .centeredHorizontally, animated: true)
-        }
+//        guard let collectionView = collectionView else { return }
+//        nowPage += 1
+//        if nowPage == 8 {
+//            collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
+//            collectionView.scrollToItem(at: IndexPath(item: 3, section: 0), at: .centeredHorizontally, animated: true)
+//        } else {
+//            collectionView.scrollToItem(at: IndexPath(item: nowPage, section: 0), at: .centeredHorizontally, animated: true)
+//        }
 //        print(nowPage)
     }
 }
