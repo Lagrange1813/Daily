@@ -244,6 +244,17 @@ extension ArticleListViewController {
                 )
                 let midSection = NSCollectionLayoutSection(group: midGroup)
                 midSection.orthogonalScrollingBehavior = .continuous
+                
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .absolute(30)
+                    ),
+                    elementKind: ArticleListHeaderView.reuseIdentifier,
+                    alignment: .top)
+                midSection.boundarySupplementaryItems = [header]
+                midSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15,
+                                                                   bottom: 5, trailing: 15)
                 return midSection
             } else { // Bottom Section
 				let listItem = NSCollectionLayoutItem(
@@ -365,6 +376,17 @@ extension ArticleListViewController {
 		// Header/Footer Provider
 		dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath in
 			if kind == ArticleListHeaderView.reuseIdentifier { // Header
+                
+                if indexPath.section == 1 { // Middle Section
+                    guard let header = collectionView.dequeueReusableSupplementaryView(
+                        ofKind: ArticleListHeaderView.reuseIdentifier,
+                        withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
+                        for: indexPath
+                    ) as? ArticleListHeaderView else { fatalError() }
+                    header.configureContents(with: "Explore")
+                    return header
+                }
+                
 				guard let header = collectionView.dequeueReusableSupplementaryView(
 					ofKind: ArticleListHeaderView.reuseIdentifier,
 					withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
