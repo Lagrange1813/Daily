@@ -167,3 +167,28 @@ class AriticleListFooterView: UICollectionReusableView {
 		activityIndicator.frame = bounds
 	}
 }
+
+protocol PageControlDelegate {
+    func pageControl(_ pageControl: PageControl, currentPageDidChangeTo now: Int)
+}
+
+class PageControl: UIPageControl {
+    var delegate: PageControlDelegate
+    
+    init(delegate: PageControlDelegate) {
+        self.delegate = delegate
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var currentPage: Int {
+        didSet {
+            print("DidSet")
+            delegate.pageControl(self, currentPageDidChangeTo: currentPage)
+        }
+        
+    }
+}

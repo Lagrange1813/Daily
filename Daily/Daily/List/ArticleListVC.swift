@@ -11,14 +11,13 @@ import UIKit
 class ArticleListViewController: UIViewController {
     var collectionView: UICollectionView?
     var dataSource: UICollectionViewDiffableDataSource<String, ArticleAbstract>?
-    let pageControl = UIPageControl()
-    var pageStack = [0]
+    var pageControl: PageControl?
     var earliestDate = ""
     var dates = [""]
+    var collectionViewOriginalYOffset: CGFloat = 0
     var seletedDate: String = "" {
         didSet {
             // Todo after select date
-            print(seletedDate)
             earliestDate = seletedDate
             dates = [""]
             var snapshot = NSDiffableDataSourceSnapshot<String, ArticleAbstract>()
@@ -168,10 +167,13 @@ extension ArticleListViewController {
     }
     
     private func configurePageControl() {
+        pageControl = PageControl(delegate: self)
+        guard let pageControl = pageControl else { return }
         pageControl.currentPage = 0
         pageControl.numberOfPages = 5
         pageControl.pageIndicatorTintColor = .gray
         pageControl.currentPageIndicatorTintColor = .white
+
 		
         guard let collectionView = collectionView else { return }
 		
@@ -208,6 +210,9 @@ extension ArticleListViewController {
                 let topSection = NSCollectionLayoutSection(group: topGroup)
                 topSection.orthogonalScrollingBehavior = .paging
                 topSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
+                topSection.visibleItemsInvalidationHandler = { items, _, _ in
+                    self.pageControl?.currentPage = items.last?.indexPath.item ?? 0
+                }
                 return topSection
             } else { // Bottom Section
                 let listItem = NSCollectionLayoutItem(
@@ -282,6 +287,7 @@ extension ArticleListViewController {
 			make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
 			make.trailing.equalToSuperview()
 		}
+        
     } // Configure CollectionView End
     
     // Configure DataSource
@@ -349,6 +355,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let y = scrollView.contentOffset.y
         if y < -91 {
+            guard let pageControl = pageControl else { return }
             let indexPath = IndexPath(item: pageControl.currentPage, section: 0)
             let cell = collectionView?.cellForItem(at: indexPath) as? ArticleTopListCell
             guard let cell = cell else { return }
@@ -377,20 +384,12 @@ extension ArticleListViewController: UICollectionViewDelegate {
         }
         
         guard indexPath.section == 0 else { return }
-        pageStack.append(indexPath.item)
-        guard let last = pageStack.last else { return }
-        pageControl.currentPage = last
+        guard let pageControl = pageControl else { return }
 		collectionView.bringSubviewToFront(pageControl)
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard indexPath.section == 0 else { return }
-        guard let last = pageStack.last else { return }
-        if last == indexPath.item {
-            pageStack.removeLast()
-        }
-        guard let page = pageStack.last else { return }
-        pageControl.currentPage = page
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -440,7 +439,7 @@ extension ArticleListViewController {
             snapshot.appendItems(topArticles, toSection: "top")
             dataSource.apply(snapshot, animatingDifferences: true)
             topActivityIndicator.stopAnimating()
-            pageControl.numberOfPages = topArticles.count
+            pageControl?.numberOfPages = topArticles.count
             
             earliestDate = await ArticleManager.shared.getTodaysDate()
             
@@ -487,5 +486,11 @@ extension ArticleListViewController {
         guard var nowDate = dateFormatter.date(from: now) else { fatalError() }
         nowDate = nowDate.dayBofre
         return dateFormatter.string(from: nowDate)
+    }
+}
+
+extension ArticleListViewController: PageControlDelegate {
+    func pageControl(_ pageControl: PageControl, currentPageDidChangeTo now: Int) {
+
     }
 }
