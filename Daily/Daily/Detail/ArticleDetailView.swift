@@ -87,6 +87,10 @@ class ArticleDetailView: WKWebView {
 	}
 	
 	public func resetContent() {
+		scrollView.setContentOffset(CGPoint(x: 0, y: -200), animated: false)
+		imageView?.snp.updateConstraints({ make in
+			make.height.equalTo(imageHeight)
+		})
 		id = ""
 		imageView?.image = UIImage()
 		titleLabel?.text = ""

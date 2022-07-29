@@ -242,7 +242,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 		guard scrollView == switchingView else { return }
 
 		if noLeft {
-			print("noLeft")
 			if scrollView.contentOffset.x < Constants.width {
 				scrollView.setContentOffset(CGPoint(x: Constants.width, y: 0),
 				                            animated: false)
@@ -250,7 +249,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 		}
 
 		if noRight {
-			print("noRight")
 			if scrollView.contentOffset.x > Constants.width {
 				scrollView.setContentOffset(CGPoint(x: Constants.width, y: 0),
 				                            animated: false)
@@ -327,7 +325,6 @@ extension ArticleDisplayViewController: UIScrollViewDelegate {
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		guard scrollView == switchingView else { return }
-		print("done")
 		guard let switchingView = switchingView else { return }
 
 		let index = index(at: switchingView.contentOffset.x + Constants.width / 2)

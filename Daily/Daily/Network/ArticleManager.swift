@@ -123,6 +123,7 @@ extension ArticleManager {
 
 enum LastArticleError: Error {
 	case outOfIndex
+	case first
 }
 
 enum NextArticleError: Error {
@@ -156,12 +157,13 @@ extension ArticleManager {
 	public func lastArticle(of id: String) async throws -> (String, Article) {
 		guard let index = idList.firstIndex(of: id),
 		      index > 0 else { throw LastArticleError.outOfIndex }
+		if index == 1 { throw LastArticleError.first }
 		return (idList[index - 1], try await getArticle(by: idList[index - 1]))
 	}
 
 	public func nextArticle(of id: String) async throws -> (String, Article) {
 		guard let index = idList.firstIndex(of: id) else { throw NextArticleError.notInside }
-		if index == idList.count - 1 {
+		if index == idList.count - 3 {
 			try await fetchNextDatesAbstract()
 		}
 		guard index < idList.count else { throw NextArticleError.outOfNumber }
