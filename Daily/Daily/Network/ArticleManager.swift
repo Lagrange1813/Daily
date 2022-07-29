@@ -28,8 +28,6 @@ class ArticleManager {
 	private var idList: [String] = []
 	private var currentDate: String?
 
-	private var currentID: String?
-
 	private var mode: ArticleListType = .date
 
 	fileprivate init() {}
@@ -136,22 +134,19 @@ enum fetchBeforeDataError: Error {
 }
 
 extension ArticleManager {
-	public func getCurrentID() -> String? {
-		return currentID
-	}
-
-	public func getArticle(by id: String) async throws -> Article {
+	public func getArticle(by id: String) async throws -> (Article, Bool) {
 		print(idList)
 		async let json = service.getArticle(by: id)
-		currentID = id
+		let signal = idList.firstIndex(of: id) == 0
+		print(signal)
 
-		return try await Article(
+		return try await (Article(
 			title: json["title"].stringValue,
 			body: json["body"].stringValue,
 			image: await getImage(url: json["image"].stringValue),
 			link: json["url"].stringValue,
 			css: json["css"].arrayValue.map { $0.stringValue }
-		)
+		), signal)
 	}
 
 	public func lastArticle(of id: String) async throws -> (String, Article, Bool) {
@@ -159,7 +154,7 @@ extension ArticleManager {
 		guard let index = idList.firstIndex(of: id),
 		      index > 0 else { throw LastArticleError.outOfIndex }
 		if index == 1 { signal = true }
-		return (idList[index - 1], try await getArticle(by: idList[index - 1]), signal)
+		return (idList[index - 1], try await getArticle(by: idList[index - 1]).0, signal)
 	}
 
 	public func nextArticle(of id: String) async throws -> (String, Article) {
@@ -168,7 +163,7 @@ extension ArticleManager {
 			try await fetchNextDatesAbstract()
 		}
 		guard index < idList.count else { throw NextArticleError.outOfNumber }
-		return (idList[index + 1], try await getArticle(by: idList[index + 1]))
+		return (idList[index + 1], try await getArticle(by: idList[index + 1]).0)
 	}
 
 	public func fetchNextDatesAbstract() async throws {

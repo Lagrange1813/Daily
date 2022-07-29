@@ -50,11 +50,6 @@ class ArticleDisplayViewController: UIViewController {
             webViewArray[i].delegate = self
         }
 
-		Task {
-			await ArticleManager.shared.getTodaysDate()
-			await ArticleManager.shared.getTodaysArticleAbstracts()
-		}
-
 		configureToolbar()
 		configureSwitchingView()
 		configureTopView()
@@ -185,12 +180,16 @@ class ArticleDisplayViewController: UIViewController {
 		webViewArray[1].willLoad = true
 		Task {
 			do {
-				let article = try await ArticleManager.shared.getArticle(by: id)
-				let html = concatHTML(css: article.css, body: article.body)
-				webViewArray[1].setContent(id: id, title: article.title, image: article.image, html: html)
+				let data = try await ArticleManager.shared.getArticle(by: id)
+				let html = concatHTML(css: data.0.css, body: data.0.body)
+				webViewArray[1].setContent(id: id, title: data.0.title, image: data.0.image, html: html)
+				webViewArray[1].isFirst = data.1
 				webViewArray[1].isLoaded = true
 			} catch {
 				print(error)
+			}
+			if webViewArray[1].isFirst {
+				noLeft = true
 			}
 		}
 	}

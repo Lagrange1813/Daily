@@ -348,7 +348,6 @@ extension ArticleListViewController: UICollectionViewDelegate {
                 gradientLayer.position = CGPoint(x: position.x, y: position.y-y-91)
 				view.layoutIfNeeded()
             }
-            let imageView = cell.imageView
             cell.imageView.snp.remakeConstraints { make in
                 make.bottom.equalToSuperview()
                 make.trailing.equalToSuperview()
