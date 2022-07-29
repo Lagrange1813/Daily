@@ -359,6 +359,7 @@ extension ArticleListViewController {
                         for: indexPath
                     ) as? ArticleMiddleListCell else { fatalError() }
                     let article = self.middleArticles[indexPath.item]
+//                    cell.removeAllSubviews()
                     cell.configureContents(withImage:
                                             article.image,
                                            title: article.title)
@@ -547,15 +548,15 @@ extension ArticleListViewController {
             guard let signatureImage = UIImage(systemName: "signature") else { return }
             middleArticles = [
                 ArticleAbstract(title: "大误", hint: "",
-                                image: signatureImage,
+                                image: UIImage(named: "night") ?? signatureImage,
                                 id: "",
                                 charColor: .black),
                 ArticleAbstract(title: "小事", hint: "",
-                                image: signatureImage,
+                                image: UIImage(named: "night") ?? signatureImage,
                                 id: "",
                                 charColor: .white),
                 ArticleAbstract(title: "瞎扯", hint: "",
-                                image: signatureImage,
+                                image: UIImage(named: "night") ?? signatureImage,
                                 id: "",
                                 charColor: .blue),
                 ArticleAbstract(title: "深夜食堂", hint: "",
@@ -563,7 +564,7 @@ extension ArticleListViewController {
                                 id: "",
                                 charColor: .brown),
                 ArticleAbstract(title: "知天下", hint: "",
-                                image: signatureImage,
+                                image: UIImage(named: "night") ?? signatureImage,
                                 id: "",
                                 charColor: .cyan)
             ]
