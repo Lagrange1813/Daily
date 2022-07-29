@@ -95,6 +95,8 @@ class ArticleMiddleListCell: ArticleListCell {
     static let reuseIdentifier = "article-middle-list-cell"
     
     func configureContents(withImage image: UIImage?, title: String) {
+		contentView.layer.cornerRadius = 10
+		
         imageView.image = image
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit

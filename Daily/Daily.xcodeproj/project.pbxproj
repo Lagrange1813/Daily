@@ -116,6 +116,7 @@
 		7A49CA0D288ECBB700411D49 /* Daily */ = {
 			isa = PBXGroup;
 			children = (
+				7A512C6628942A0D003806E1 /* Test */,
 				7ACDD62C289389EE005DE38A /* Universal */,
 				7A838F7228901FAA00837DB7 /* Resources */,
 				7A122AA128912480005B6FD7 /* Detail */,
@@ -123,7 +124,6 @@
 				7A122AA3289124CB005B6FD7 /* Network */,
 				7A49CA10288ECBB700411D49 /* SceneDelegate.swift */,
 				7A49CA0E288ECBB700411D49 /* AppDelegate.swift */,
-				7A49CA12288ECBB700411D49 /* ViewController.swift */,
 				7A49CA1A288ECBBB00411D49 /* Assets.xcassets */,
 				7A49CA1C288ECBBB00411D49 /* LaunchScreen.storyboard */,
 				7A49CA1F288ECBBB00411D49 /* Info.plist */,
@@ -131,6 +131,14 @@
 				7AF36BDC2891083100F3EFFA /* Constants.swift */,
 			);
 			path = Daily;
+			sourceTree = "<group>";
+		};
+		7A512C6628942A0D003806E1 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				7A49CA12288ECBB700411D49 /* ViewController.swift */,
+			);
+			path = Test;
 			sourceTree = "<group>";
 		};
 		7A838F7228901FAA00837DB7 /* Resources */ = {

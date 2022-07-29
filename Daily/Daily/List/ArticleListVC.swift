@@ -226,15 +226,15 @@ extension ArticleListViewController {
                 
                 let midItem = NSCollectionLayoutItem(
                     layoutSize:NSCollectionLayoutSize(
-                        widthDimension: .absolute(150),
-                        heightDimension: .absolute(150)
+                        widthDimension: .absolute(100),
+                        heightDimension: .absolute(100)
                     )
                 )
                 
                 let midGroup = NSCollectionLayoutGroup.horizontal(
                     layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .absolute(150),
-                        heightDimension: .absolute(160)
+                        widthDimension: .absolute(100),
+                        heightDimension: .absolute(100)
                     ),
                     subitem: midItem,
                     count:1
