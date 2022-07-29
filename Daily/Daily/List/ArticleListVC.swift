@@ -355,33 +355,33 @@ extension ArticleListViewController {
 
 /// Collection View Delegate
 extension ArticleListViewController: UICollectionViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let y = scrollView.contentOffset.y
-        print(y)
-//        let collectionView = scrollView as! UICollectionView
-        if y < -91 {
-            let indexPath = IndexPath(item: pageControl.currentPage+2, section: 0)
-            let cell = collectionView?.cellForItem(at: indexPath) as? ArticleTopListCell
-            guard let cell = cell else { return }
-            let gradientLayer = cell.gradientLayer
-            if let position = cell.gradientLayerPosition {
-                print(position)
-                gradientLayer.position = CGPoint(x: position.x, y: position.y - y - 91)
-                view.layoutIfNeeded()
-            }
-            cell.imageView.snp.remakeConstraints { make in
-                make.bottom.equalToSuperview()
-                make.trailing.equalToSuperview()
-                make.leading.equalToSuperview()
-                make.height.equalTo(390 - y - 91)
-            }
-        }
-        if y == -91 {
-            autoPlay = true
-        } else {
-            autoPlay = false
-        }
-    }
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let y = scrollView.contentOffset.y
+//        print(y)
+////        let collectionView = scrollView as! UICollectionView
+//        if y < -91 {
+//            let indexPath = IndexPath(item: pageControl.currentPage+2, section: 0)
+//            let cell = collectionView?.cellForItem(at: indexPath) as? ArticleTopListCell
+//            guard let cell = cell else { return }
+//            let gradientLayer = cell.gradientLayer
+//            if let position = cell.gradientLayerPosition {
+//                print(position)
+//                gradientLayer.position = CGPoint(x: position.x, y: position.y - y - 91)
+//                view.layoutIfNeeded()
+//            }
+//            cell.imageView.snp.remakeConstraints { make in
+//                make.bottom.equalToSuperview()
+//                make.trailing.equalToSuperview()
+//                make.leading.equalToSuperview()
+//                make.height.equalTo(390 - y - 91)
+//            }
+//        }
+//        if y == -91 {
+//            autoPlay = true
+//        } else {
+//            autoPlay = false
+//        }
+//    }
 
     // func collectionView
 
