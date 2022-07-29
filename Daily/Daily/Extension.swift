@@ -41,6 +41,10 @@ extension Date {
     var dayBofre: Date {
         Calendar.current.date(byAdding: .day, value: -1, to: self) ?? Date.distantPast
     }
+    
+    var dayAfter: Date {
+        Calendar.current.date(byAdding: .day, value: 1, to: self) ?? Date.distantPast
+    }
 }
 
 extension UIView {

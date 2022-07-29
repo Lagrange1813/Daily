@@ -29,10 +29,12 @@ class ArticleListViewController: UIViewController {
             // Todo after select date
             earliestDate = seletedDate
             dates = [""]
+            guard let dataSource = dataSource else { return }
             var snapshot = NSDiffableDataSourceSnapshot<String, ArticleAbstract>()
-            snapshot.appendSections(["top"])
+            snapshot.appendSections(["top", "middle"])
             snapshot.appendItems(topArticles, toSection: "top")
-            dataSource?.apply(snapshot)
+            snapshot.appendItems(middleArticles, toSection: "middle")
+            dataSource.apply(snapshot)
             fetchNewData(setDate: false)
         }
     }
