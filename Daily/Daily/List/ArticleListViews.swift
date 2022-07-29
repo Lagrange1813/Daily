@@ -110,7 +110,8 @@ class ArticleMiddleListCell: ArticleListCell {
 
         
         titleView.text = title
-        titleView.textColor = .black
+		titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 18)
+        titleView.textColor = .white
         titleView.textAlignment = .center
         contentView.addSubview(titleView)
         titleView.snp.makeConstraints { make in

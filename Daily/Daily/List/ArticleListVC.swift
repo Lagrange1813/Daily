@@ -221,7 +221,7 @@ extension ArticleListViewController {
 
 				let topSection = NSCollectionLayoutSection(group: topGroup)
 				
-                topSection.orthogonalScrollingBehavior = .groupPagingCentered
+                topSection.orthogonalScrollingBehavior = .groupPaging
 				topSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
 				
 				return topSection
@@ -526,7 +526,7 @@ extension ArticleListViewController {
                                 id: "",
                                 charColor: .blue),
                 ArticleAbstract(title: "深夜食堂", hint: "",
-                                image:  signatureImage,
+								image:  UIImage(named: "night") ?? signatureImage,
                                 id: "",
                                 charColor: .brown),
                 ArticleAbstract(title: "知天下", hint: "",
