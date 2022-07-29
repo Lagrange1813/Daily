@@ -172,9 +172,17 @@ extension ArticleListViewController {
         pageControl.numberOfPages = 5
         pageControl.pageIndicatorTintColor = .gray
         pageControl.currentPageIndicatorTintColor = .black
+		
         guard let collectionView = collectionView else { return }
-        pageControl.frame = CGRect(x: view.bounds.width - 175, y: view.bounds.width - 40, width: 175, height: 40)
-        collectionView.addSubview(pageControl)
+		
+        collectionView.insertSubview(pageControl, at: 100)
+		
+		pageControl.snp.makeConstraints { make in
+			make.trailing.equalTo(view.snp.trailing)
+			make.top.equalToSuperview().offset(Constants.width - 30 - 50)
+			make.width.equalTo(175)
+			make.height.equalTo(50)
+		}
     }
     
     private func configureCollectionView() {
@@ -372,8 +380,7 @@ extension ArticleListViewController: UICollectionViewDelegate {
         pageStack.append(indexPath.item)
         guard let last = pageStack.last else { return }
         pageControl.currentPage = last
-        pageControl.removeFromSuperview()
-        collectionView.addSubview(pageControl)
+		collectionView.bringSubviewToFront(pageControl)
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
