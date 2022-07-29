@@ -16,8 +16,8 @@ class ArticleListViewController: UIViewController {
     var nowPage = 2
     var earliestDate = ""
     var dates = [""]
-    //用于无限轮播图片
-    var isFirstTime:Bool = true
+    // 用于无限轮播图片
+    var isFirstTime: Bool = true
     //
     var seletedDate: String = "" {
         didSet {
@@ -183,12 +183,12 @@ extension ArticleListViewController {
 		
         collectionView.addSubview(pageControl)
 		
-		pageControl.snp.makeConstraints { make in
-			make.trailing.equalTo(view.snp.trailing)
-			make.top.equalToSuperview().offset(Constants.width - 30 - 50)
-			make.width.equalTo(175)
-			make.height.equalTo(50)
-		}
+        pageControl.snp.makeConstraints { make in
+            make.trailing.equalTo(view.snp.trailing)
+            make.top.equalToSuperview().offset(Constants.width - 30 - 50)
+            make.width.equalTo(175)
+            make.height.equalTo(50)
+        }
     }
     
     private func configureCollectionView() {
@@ -198,14 +198,14 @@ extension ArticleListViewController {
                 let topItem = NSCollectionLayoutItem(
                     layoutSize: NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
-						heightDimension: .absolute(Constants.width-30)
+                        heightDimension: .absolute(Constants.width - 30)
                     )
                 )
                 topItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15)
                 let topGroup = NSCollectionLayoutGroup.horizontal(
                     layoutSize: NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
-                        heightDimension: .absolute(Constants.width-30)
+                        heightDimension: .absolute(Constants.width - 30)
                     ),
                     subitem: topItem,
                     count: 1
@@ -262,7 +262,7 @@ extension ArticleListViewController {
 		
         guard let collectionView = collectionView else { return }
 		
-		collectionView.backgroundColor = UIColor(hexString: "#F3F3F3")
+        collectionView.backgroundColor = UIColor(hexString: "#F3F3F3")
         
         // Register Cells And Headers
         collectionView.register(ArticleTopListCell.self,
@@ -282,12 +282,12 @@ extension ArticleListViewController {
         collectionView.bounces = true
         collectionView.showsVerticalScrollIndicator = false
         
-		collectionView.snp.makeConstraints { make in
-			make.top.equalToSuperview()
-			make.leading.equalToSuperview()
-			make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-			make.trailing.equalToSuperview()
-		}
+        collectionView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.trailing.equalToSuperview()
+        }
     } // Configure CollectionView End
     
     // Configure DataSource
@@ -362,8 +362,8 @@ extension ArticleListViewController: UICollectionViewDelegate {
             let gradientLayer = cell.gradientLayer
             if let position = cell.gradientLayerPosition {
                 print(position)
-                gradientLayer.position = CGPoint(x: position.x, y: position.y-y-91)
-				view.layoutIfNeeded()
+                gradientLayer.position = CGPoint(x: position.x, y: position.y - y - 91)
+                view.layoutIfNeeded()
             }
             cell.imageView.snp.remakeConstraints { make in
                 make.bottom.equalToSuperview()
@@ -371,17 +371,16 @@ extension ArticleListViewController: UICollectionViewDelegate {
                 make.leading.equalToSuperview()
                 make.height.equalTo(390 - y - 91)
             }
-            
         }
     }
-    //func collectionView
+
+    // func collectionView
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        
         if isFirstTime {
             collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
             isFirstTime.toggle()
-        }else if indexPath.section == 0 {
+        } else if indexPath.section == 0 {
             if indexPath.item == 8 {
                 nowPage = 2
                 collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
@@ -390,7 +389,6 @@ extension ArticleListViewController: UICollectionViewDelegate {
                 nowPage = 6
                 collectionView.scrollToItem(at: IndexPath(item: 6, section: 0), at: .centeredHorizontally, animated: false)
                 return
-                
             }
         }
         
@@ -410,24 +408,16 @@ extension ArticleListViewController: UICollectionViewDelegate {
         default:
             pageControl.currentPage = nowPage - 2
         }
-		collectionView.bringSubviewToFront(pageControl)
+        collectionView.bringSubviewToFront(pageControl)
     }
     
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        guard indexPath.section == 0 else { return }
-//        guard let last = pageStack.last else { return }
-//        if last == indexPath.item {
-//            pageStack.removeLast()
-//        }
-//        guard let page = pageStack.last else { return }
-//        pageControl.currentPage = page-2
-    }
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {}
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
-//        let detailVC = ArticleDisplayViewController(id: article.id)
-//        navigationController?.pushViewController(detailVC, animated: true)
-        print(indexPath)
+        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
+        let detailVC = ArticleDisplayViewController(id: article.id)
+        navigationController?.pushViewController(detailVC, animated: true)
+//        print(indexPath)
     }
 }
 
@@ -531,21 +521,23 @@ extension ArticleListViewController {
         return dateFormatter.string(from: nowDate)
     }
 }
-//实现无限自动轮播
+
+// 实现无限自动轮播
 extension ArticleListViewController {
     func setupTimer() {
-           let timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(showNextImage), userInfo: nil, repeats: true)
+        let timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(showNextImage), userInfo: nil, repeats: true)
         RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
-        }
+    }
+
     @objc func showNextImage() {
         guard let collectionView = collectionView else { return }
         nowPage += 1
-        if nowPage==8{
-            nowPage = 3
+        if nowPage == 8 {
+            collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
+            collectionView.scrollToItem(at: IndexPath(item: 3, section: 0), at: .centeredHorizontally, animated: true)
+        } else {
+            collectionView.scrollToItem(at: IndexPath(item: nowPage, section: 0), at: .centeredHorizontally, animated: true)
         }
-        collectionView.scrollToItem(at: IndexPath(item: nowPage, section: 0), at: .centeredHorizontally, animated: true)
         print(nowPage)
-        
-        
     }
 }
