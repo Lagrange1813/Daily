@@ -233,19 +233,29 @@ extension ArticleListViewController {
                         heightDimension: .absolute(100)
                     )
                 )
-				midItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0,                                                    trailing: 0)
+                midItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
                 
                 let midGroup = NSCollectionLayoutGroup.horizontal(
                     layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .absolute(115),
+                        widthDimension: .absolute(100),
                         heightDimension: .absolute(100)
                     ),
                     subitem: midItem,
-                    count:1
+                    count: 1
                 )
                 let midSection = NSCollectionLayoutSection(group: midGroup)
                 midSection.orthogonalScrollingBehavior = .continuous
-				midSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
+                
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .absolute(30)
+                    ),
+                    elementKind: ArticleListHeaderView.reuseIdentifier,
+                    alignment: .top)
+                midSection.boundarySupplementaryItems = [header]
+                midSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15,
+                                                                   bottom: 20, trailing: 15)
                 return midSection
             } else { // Bottom Section
 				let listItem = NSCollectionLayoutItem(
@@ -366,13 +376,32 @@ extension ArticleListViewController {
         
 		// Header/Footer Provider
 		dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath in
+            
+            if indexPath.section == 1 { // Middle Section
+                guard let header = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: ArticleListHeaderView.reuseIdentifier,
+                    withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
+                    for: indexPath
+                ) as? ArticleListHeaderView else { fatalError() }
+                header.configureContents(with: "Explore")
+                return header
+            }
+            
+            
+            // Bottom Section
 			if kind == ArticleListHeaderView.reuseIdentifier { // Header
 				guard let header = collectionView.dequeueReusableSupplementaryView(
 					ofKind: ArticleListHeaderView.reuseIdentifier,
 					withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
 					for: indexPath
 				) as? ArticleListHeaderView else { fatalError() }
-				header.configureContents(with: self.dates[indexPath.section - 1])
+                var dateStr = self.dates[indexPath.section - 1]
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyyMMdd"
+                guard let date = dateFormatter.date(from: dateStr) else { fatalError() }
+                dateFormatter.dateFormat = "MM月dd日"
+                dateStr = dateFormatter.string(from: date)
+				header.configureContents(with: dateStr)
 				return header
 			} else { // Footer
 				guard let footer = collectionView.dequeueReusableSupplementaryView(
