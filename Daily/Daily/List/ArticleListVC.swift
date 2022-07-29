@@ -10,7 +10,6 @@ import UIKit
 
 class ArticleListViewController: UIViewController {
     var collectionView: UICollectionView?
-    let collectionViewHorizontalOffset: CGFloat = 0
     var dataSource: UICollectionViewDiffableDataSource<String, ArticleAbstract>?
     let pageControl = UIPageControl()
     var pageStack = [0]
@@ -193,14 +192,14 @@ extension ArticleListViewController {
                 let topItem = NSCollectionLayoutItem(
                     layoutSize: NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
-                        heightDimension: .fractionalWidth(1)
+						heightDimension: .absolute(Constants.width-30)
                     )
                 )
                 topItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15)
                 let topGroup = NSCollectionLayoutGroup.horizontal(
                     layoutSize: NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
-                        heightDimension: .fractionalWidth(1)
+                        heightDimension: .absolute(Constants.width-30)
                     ),
                     subitem: topItem,
                     count: 1
@@ -228,7 +227,7 @@ extension ArticleListViewController {
                 )
                 
                 let listSection = NSCollectionLayoutSection(group: listGroup)
-                listSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
+                listSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 20, trailing: 15)
                 
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
                     layoutSize: NSCollectionLayoutSize(
@@ -279,9 +278,9 @@ extension ArticleListViewController {
         
 		collectionView.snp.makeConstraints { make in
 			make.top.equalToSuperview()
-			make.leading.equalToSuperview().offset(collectionViewHorizontalOffset)
+			make.leading.equalToSuperview()
 			make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-			make.trailing.equalToSuperview().inset(collectionViewHorizontalOffset)
+			make.trailing.equalToSuperview()
 		}
     } // Configure CollectionView End
     
