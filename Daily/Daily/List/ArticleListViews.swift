@@ -174,7 +174,7 @@ protocol PageControlDelegate {
 
 class PageControl: UIPageControl {
     var delegate: PageControlDelegate
-    
+    var lastPage: Int = 0
     init(delegate: PageControlDelegate) {
         self.delegate = delegate
         super.init(frame: .zero)
@@ -184,11 +184,11 @@ class PageControl: UIPageControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override var currentPage: Int {
-        didSet {
-            print("DidSet")
-            delegate.pageControl(self, currentPageDidChangeTo: currentPage)
-        }
-        
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        guard currentPage != lastPage else { return }
+        lastPage = currentPage
+        delegate.pageControl(self, currentPageDidChangeTo: currentPage)
     }
+
 }

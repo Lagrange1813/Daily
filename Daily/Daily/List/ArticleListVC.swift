@@ -491,6 +491,8 @@ extension ArticleListViewController {
 
 extension ArticleListViewController: PageControlDelegate {
     func pageControl(_ pageControl: PageControl, currentPageDidChangeTo now: Int) {
-
+        guard let collectionView = collectionView else { return }
+        let indexPath = IndexPath(item: now, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
     }
 }
