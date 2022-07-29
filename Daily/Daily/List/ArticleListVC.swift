@@ -22,7 +22,8 @@ class ArticleListViewController: UIViewController {
     // 用于无限轮播图片
     var isFirstTime: Bool = true
     var timer: Timer?
-    var autoPlay = true
+    var autoPlay = false
+    var canStartPlay = false
     //
     var seletedDate: String = "" {
         didSet {
@@ -431,6 +432,8 @@ extension ArticleListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if isFirstTime {
             if collectionView.numberOfSections > 0 {
+                print("try1")
+                canStartPlay = true
                 collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
                 isFirstTime.toggle()
             }
@@ -492,6 +495,7 @@ extension ArticleListViewController {
             topActivityIndicator.startAnimating()
             todayActivityIndicator.startAnimating()
             topArticles = await ArticleManager.shared.getTopArticleAbstracts()
+            //autoPlay = true
             guard let lastArticles = topArticles.last, let firstArticle = topArticles.first else { return }
             
             let leftSecondArticle = ArticleAbstract(title: lastArticles.title, hint: lastArticles.hint, image: lastArticles.image, id: "0", charColor: lastArticles.charColor)
@@ -606,7 +610,7 @@ extension ArticleListViewController {
     }
 
     @objc func showNextImage() {
-        if !autoPlay { return }
+        if !autoPlay || !canStartPlay { return }
         guard let collectionView = collectionView else { return }
         nowPage += 1
         if nowPage == 8 {
@@ -615,7 +619,6 @@ extension ArticleListViewController {
         } else {
             collectionView.scrollToItem(at: IndexPath(item: nowPage, section: 0), at: .centeredHorizontally, animated: true)
         }
-        print(nowPage)
     }
 }
 
