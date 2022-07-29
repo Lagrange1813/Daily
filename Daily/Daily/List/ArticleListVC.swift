@@ -241,7 +241,7 @@ extension ArticleListViewController {
                         heightDimension: .absolute(100)
                     ),
                     subitem: midItem,
-                    count:1
+                    count: 1
                 )
                 let midSection = NSCollectionLayoutSection(group: midGroup)
                 midSection.orthogonalScrollingBehavior = .continuous
@@ -255,7 +255,7 @@ extension ArticleListViewController {
                     alignment: .top)
                 midSection.boundarySupplementaryItems = [header]
                 midSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15,
-                                                                   bottom: 5, trailing: 15)
+                                                                   bottom: 20, trailing: 15)
                 return midSection
             } else { // Bottom Section
 				let listItem = NSCollectionLayoutItem(
