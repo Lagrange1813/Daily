@@ -431,7 +431,6 @@ extension ArticleListViewController {
 	private func fetchData() {
 		guard let dataSource = dataSource else { return }
         
-        fetchDate()
         dataSource.apply(NSDiffableDataSourceSnapshot<String, ArticleAbstract>())
         Task {
             // Fetch Top Articles
