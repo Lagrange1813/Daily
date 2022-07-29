@@ -172,7 +172,7 @@ extension ArticleListViewController {
         pageControl.currentPage = 0
         pageControl.numberOfPages = 5
         pageControl.pageIndicatorTintColor = .gray
-        pageControl.currentPageIndicatorTintColor = .black
+        pageControl.currentPageIndicatorTintColor = .white
 		
         guard let collectionView = collectionView else { return }
 		
@@ -196,7 +196,7 @@ extension ArticleListViewController {
                         heightDimension: .fractionalWidth(1)
                     )
                 )
-//                topItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
+                topItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15)
                 let topGroup = NSCollectionLayoutGroup.horizontal(
                     layoutSize: NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
