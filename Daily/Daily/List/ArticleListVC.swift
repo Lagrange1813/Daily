@@ -12,11 +12,12 @@ import SwiftUI
 class ArticleListViewController: UIViewController {
     var collectionView: UICollectionView?
     var dataSource: UICollectionViewDiffableDataSource<String, ArticleAbstract>?
-    let pageControl = UIPageControl()
-//    var pageStack = [0]
-    var nowPage = 2
+    var pageControl = PageControl(delegate: nil)
     var earliestDate = ""
     var dates = [""]
+    var collectionViewOriginalYOffset: CGFloat = 0
+//    var pageStack = [0]
+    var nowPage = 2
     // 用于无限轮播图片
     var isFirstTime: Bool = true
     var timer: Timer?
@@ -25,7 +26,6 @@ class ArticleListViewController: UIViewController {
     var seletedDate: String = "" {
         didSet {
             // Todo after select date
-            print(seletedDate)
             earliestDate = seletedDate
             dates = [""]
             var snapshot = NSDiffableDataSourceSnapshot<String, ArticleAbstract>()
@@ -176,6 +176,7 @@ extension ArticleListViewController {
 		collectionView.addConstraints(constraints)
 	}
     
+
 	private func configurePageControl() {
 		pageControl.currentPage = 0
 		pageControl.numberOfPages = 5
@@ -214,6 +215,7 @@ extension ArticleListViewController {
 					count: 1
 				)
                 
+
 				let topSection = NSCollectionLayoutSection(group: topGroup)
 				topSection.orthogonalScrollingBehavior = .paging
 				topSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
@@ -291,6 +293,7 @@ extension ArticleListViewController {
 			make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
 			make.trailing.equalToSuperview()
 		}
+
 	} // Configure CollectionView End
     
 	// Configure DataSource
@@ -409,6 +412,8 @@ extension ArticleListViewController: UICollectionViewDelegate {
         }
         nowPage = indexPath.item
         guard indexPath.section == 0 else { return }
+		collectionView.bringSubviewToFront(pageControl)
+
         switch nowPage {
         case 1: pageControl.currentPage = 4
         case 7: pageControl.currentPage = 0
@@ -420,7 +425,6 @@ extension ArticleListViewController: UICollectionViewDelegate {
         collectionView.bringSubviewToFront(pageControl)
     }
     
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {}
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
@@ -462,6 +466,7 @@ extension ArticleListViewController {
             snapshot.appendItems(topArticles, toSection: "top")
             dataSource.apply(snapshot, animatingDifferences: true)
             topActivityIndicator.stopAnimating()
+
             pageControl.numberOfPages = topArticles.count - 4
             
 			earliestDate = await ArticleManager.shared.getTodaysDate()
@@ -540,5 +545,13 @@ extension ArticleListViewController {
 //            collectionView.scrollToItem(at: IndexPath(item: nowPage, section: 0), at: .centeredHorizontally, animated: true)
 //        }
 //        print(nowPage)
+    }
+}
+
+extension ArticleListViewController: PageControlDelegate {
+    func pageControl(_ pageControl: PageControl, currentPageDidChangeTo now: Int) {
+        guard let collectionView = collectionView else { return }
+        let indexPath = IndexPath(item: now, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
     }
 }

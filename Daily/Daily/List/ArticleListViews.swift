@@ -197,3 +197,28 @@ class AriticleListFooterView: UICollectionReusableView {
 		activityIndicator.frame = bounds
 	}
 }
+
+protocol PageControlDelegate {
+    func pageControl(_ pageControl: PageControl, currentPageDidChangeTo now: Int)
+}
+
+class PageControl: UIPageControl {
+    var delegate: PageControlDelegate?
+    var lastPage: Int = 0
+    init(delegate: PageControlDelegate?) {
+        self.delegate = delegate
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        guard currentPage != lastPage else { return }
+        lastPage = currentPage
+        delegate?.pageControl(self, currentPageDidChangeTo: currentPage)
+    }
+
+}
