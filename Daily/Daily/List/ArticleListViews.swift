@@ -118,6 +118,38 @@ class ArticleTopListCell: ArticleListCell {
 	}
 }
 
+class ArticleMiddleListCell: ArticleListCell {
+    static let reuseIdentifier = "article-middle-list-cell"
+    
+    func configureContents(withImage image: UIImage?, title: String) {
+        imageView.image = image
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
+        contentView.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+
+        
+        titleView.text = title
+        contentView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        imageView.layer.cornerRadius = imageView.frame.size.width / 2
+        imageView.layer.borderWidth = 1
+    }
+}
+
 class ArticleBottomListCell: ArticleListCell {
 	static let reuseIdentifier = "article-bottom-list-cell"
     

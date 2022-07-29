@@ -205,7 +205,7 @@ extension ArticleListViewController {
 						heightDimension: .absolute(320)
 					)
 				)
-				topItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 0)
+				topItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0,                                                    trailing: 0)
 				let topGroup = NSCollectionLayoutGroup.horizontal(
 					layoutSize: NSCollectionLayoutSize(
 						widthDimension: .absolute(315),
@@ -220,7 +220,27 @@ extension ArticleListViewController {
 				topSection.orthogonalScrollingBehavior = .paging
 				topSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
 				return topSection
-			} else { // Bottom Section
+            } else if sectionIndex == 1 { // Middle Section
+                
+                let midItem = NSCollectionLayoutItem(
+                    layoutSize:NSCollectionLayoutSize(
+                        widthDimension: .absolute(150),
+                        heightDimension: .absolute(150)
+                    )
+                )
+                
+                let midGroup = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .absolute(150),
+                        heightDimension: .absolute(160)
+                    ),
+                    subitem: midItem,
+                    count:1
+                )
+                let midSection = NSCollectionLayoutSection(group: midGroup)
+                midSection.orthogonalScrollingBehavior = .continuous
+                return midSection
+            } else { // Bottom Section
 				let listItem = NSCollectionLayoutItem(
 					layoutSize: NSCollectionLayoutSize(
 						widthDimension: .fractionalWidth(1),
@@ -272,6 +292,8 @@ extension ArticleListViewController {
 		// Register Cells And Headers
 		collectionView.register(ArticleTopListCell.self,
 		                        forCellWithReuseIdentifier: ArticleTopListCell.reuseIdentifier)
+        collectionView.register(ArticleMiddleListCell.self,
+                                forCellWithReuseIdentifier: ArticleMiddleListCell.reuseIdentifier)
 		collectionView.register(ArticleBottomListCell.self,
 		                        forCellWithReuseIdentifier: ArticleBottomListCell.reuseIdentifier)
 		collectionView.register(ArticleListHeaderView.self,
@@ -313,7 +335,17 @@ extension ArticleListViewController {
 					cell.configureContents(withArticle: itemIdentifier, indicator: self.topActivityIndicator)
 					return cell
                     
-				} else { // Bottom
+                } else if indexPath.section == 1 { // Middle
+                    guard let cell = collectionView.dequeueReusableCell(
+                        withReuseIdentifier: ArticleMiddleListCell.reuseIdentifier,
+                        for: indexPath
+                    ) as? ArticleMiddleListCell else { fatalError() }
+                    cell.configureContents(withImage:
+                                            UIImage(systemName: "signature"),
+                                           title: "Test")
+                    return cell
+                            
+                } else { // Bottom
 					guard let cell = collectionView.dequeueReusableCell(
 						withReuseIdentifier: ArticleBottomListCell.reuseIdentifier,
 						for: indexPath
@@ -332,7 +364,7 @@ extension ArticleListViewController {
 					withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
 					for: indexPath
 				) as? ArticleListHeaderView else { fatalError() }
-				header.configureContents(with: self.dates[indexPath.section])
+				header.configureContents(with: self.dates[indexPath.section - 1])
 				return header
 			} else { // Footer
 				guard let footer = collectionView.dequeueReusableSupplementaryView(
@@ -467,6 +499,22 @@ extension ArticleListViewController {
             dataSource.apply(snapshot, animatingDifferences: true)
             topActivityIndicator.stopAnimating()
 
+            
+            // Middle Items
+            let middleArticles = [
+                ArticleAbstract(title: "", hint: "", image: UIImage(), id: "",
+                                charColor: .black),
+                ArticleAbstract(title: "", hint: "", image: UIImage(), id: "",
+                                charColor: .white),
+                ArticleAbstract(title: "", hint: "", image: UIImage(), id: "",
+                                charColor: .blue),
+                ArticleAbstract(title: "", hint: "", image: UIImage(), id: "",
+                                charColor: .brown),
+            ]
+            snapshot.appendSections(["middle"])
+            snapshot.appendItems(middleArticles, toSection: "middle")
+            dataSource.apply(snapshot)
+            
             pageControl.numberOfPages = topArticles.count - 4
             
 			earliestDate = await ArticleManager.shared.getTodaysDate()
