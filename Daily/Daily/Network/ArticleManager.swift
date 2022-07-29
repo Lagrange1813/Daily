@@ -29,7 +29,7 @@ class ArticleManager {
 	private var currentDate: String?
 
 	private var currentID: String?
-	
+
 	private var mode: ArticleListType = .date
 
 	fileprivate init() {}
@@ -121,6 +121,10 @@ extension ArticleManager {
 	}
 }
 
+enum LastArticleError: Error {
+	case outOfIndex
+}
+
 enum NextArticleError: Error {
 	case notInside
 	case outOfNumber
@@ -132,15 +136,15 @@ enum fetchBeforeDataError: Error {
 
 extension ArticleManager {
 	public func getCurrentID() -> String? {
-		return self.currentID
+		return currentID
 	}
-	
-	public func getArticle(by id: String) async -> Article {
+
+	public func getArticle(by id: String) async throws -> Article {
 		print(idList)
 		async let json = service.getArticle(by: id)
-		self.currentID = id
+		currentID = id
 
-		return await Article(
+		return try await Article(
 			title: json["title"].stringValue,
 			body: json["body"].stringValue,
 			image: await getImage(url: json["image"].stringValue),
@@ -149,23 +153,19 @@ extension ArticleManager {
 		)
 	}
 
-	public func lastArticle(of id: String) async -> (String, Article)? {
+	public func lastArticle(of id: String) async throws -> (String, Article) {
 		guard let index = idList.firstIndex(of: id),
-		      index > 0 else { return nil }
-		return (idList[index - 1], await getArticle(by: idList[index - 1]))
+		      index > 0 else { throw LastArticleError.outOfIndex }
+		return (idList[index - 1], try await getArticle(by: idList[index - 1]))
 	}
 
-	public func nextArticle(of id: String) async throws -> (String, Article)? {
+	public func nextArticle(of id: String) async throws -> (String, Article) {
 		guard let index = idList.firstIndex(of: id) else { throw NextArticleError.notInside }
 		if index == idList.count - 1 {
-			do {
-				try await fetchNextDatesAbstract()
-			} catch fetchBeforeDataError.cantFetch {
-				try await fetchNextDatesAbstract()
-			}
+			try await fetchNextDatesAbstract()
 		}
 		guard index < idList.count else { throw NextArticleError.outOfNumber }
-		return (idList[(index) + 1], await getArticle(by: idList[(index) + 1]))
+		return (idList[index + 1], try await getArticle(by: idList[index + 1]))
 	}
 
 	public func fetchNextDatesAbstract() async throws {
