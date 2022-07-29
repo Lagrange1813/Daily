@@ -13,9 +13,13 @@ class ArticleListViewController: UIViewController {
     let collectionViewHorizontalOffset: CGFloat = 0
     var dataSource: UICollectionViewDiffableDataSource<String, ArticleAbstract>?
     let pageControl = UIPageControl()
-    var pageStack = [0]
+//    var pageStack = [0]
+    var nowPage = 2
     var earliestDate = ""
     var dates = [""]
+    //用于无限轮播图片
+    var isFirstTime:Bool = true
+    //
     var seletedDate: String = "" {
         didSet {
             // Todo after select date
@@ -44,12 +48,14 @@ class ArticleListViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(hexString: "#F3F3F3")
         configureNetworkMonitor()
+        setupTimer()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
         setTitle()
+        collectionView?.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -349,6 +355,7 @@ extension ArticleListViewController {
 extension ArticleListViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let y = scrollView.contentOffset.y
+//        let collectionView = scrollView as! UICollectionView
         if y < -91 {
             let indexPath = IndexPath(item: pageControl.currentPage, section: 0)
             let cell = collectionView?.cellForItem(at: indexPath) as? ArticleTopListCell
@@ -368,36 +375,60 @@ extension ArticleListViewController: UICollectionViewDelegate {
             
         }
     }
+    //func collectionView
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        if isFirstTime {
+            collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
+            isFirstTime.toggle()
+        }else if indexPath.section == 0 {
+            if indexPath.item == 8 {
+                nowPage = 2
+                collectionView.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
+                return
+            } else if indexPath.item == 0 {
+                nowPage = 6
+                collectionView.scrollToItem(at: IndexPath(item: 6, section: 0), at: .centeredHorizontally, animated: false)
+                return
+                
+            }
+        }
+        
         // Should Fetch New Data
         guard let dataSource = dataSource else { return }
         
         if dataSource.isIndexPath(indexPath, lastOf: collectionView) {
             fetchNewData(setDate: true)
         }
-        
+        nowPage = indexPath.item
         guard indexPath.section == 0 else { return }
-        pageStack.append(indexPath.item)
-        guard let last = pageStack.last else { return }
-        pageControl.currentPage = last
+        switch nowPage {
+        case 1: pageControl.currentPage = 4
+        case 7: pageControl.currentPage = 0
+        case 0: return
+        case 8: return
+        default:
+            pageControl.currentPage = nowPage - 2
+        }
 		collectionView.bringSubviewToFront(pageControl)
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard indexPath.section == 0 else { return }
-        guard let last = pageStack.last else { return }
-        if last == indexPath.item {
-            pageStack.removeLast()
-        }
-        guard let page = pageStack.last else { return }
-        pageControl.currentPage = page
+//        guard indexPath.section == 0 else { return }
+//        guard let last = pageStack.last else { return }
+//        if last == indexPath.item {
+//            pageStack.removeLast()
+//        }
+//        guard let page = pageStack.last else { return }
+//        pageControl.currentPage = page-2
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
-        let detailVC = ArticleDisplayViewController(id: article.id)
-        navigationController?.pushViewController(detailVC, animated: true)
+//        guard let article = dataSource?.itemIdentifier(for: indexPath) else { fatalError() }
+//        let detailVC = ArticleDisplayViewController(id: article.id)
+//        navigationController?.pushViewController(detailVC, animated: true)
+        print(indexPath)
     }
 }
 
@@ -436,12 +467,23 @@ extension ArticleListViewController {
             topActivityIndicator.startAnimating()
             todayActivityIndicator.startAnimating()
             topArticles = await ArticleManager.shared.getTopArticleAbstracts()
+            guard let lastArticles = topArticles.last, let firstArticle = topArticles.first else { return }
+            
+            let leftSecondArticle = ArticleAbstract(title: lastArticles.title, hint: lastArticles.hint, image: lastArticles.image, id: "0", charColor: lastArticles.charColor)
+            let leftFirstArticle = ArticleAbstract(title: "", hint: "", image: lastArticles.image, id: "0", charColor: lastArticles.charColor)
+            
+            topArticles.insert(leftSecondArticle, at: 0)
+            topArticles.insert(leftFirstArticle, at: 0)
+            let rightSecondArticle = ArticleAbstract(title: firstArticle.title, hint: firstArticle.hint, image: firstArticle.image, id: "", charColor: firstArticle.charColor)
+            let rightFirstArticle = ArticleAbstract(title: "", hint: "", image: firstArticle.image, id: "", charColor: firstArticle.charColor)
+            topArticles.append(rightSecondArticle)
+            topArticles.append(rightFirstArticle)
             var snapshot = dataSource.snapshot()
             snapshot.appendSections(["top"])
             snapshot.appendItems(topArticles, toSection: "top")
             dataSource.apply(snapshot, animatingDifferences: true)
             topActivityIndicator.stopAnimating()
-            pageControl.numberOfPages = topArticles.count
+            pageControl.numberOfPages = topArticles.count - 4
             
             earliestDate = await ArticleManager.shared.getTodaysDate()
             
@@ -488,5 +530,23 @@ extension ArticleListViewController {
         guard var nowDate = dateFormatter.date(from: now) else { fatalError() }
         nowDate = nowDate.dayBofre
         return dateFormatter.string(from: nowDate)
+    }
+}
+//实现无限自动轮播
+extension ArticleListViewController {
+    func setupTimer() {
+           let timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(showNextImage), userInfo: nil, repeats: true)
+        RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
+        }
+    @objc func showNextImage() {
+        guard let collectionView = collectionView else { return }
+        nowPage += 1
+        if nowPage==8{
+            nowPage = 3
+        }
+        collectionView.scrollToItem(at: IndexPath(item: nowPage, section: 0), at: .centeredHorizontally, animated: true)
+        print(nowPage)
+        
+        
     }
 }
