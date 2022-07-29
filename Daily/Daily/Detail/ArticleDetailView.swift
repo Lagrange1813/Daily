@@ -60,7 +60,7 @@ class ArticleDetailView: WKWebView {
 			make.centerX.equalToSuperview()
 //			make.top.equalTo(scrollView.snp.top).offset(-200)
 			make.bottom.equalTo(scrollView.snp.top).offset(200)
-			make.height.equalTo(imageHeight)
+            make.height.equalTo(imageHeight)
 			make.width.equalTo(Constants.width)
 		}
 		

@@ -22,10 +22,15 @@ class ArticleTopListCell: ArticleListCell {
         
         articleId = article.id
 		imageView.image = article.image
-		imageView.frame = contentView.bounds
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
 		contentView.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.height.equalToSuperview()
+        }
         
 		titleView.text = article.title
 		titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 20)
