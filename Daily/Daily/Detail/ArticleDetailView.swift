@@ -15,6 +15,7 @@ class ArticleDetailView: WKWebView {
 	
 	private var imageView: UIImageView?
 	private var titleLabel: UILabel?
+    private var gradientView = GradientView(colors: [])
     
     var delegate: ArticleDetailViewDelegate?
 
@@ -67,7 +68,15 @@ class ArticleDetailView: WKWebView {
             make.height.equalTo(imageHeight)
 			make.width.equalTo(Constants.width)
 		}
-		
+        
+        imageView.addSubview(gradientView)
+        gradientView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.height.equalTo(imageHeight / 3)
+            make.width.equalToSuperview()
+        }
+        
 		imageView.addSubview(titleLabel)
 		titleLabel.snp.makeConstraints { make in
 			make.bottom.equalToSuperview().inset(20)
@@ -82,10 +91,15 @@ class ArticleDetailView: WKWebView {
 		handler(imageView)
 	}
 	
-	public func setContent(id: String, title: String, image: UIImage, html: String) {
+    public func setContent(id: String, title: String, image: UIImage, html: String, charColor: UIColor) {
 		self.id = id
 		imageView?.image = image
 		titleLabel?.text = title
+        gradientView.gradientLayer.colors = [
+            UIColor(charColor, withNewAlpha: 0).cgColor,
+            UIColor(charColor, withNewAlpha: 0.8).cgColor,
+            UIColor(charColor, withNewAlpha: 1).cgColor,
+        ]
 		loadHTMLString(html, baseURL: nil)
 	}
 	
