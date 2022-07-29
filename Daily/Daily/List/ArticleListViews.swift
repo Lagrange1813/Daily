@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import SnapKit
 
 class ArticleListCell: UICollectionViewCell {
     let imageView = UIImageView()
     let titleView = UILabel()
     let subtitleView = UILabel()
+    let gradientLayer = CAGradientLayer()
+    var gradientLayerPosition: CGPoint?
     var articleId = ""
 }
 
@@ -22,10 +25,15 @@ class ArticleTopListCell: ArticleListCell {
         
         articleId = article.id
 		imageView.image = article.image
-		imageView.frame = contentView.bounds
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
 		contentView.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.height.equalToSuperview()
+        }
         
 		titleView.text = article.title
 		titleView.font = UIFont(name: "LXGWWenKai-Bold", size: 20)
@@ -61,21 +69,33 @@ class ArticleTopListCell: ArticleListCell {
         indicator.frame = bounds
         contentView.addSubview(indicator)
         // Gradient Layer
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = CGRect(
-            x: 0,
-            y: imageView.frame.height / 3.0 * 2,
-            width: imageView.frame.width,
-            height: imageView.frame.height / 3.0
-        )
+//        gradientLayer.frame = CGRect(
+//            x: 0,
+//            y: frame.height / 3.0 * 2,
+//            width: frame.width,
+//            height: frame.height / 3.0
+//        )
         let gradientColors = [
             UIColor(article.charColor, withNewAlpha: 0).cgColor,
-            UIColor(article.charColor, withNewAlpha: 1).cgColor,
+            UIColor(article.charColor, withNewAlpha: 0.8).cgColor,
             UIColor(article.charColor, withNewAlpha: 1).cgColor,
         ]
-        gradientLayer.colors = gradientColors
-        imageView.layer.removeAllSubLayers()
-        imageView.layer.addSublayer(gradientLayer)
+//        gradientLayer.colors = gradientColors
+//        imageView.layer.removeAllSubLayers()
+//        imageView.layer.addSublayer(gradientLayer)
+//
+//        gradientLayerPosition = gradientLayer.position
+		
+		let view = GradientView(colors: gradientColors)
+		
+		contentView.addSubview(view)
+		
+		view.snp.makeConstraints { make in
+			make.bottom.equalToSuperview()
+			make.centerX.equalToSuperview()
+			make.width.equalTo(Constants.width)
+			make.height.equalTo(100)
+		}
 	}
     
 	override func layoutSubviews() {
