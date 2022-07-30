@@ -253,7 +253,15 @@ extension ArticleListViewController {
                     ),
                     elementKind: ArticleListHeaderView.reuseIdentifier,
                     alignment: .top)
-                midSection.boundarySupplementaryItems = [header]
+                let footer = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .absolute(20)
+                    ),
+                    elementKind: AriticleListFooterView.reuseIdentifier,
+                    alignment: .bottom
+                )
+                midSection.boundarySupplementaryItems = [header, footer]
                 midSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15,
                                                                    bottom: 20, trailing: 15)
                 return midSection
@@ -378,19 +386,22 @@ extension ArticleListViewController {
 		// Header/Footer Provider
 		dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath in
             
-            if indexPath.section == 1 { // Middle Section
-                guard let header = collectionView.dequeueReusableSupplementaryView(
-                    ofKind: ArticleListHeaderView.reuseIdentifier,
-                    withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
-                    for: indexPath
-                ) as? ArticleListHeaderView else { fatalError() }
-                header.configureContents(with: "Explore")
-                return header
-            }
+
             
             
-            // Bottom Section
 			if kind == ArticleListHeaderView.reuseIdentifier { // Header
+                
+                if indexPath.section == 1 { // Middle Section
+                    guard let header = collectionView.dequeueReusableSupplementaryView(
+                        ofKind: ArticleListHeaderView.reuseIdentifier,
+                        withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
+                        for: indexPath
+                    ) as? ArticleListHeaderView else { fatalError() }
+                    header.configureContents(with: "Explore")
+                    return header
+                }
+                
+                // Bottom Section
 				guard let header = collectionView.dequeueReusableSupplementaryView(
 					ofKind: ArticleListHeaderView.reuseIdentifier,
 					withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
@@ -595,7 +606,7 @@ extension ArticleListViewController {
 			}
 			dates.append(earliestDate)
 			guard let footer = dataSource.collectionView(collectionView, viewForSupplementaryElementOfKind: AriticleListFooterView.reuseIdentifier,
-			                                             at: dataSource.lastIndexPath(of: collectionView)) as? AriticleListFooterView
+                at: dataSource.lastIndexPath(of: collectionView)) as? AriticleListFooterView
 			else {
 				fatalError()
 			}
