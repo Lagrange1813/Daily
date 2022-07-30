@@ -62,7 +62,9 @@ class ArticleListViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
         setTitle()
         //collectionView?.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
-        autoPlay = true
+        if collectionView?.contentOffset.y == -143{
+            autoPlay = true
+        }
     }
     
 	override func viewWillDisappear(_ animated: Bool) {
