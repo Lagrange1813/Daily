@@ -37,6 +37,11 @@ class ArticleListViewController: UIViewController {
             snapshot.appendItems(topArticles, toSection: "top")
             snapshot.appendItems(middleArticles, toSection: "middle")
             dataSource.apply(snapshot)
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyyMMdd"
+            guard let date = dateFormatter.date(from: earliestDate) else { return }
+            earliestDate = dateFormatter.string(from: date.dayAfter)
             fetchNewData(setDate: false)
         }
     }
@@ -622,11 +627,8 @@ extension ArticleListViewController {
 		guard let collectionView = collectionView else { return }
 		Task {
 			bottomActivityIndicator.startAnimating()
-            if setDate {
-                earliestDate = getDate(before: earliestDate)
-            }
 			let newArticles = await ArticleManager.shared.getArticleAbstracts(before: earliestDate)
-
+            earliestDate = getDate(before: earliestDate)
 			dates.append(earliestDate)
 			guard let footer = dataSource.collectionView(collectionView, viewForSupplementaryElementOfKind: AriticleListFooterView.reuseIdentifier,
                 at: dataSource.lastIndexPath(of: collectionView)) as? AriticleListFooterView
@@ -641,6 +643,7 @@ extension ArticleListViewController {
 			snapshot.appendItems(newArticles, toSection: earliestDate)
 			dataSource.apply(snapshot, animatingDifferences: true)
             isFetching = false
+
 		}
 	}
     
