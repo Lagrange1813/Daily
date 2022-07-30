@@ -122,8 +122,7 @@ class ArticleMiddleListCell: ArticleListCell {
 		
         imageView.image = image
         imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFit
-//        imageView
+        imageView.contentMode = .scaleAspectFill
         contentView.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
