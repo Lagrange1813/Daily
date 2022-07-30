@@ -118,28 +118,29 @@ class ArticleMiddleListCell: ArticleListCell {
     let blurView = UIVisualEffectView()
 
     func configureContents(withImage image: UIImage?, title: String) {
-		contentView.layer.cornerRadius = 10
+		contentView.layer.cornerRadius = 50
+		contentView.backgroundColor = .white
 		
         imageView.image = image
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         contentView.addSubview(imageView)
         imageView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
+			make.top.equalToSuperview().offset(5)
+            make.leading.equalToSuperview().offset(5)
+            make.trailing.equalToSuperview().offset(-5)
+            make.bottom.equalToSuperview().offset(-5)
         }
 
         
-        blurView.effect = UIBlurEffect(style: UIBlurEffect.Style.dark)
-        gradientLayer.colors = [UIColor(white: 0, alpha: 0.8).cgColor,
-                        UIColor(white: 0, alpha: 0.8).cgColor,
-//                        UIColor(white: 0, alpha: 0).cgColor
-        ]
-        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
-        blurView.layer.mask = gradientLayer
+//        blurView.effect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+//        gradientLayer.colors = [UIColor(white: 0, alpha: 0.8).cgColor,
+//                        UIColor(white: 0, alpha: 0.8).cgColor,
+////                        UIColor(white: 0, alpha: 0).cgColor
+//        ]
+//        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+//        gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
+//        blurView.layer.mask = gradientLayer
         
         contentView.addSubview(blurView)
         blurView.snp.makeConstraints { make in
