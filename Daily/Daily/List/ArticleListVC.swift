@@ -62,13 +62,16 @@ class ArticleListViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
         setTitle()
-//        collectionView?.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
+
+        //collectionView?.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
+        autoPlay = true
     }
     
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		title = ""
 		navigationController?.navigationBar.isHidden = true
+        autoPlay = false
 	}
 }
 
@@ -488,8 +491,15 @@ extension ArticleListViewController: UICollectionViewDelegate {
                 nowPage = 6
                 collectionView.scrollToItem(at: IndexPath(item: 6, section: 0), at: .centeredHorizontally, animated: false)
                 return
+            }else { if nowPage == indexPath.item + 1 {
+                nowPage = indexPath.item
+            } else {
+                nowPage = indexPath.item - 1
+            }
+                print(nowPage)
             }
         }
+
         
         // Should Fetch New Data
         guard let dataSource = dataSource else { return }
