@@ -17,6 +17,7 @@ class ArticleListViewController: UIViewController {
     var dates = [""]
     var collectionViewOriginalYOffset: CGFloat = 0
     var middleArticles: [ArticleAbstract] = []
+    var isFetching = false
 //    var pageStack = [0]
     var nowPage = 2
     // 用于无限轮播图片
@@ -36,6 +37,11 @@ class ArticleListViewController: UIViewController {
             snapshot.appendItems(topArticles, toSection: "top")
             snapshot.appendItems(middleArticles, toSection: "middle")
             dataSource.apply(snapshot)
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyyMMdd"
+            guard let date = dateFormatter.date(from: earliestDate) else { return }
+            earliestDate = dateFormatter.string(from: date.dayAfter)
             fetchNewData(setDate: false)
         }
     }
@@ -61,13 +67,18 @@ class ArticleListViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
         setTitle()
-        collectionView?.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
+
+        //collectionView?.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
+        if collectionView?.contentOffset.y == -143{
+            autoPlay = true
+        }
     }
     
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		title = ""
 		navigationController?.navigationBar.isHidden = true
+        autoPlay = false
 	}
 }
 
@@ -487,8 +498,15 @@ extension ArticleListViewController: UICollectionViewDelegate {
                 nowPage = 6
                 collectionView.scrollToItem(at: IndexPath(item: 6, section: 0), at: .centeredHorizontally, animated: false)
                 return
+            }else { if nowPage == indexPath.item + 1 {
+                nowPage = indexPath.item
+            } else {
+                nowPage = indexPath.item - 1
+            }
+                print(nowPage)
             }
         }
+
         
         // Should Fetch New Data
         guard let dataSource = dataSource else { return }
@@ -601,15 +619,16 @@ extension ArticleListViewController {
     
 	private func fetchNewData(setDate: Bool) {
 		print("Fetch New Data")
+        if isFetching {
+            return
+        }
+        isFetching = true
 		guard let dataSource = dataSource else { return }
 		guard let collectionView = collectionView else { return }
 		Task {
 			bottomActivityIndicator.startAnimating()
-            if setDate {
-                earliestDate = getDate(before: earliestDate)
-            }
 			let newArticles = await ArticleManager.shared.getArticleAbstracts(before: earliestDate)
-
+            earliestDate = getDate(before: earliestDate)
 			dates.append(earliestDate)
 			guard let footer = dataSource.collectionView(collectionView, viewForSupplementaryElementOfKind: AriticleListFooterView.reuseIdentifier,
                 at: dataSource.lastIndexPath(of: collectionView)) as? AriticleListFooterView
@@ -623,6 +642,8 @@ extension ArticleListViewController {
 			snapshot.appendSections([earliestDate])
 			snapshot.appendItems(newArticles, toSection: earliestDate)
 			dataSource.apply(snapshot, animatingDifferences: true)
+            isFetching = false
+
 		}
 	}
     
