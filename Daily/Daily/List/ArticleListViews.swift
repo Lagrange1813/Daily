@@ -20,10 +20,10 @@ class ArticleListCell: UICollectionViewCell {
 
 class ArticleTopListCell: ArticleListCell {
 	static let reuseIdentifier = "article-top-list-cell"
-    
-	func configureContents(withArticle article: ArticleAbstract, indicator: UIActivityIndicatorView) {
+    var controller: ArticleListViewController?
+    func configureContents(withArticle article: ArticleAbstract, indicator: UIActivityIndicatorView, controller: ArticleListViewController) {
+        self.controller = controller
 		contentView.backgroundColor = .white
-		
 		articleId = article.id
 		
 		imageView.image = article.image
@@ -89,6 +89,27 @@ class ArticleTopListCell: ArticleListCell {
 	override func layoutSubviews() {
 		super.layoutSubviews()
 	}
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        print("began")
+//        controller?.autoPlay = false
+    }
+
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        print("moved")
+//        controller?.autoPlay = false
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        print("end")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            self.controller?.autoPlay = true
+
+        }
+    }
 }
 
 class ArticleMiddleListCell: ArticleListCell {
