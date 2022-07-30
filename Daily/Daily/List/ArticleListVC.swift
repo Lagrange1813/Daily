@@ -398,7 +398,7 @@ extension ArticleListViewController {
                         withReuseIdentifier: ArticleListHeaderView.reuseIdentifier,
                         for: indexPath
                     ) as? ArticleListHeaderView else { fatalError() }
-                    header.configureContents(with: "Explore")
+                    header.configureContents(with: "合集")
                     return header
                 }
                 
@@ -559,23 +559,23 @@ extension ArticleListViewController {
             guard let signatureImage = UIImage(systemName: "signature") else { return }
             middleArticles = [
                 ArticleAbstract(title: "大误", hint: "",
-                                image: UIImage(named: "night") ?? signatureImage,
+                                image: UIImage(named: "Abstract") ?? signatureImage,
                                 id: "",
                                 charColor: .black),
                 ArticleAbstract(title: "小事", hint: "",
-                                image: UIImage(named: "night") ?? signatureImage,
+                                image: UIImage(named: "Trifles") ?? signatureImage,
                                 id: "",
                                 charColor: .white),
-                ArticleAbstract(title: "瞎扯", hint: "",
-                                image: UIImage(named: "night") ?? signatureImage,
-                                id: "",
-                                charColor: .blue),
                 ArticleAbstract(title: "深夜食堂", hint: "",
-								image:  UIImage(named: "night") ?? signatureImage,
+								image:  UIImage(named: "Night") ?? signatureImage,
                                 id: "",
                                 charColor: .brown),
+				ArticleAbstract(title: "瞎扯", hint: "",
+								image: UIImage(named: "Messy") ?? signatureImage,
+								id: "",
+								charColor: .blue),
                 ArticleAbstract(title: "知天下", hint: "",
-                                image: UIImage(named: "night") ?? signatureImage,
+                                image: UIImage(named: "World") ?? signatureImage,
                                 id: "",
                                 charColor: .cyan)
             ]

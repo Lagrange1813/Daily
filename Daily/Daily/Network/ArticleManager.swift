@@ -36,7 +36,7 @@ class ArticleManager {
 
 	private func getImage(url: String) async -> UIImage {
 		async let data = service.getImage(url: url)
-		return await UIImage(data: data) ?? UIImage()
+		return await UIImage(data: data) ?? UIImage(named: "Alternative") ?? UIImage()
 	}
 
 	private func convertColorString(_ origin: String) -> String {
