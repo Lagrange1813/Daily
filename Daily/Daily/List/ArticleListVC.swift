@@ -17,6 +17,7 @@ class ArticleListViewController: UIViewController {
     var dates = [""]
     var collectionViewOriginalYOffset: CGFloat = 0
     var middleArticles: [ArticleAbstract] = []
+    var isFetching = false
 //    var pageStack = [0]
     var nowPage = 2
     // 用于无限轮播图片
@@ -61,7 +62,7 @@ class ArticleListViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
         setTitle()
-        collectionView?.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
+//        collectionView?.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
     }
     
 	override func viewWillDisappear(_ animated: Bool) {
@@ -601,6 +602,10 @@ extension ArticleListViewController {
     
 	private func fetchNewData(setDate: Bool) {
 		print("Fetch New Data")
+        if isFetching {
+            return
+        }
+        isFetching = true
 		guard let dataSource = dataSource else { return }
 		guard let collectionView = collectionView else { return }
 		Task {
@@ -623,6 +628,7 @@ extension ArticleListViewController {
 			snapshot.appendSections([earliestDate])
 			snapshot.appendItems(newArticles, toSection: earliestDate)
 			dataSource.apply(snapshot, animatingDifferences: true)
+            isFetching = false
 		}
 	}
     
