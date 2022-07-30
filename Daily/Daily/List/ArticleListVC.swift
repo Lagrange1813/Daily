@@ -358,7 +358,7 @@ extension ArticleListViewController {
 						withReuseIdentifier: ArticleTopListCell.reuseIdentifier,
 						for: indexPath
 					) as? ArticleTopListCell else { fatalError() }
-					cell.configureContents(withArticle: itemIdentifier, indicator: self.topActivityIndicator)
+					cell.configureContents(withArticle: itemIdentifier, indicator: self.topActivityIndicator, controller: self)
 					return cell
                     
                 } else if indexPath.section == 1 { // Middle
@@ -582,6 +582,7 @@ extension ArticleListViewController {
             snapshot.appendSections(["middle"])
             snapshot.appendItems(middleArticles, toSection: "middle")
             dataSource.apply(snapshot)
+            bottomActivityIndicator.stopAnimating()
             
             pageControl.numberOfPages = topArticles.count - 4
             
@@ -604,10 +605,11 @@ extension ArticleListViewController {
 		guard let collectionView = collectionView else { return }
 		Task {
 			bottomActivityIndicator.startAnimating()
+            if setDate {
+                earliestDate = getDate(before: earliestDate)
+            }
 			let newArticles = await ArticleManager.shared.getArticleAbstracts(before: earliestDate)
-			if setDate {
-				earliestDate = getDate(before: earliestDate)
-			}
+
 			dates.append(earliestDate)
 			guard let footer = dataSource.collectionView(collectionView, viewForSupplementaryElementOfKind: AriticleListFooterView.reuseIdentifier,
                 at: dataSource.lastIndexPath(of: collectionView)) as? AriticleListFooterView
@@ -616,7 +618,7 @@ extension ArticleListViewController {
 			}
 			bottomActivityIndicator.stopAnimating()
 			footer.removeAllSubviews()
-            
+            footer.layoutIfNeeded()
 			var snapshot = dataSource.snapshot()
 			snapshot.appendSections([earliestDate])
 			snapshot.appendItems(newArticles, toSection: earliestDate)
@@ -640,14 +642,6 @@ extension ArticleListViewController {
         if let timer = timer {
             RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
         }
-    }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        autoPlay = false
-    }
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        autoPlay = true
     }
 
     @objc func showNextImage() {
