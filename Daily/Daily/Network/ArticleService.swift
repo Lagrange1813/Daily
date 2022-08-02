@@ -10,9 +10,9 @@ import Foundation
 import SwiftyJSON
 
 private enum URLList {
-	static let today = "http://news-at.zhihu.com/api/4/news/latest"
-	static let before = "http://news.at.zhihu.com/api/4/news/before/"
-	static let article = "https://news-at.zhihu.com/api/4/news/"
+	static let today = "https://news-at.zhihu.com/api/3/stories/latest"
+	static let before = "https://news-at.zhihu.com/api/3/news/before/"
+	static let article = "https://news-at.zhihu.com/api/3/news/"
 }
 
 class ArticleService {
